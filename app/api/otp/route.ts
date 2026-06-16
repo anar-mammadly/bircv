@@ -2,30 +2,51 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-// In-memory OTP store. NOTE: this resets on server restart and is per-instance.
-// For production, back this with Redis / a database so codes survive across
-// serverless invocations.
 type Entry = { code: string; expires: number };
 const store: Map<string, Entry> =
   (globalThis as any).__OTP_STORE__ || ((globalThis as any).__OTP_STORE__ = new Map());
 
-const OTP_TTL_MS = 3 * 60 * 1000; // 3 minutes
+const OTP_TTL_MS = 3 * 60 * 1000; // 3 dəqiqə
 
 function genCode() {
-  return String(Math.floor(100000 + Math.random() * 900000)); // 6 digits
+  return String(Math.floor(100000 + Math.random() * 900000));
 }
 
 async function sendEmail(to: string, code: string): Promise<boolean> {
-  // Wire your email provider here (SMTP / Resend / SendGrid …).
-  // Example with nodemailer (install it and set the SMTP_* env vars):
-  //
-  //   const nodemailer = await import('nodemailer');
-  //   const tx = nodemailer.createTransport({ host: process.env.SMTP_HOST, ... });
-  //   await tx.sendMail({ to, subject: 'BirCV təsdiq kodu', text: `Kodunuz: ${code}` });
-  //
+  const subject = 'BirCV – Təsdiq kodu';
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f9f9f9;border-radius:12px;">
+      <h2 style="color:#1a1a2e;margin:0 0 8px">BirCV</h2>
+      <p style="color:#555;margin:0 0 24px">Aşağıdakı kodu daxil edin:</p>
+      <div style="background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:20px;text-align:center;">
+        <span style="font-size:36px;font-weight:900;letter-spacing:8px;color:#7C6EF8">${code}</span>
+      </div>
+      <p style="color:#999;font-size:12px;margin:16px 0 0">Kod 3 dəqiqə etibarlıdır.</p>
+    </div>
+  `;
+  const text = `BirCV təsdiq kodunuz: ${code}\nKod 3 dəqiqə etibarlıdır.`;
+
+  // ── Variant 1: Resend ───────────────────────────────────────────────────────
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const { Resend } = await import('resend');
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: process.env.RESEND_FROM || 'BirCV <noreply@yourdomain.com>',
+        to,
+        subject,
+        html,
+      });
+      return true;
+    } catch (e) {
+      console.error('[otp] Resend error:', e);
+      return false;
+    }
+  }
+
+  // ── Variant 2: SMTP (Gmail, vb.) ────────────────────────────────────────────
   if (process.env.SMTP_HOST && process.env.SMTP_USER) {
     try {
-      // @ts-ignore - optional dependency, present only if installed
       const nodemailer = await import('nodemailer');
       const transporter = (nodemailer as any).createTransport({
         host: process.env.SMTP_HOST,
@@ -36,27 +57,28 @@ async function sendEmail(to: string, code: string): Promise<boolean> {
       await transporter.sendMail({
         from: process.env.SMTP_FROM || process.env.SMTP_USER,
         to,
-        subject: 'BirCV – Təsdiq kodu',
-        text: `Qeydiyyat kodunuz: ${code}\nKod 3 dəqiqə ərzində etibarlıdır.`,
+        subject,
+        html,
+        text,
       });
       return true;
     } catch (e) {
-      console.error('[otp] email send failed:', e);
+      console.error('[otp] SMTP error:', e);
       return false;
     }
   }
-  // No mailer configured – log to server console for development.
-  console.log(`[otp] (dev) code for ${to}: ${code}`);
+
+  // ── Development: terminala yaz ──────────────────────────────────────────────
+  console.log(`\n[OTP DEV] ${to} → KOD: ${code}\n`);
   return false;
 }
 
 export async function POST(req: NextRequest) {
   let body: any;
-  try {
-    body = await req.json();
-  } catch {
+  try { body = await req.json(); } catch {
     return NextResponse.json({ error: 'invalid body' }, { status: 400 });
   }
+
   const { action, email, code } = body || {};
   const mail = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
@@ -72,8 +94,6 @@ export async function POST(req: NextRequest) {
       ok: true,
       ttl: OTP_TTL_MS / 1000,
       delivered,
-      // devCode is only returned when no real mailer is configured, so the
-      // flow stays testable locally. Remove once SMTP is wired up.
       ...(delivered ? {} : { devCode: newCode }),
     });
   }
@@ -88,7 +108,7 @@ export async function POST(req: NextRequest) {
     if (String(code) !== entry.code) {
       return NextResponse.json({ ok: false, reason: 'mismatch' }, { status: 400 });
     }
-    store.delete(mail); // single use
+    store.delete(mail);
     return NextResponse.json({ ok: true });
   }
 

@@ -114,10 +114,11 @@ function CreatePageInner() {
     style.textContent = [
       '@media print {',
       '  @page { size:210mm 297mm; margin:0; }',
-      '  html,body { width:210mm!important; height:297mm!important; overflow:hidden!important; margin:0!important; padding:0!important; }',
+      '  html, body { width:210mm!important; margin:0!important; padding:0!important; }',
       '  body > *:not(#__cv_print_root__) { display:none!important; }',
       '  #__cv_print_root__ { display:block!important; position:absolute!important; top:0!important; left:0!important; }',
       '  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }',
+      '  @page { break-inside:avoid; }',
       '}',
     ].join('\n');
     document.head.appendChild(style);

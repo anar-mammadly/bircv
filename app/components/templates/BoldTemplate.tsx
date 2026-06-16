@@ -5,7 +5,7 @@ const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','O
 const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function fmtDate(month:string,year:string,lang:'az'|'en'){const arr=lang==='az'?MONTHS_AZ:MONTHS_EN;const m=parseInt(month);if(!year)return'';return`${m&&arr[m]?arr[m]+' ':''}${year}`;}
 
-export default function BoldTemplate({ data, lang, forPDF }: { data: CVData; lang: 'az'|'en'; forPDF?: boolean }) {
+export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|'en' }) {
   const { personal:p, experience, education, skills, languages, additional } = data;
   const certs  = (data as any).certificates || [];
   const trains = (data as any).trainings    || [];
@@ -40,7 +40,7 @@ export default function BoldTemplate({ data, lang, forPDF }: { data: CVData; lan
         </div>
       </div>
 
-      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, overflowY:forPDF?'visible':'auto', height:forPDF?'auto':'calc(100% - 115px)' }}>
+      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px' }}>
         {p.summary && (
           <div style={{ fontSize:10, color:'#374151', lineHeight:1.7, borderLeft:'4px solid #FFD60A', paddingLeft:10 }}>{p.summary}</div>
         )}

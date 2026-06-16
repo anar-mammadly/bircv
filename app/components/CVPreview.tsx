@@ -43,8 +43,13 @@ function SvgLogo({ name, size=40 }:{ name:string; size?:number }) {
   );
 }
 
-function BulletDot({ color='#888' }:{ color?:string }) {
-  return <div style={{width:4,height:4,borderRadius:'50%',background:color,flexShrink:0,marginTop:4}}/>;
+// Inline bullet helper — no div, no flex offset needed
+function Bul({color='#888',text,style={}}:{color?:string;text?:string;style?:any}){
+  return(
+    <div style={{fontSize:10,lineHeight:'15px',marginBottom:3,...style}}>
+      <span style={{marginRight:6,color,fontWeight:700}}>•</span>{text}
+    </div>
+  );
 }
 
 function SkillSvg({ text }:{ text:string }) {
@@ -118,7 +123,7 @@ function ElegantTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:
           {p.city&&<span>{p.city}{p.country?', '+p.country:''}</span>}{p.linkedin&&<span>{p.linkedin}</span>}
         </div>
       </div>
-      <div style={{padding:'16px 30px',display:'flex',gap:22,overflowY:forPDF?'visible':'auto',height:forPDF?'auto':'calc(100% - 130px)'}}>
+      <div style={{padding:'16px 30px',display:'flex',gap:22,paddingBottom:'14px'}}>
         <div style={{width:'34%',borderRight:'0.5px solid #d4cfc0',paddingRight:18,flexShrink:0,display:'flex',flexDirection:'column',gap:14}}>
           {skills.length>0&&(<div><ST c={lang==='az'?'Bacarıqlar':'Skills'}/>{skills.map((s,i)=><div key={i} style={{fontSize:10,color:'#4a4438',borderBottom:'0.5px solid #ede8dc',padding:'4px 0'}}>{s}</div>)}</div>)}
           {languages.length>0&&(<div><ST c={lang==='az'?'Dillər':'Languages'}/>{languages.map((l,i)=><div key={i} style={{fontSize:10,color:'#4a4438',display:'flex',justifyContent:'space-between',borderBottom:'0.5px solid #ede8dc',padding:'4px 0'}}><span style={{fontWeight:600}}>{l.name}</span><span style={{color:'#8a7f6a',fontSize:9}}>{l.level}</span></div>)}</div>)}
@@ -180,7 +185,11 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
   const present=lang==='az'?'İndiyə qədər':'Present';
   const ov=forPDF?'visible':'auto';
   function LeftSec({title}:{title:string}){return(
-    <div style={{marginBottom:12}}><div style={{fontSize:9,fontWeight:800,color:'#fff',letterSpacing:1.5,textTransform:'uppercase' as const,marginBottom:4}}>{title}</div><div style={{height:1,background:'rgba(255,255,255,0.22)',marginBottom:7}}/></div>
+    <div style={{marginBottom:12}}>
+      <div style={{fontSize:9,fontWeight:800,color:'#fff',letterSpacing:1.5,
+        textTransform:'uppercase' as const,lineHeight:'18px',marginBottom:3}}>{title}</div>
+      <div style={{height:1,background:'rgba(255,255,255,0.22)',marginBottom:7}}/>
+    </div>
   );}
   function RightSec({title}:{title:string}){return(
     <div style={{display:'flex',alignItems:'flex-start',gap:9,marginBottom:9}}>
@@ -193,7 +202,7 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
   );}
   return(
     <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fff',width:'100%',height:'100%',display:'flex',overflow:'hidden',fontSize:10}}>
-      <div style={{width:'30%',background:'#1e2a3a',display:'flex',flexDirection:'column',overflowY:ov as any,flexShrink:0}}>
+      <div style={{width:'30%',background:'#1e2a3a',display:'flex',flexDirection:'column',flexShrink:0}}>
         <div style={{padding:'20px 14px 12px',display:'flex',justifyContent:'center'}}>
           <div style={{width:80,height:80,borderRadius:'50%',overflow:'hidden',border:'3px solid rgba(255,255,255,0.25)'}}>
             {p.photo?<img src={p.photo} alt="" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'top',display:'block'}}/>
@@ -209,12 +218,12 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
               {p.linkedin&&<div style={{display:'flex',alignItems:'flex-start',gap:7}}><div style={{marginTop:2}}><CIcon type="link" fill="transparent" stroke="rgba(255,255,255,0.7)" size={11}/></div><span style={{fontSize:9.5,color:'rgba(255,255,255,0.8)',lineHeight:1.4,wordBreak:'break-all'}}>{p.linkedin}</span></div>}
             </div>
           </div>
-          {skills.length>0&&<div><LeftSec title={lang==='az'?'Bacarıqlar':'Skills'}/><div style={{display:'flex',flexDirection:'column',gap:5}}>{skills.map((s,i)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:7,fontSize:10,color:'rgba(255,255,255,0.82)'}}><BulletDot color="rgba(255,255,255,0.55)"/>{s}</div>)}</div></div>}
+          {skills.length>0&&<div><LeftSec title={lang==='az'?'Bacarıqlar':'Skills'}/><div style={{display:'flex',flexDirection:'column',gap:5}}>{skills.map((s,i)=><Bul key={i} color="rgba(255,255,255,0.55)" text={s} style={{color:'rgba(255,255,255,0.82)'}}/>)}</div></div>}
           {languages.length>0&&<div><LeftSec title={lang==='az'?'Dillər':'Languages'}/><div style={{display:'flex',flexDirection:'column',gap:3}}>{languages.map((l,i)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10,color:'rgba(255,255,255,0.82)'}}><span>{l.name}</span>{l.level&&<span style={{color:'rgba(255,255,255,0.5)',fontSize:9}}>{l.level}</span>}</div>)}</div></div>}
           {trains.length>0&&<div><LeftSec title={lang==='az'?'Təlimlər':'Training'}/><div style={{display:'flex',flexDirection:'column',gap:6}}>{trains.map((tr:any,i:number)=><div key={i}><div style={{fontSize:10,fontWeight:600,color:'rgba(255,255,255,0.88)',lineHeight:1.3}}>{tr.name}</div><div style={{fontSize:9,color:'rgba(255,255,255,0.5)'}}>{tr.provider}{tr.year?' · '+tr.year:''}</div></div>)}</div></div>}
         </div>
       </div>
-      <div style={{flex:1,display:'flex',flexDirection:'column',overflowY:ov as any}}>
+      <div style={{flex:1,display:'flex',flexDirection:'column'}}>
         <div style={{background:'#1e2a3a',padding:'20px 20px 14px'}}>
           <div style={{fontSize:22,fontWeight:900,color:'#fff',letterSpacing:0.3,textTransform:'uppercase' as const,lineHeight:1.1}}>{p.firstName} {p.lastName}</div>
           {p.jobTitle&&<div style={{fontSize:10.5,color:'rgba(255,255,255,0.65)',marginTop:4,letterSpacing:1.2,textTransform:'uppercase' as const}}>{p.jobTitle}</div>}
@@ -257,11 +266,11 @@ function HeaderTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:b
         {p.city&&<div style={{display:'flex',alignItems:'flex-start',gap:4}}><div style={{marginTop:2}}><CIcon type="pin" fill="transparent" stroke="#555" size={10}/></div><span style={{fontSize:9.5,color:'#444'}}>{p.city}{p.country?', '+p.country:''}</span></div>}
         {p.linkedin&&<div style={{display:'flex',alignItems:'flex-start',gap:4}}><div style={{marginTop:2}}><CIcon type="link" fill="transparent" stroke="#1a6ef5" size={10}/></div><span style={{fontSize:9.5,color:'#1a6ef5'}}>{p.linkedin}</span></div>}
       </div>
-      <div style={{flex:1,display:'flex',overflowY:forPDF?'visible':'auto'}}>
+      <div style={{flex:1,display:'flex'}}>
         <div style={{width:'33%',padding:'13px 14px',borderRight:'1px solid #e5e5e5',display:'flex',flexDirection:'column',gap:13,flexShrink:0}}>
           {p.summary&&<div><Sec title={lang==='az'?'Haqqımda':'About Me'}/><div style={{fontSize:9.5,color:'#444',lineHeight:1.65,marginTop:7}}>{p.summary}</div></div>}
           {education.length>0&&<div><Sec title={lang==='az'?'Təhsil':'Education'}/><div style={{display:'flex',flexDirection:'column',gap:7,marginTop:7}}>{education.map(edu=><div key={edu.id}><div style={{fontSize:10,fontWeight:700,color:'#1a1a2e',lineHeight:1.3}}>{edu.degree||edu.school}</div>{edu.school&&edu.degree&&<div style={{fontSize:9.5,color:'#555',fontStyle:'italic'}}>{edu.school}</div>}<div style={{fontSize:9,color:'#777'}}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div></div>)}</div></div>}
-          {skills.length>0&&<div><Sec title={lang==='az'?'Bacarıqlar':'Skills'}/><div style={{display:'flex',flexDirection:'column',gap:5,marginTop:7}}>{skills.map((s,i)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:7,fontSize:10}}><BulletDot color="#1a1a2e"/>{s}</div>)}</div></div>}
+          {skills.length>0&&<div><Sec title={lang==='az'?'Bacarıqlar':'Skills'}/><div style={{display:'flex',flexDirection:'column',gap:5,marginTop:7}}>{skills.map((s,i)=><Bul key={i} color="#1a1a2e" text={s}/>)}</div></div>}
           {languages.length>0&&<div><Sec title={lang==='az'?'Dillər':'Languages'}/><div style={{display:'flex',flexDirection:'column',gap:4,marginTop:7}}>{languages.map((l,i)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10}}><span>{l.name}</span>{l.level&&<span style={{color:'#777',fontSize:9}}>{l.level}</span>}</div>)}</div></div>}
           {trains.length>0&&<div><Sec title={lang==='az'?'Təlimlər':'Training'}/><div style={{display:'flex',flexDirection:'column',gap:6,marginTop:7}}>{trains.map((tr:any,i:number)=><div key={i}><div style={{fontSize:10,fontWeight:600,color:'#1a1a2e',lineHeight:1.3}}>{tr.name}</div><div style={{fontSize:9,color:'#777'}}>{tr.provider}{tr.year?' · '+tr.year:''}</div></div>)}</div></div>}
         </div>
@@ -296,7 +305,7 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
 
   return(
     <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#f8fafc',width:'100%',height:'100%',display:'flex',overflow:'hidden',fontSize:10}}>
-      <div style={{width:'29%',flexShrink:0,background:'#f0fdfa',borderRight:'1px solid #f1f5f9',display:'flex',flexDirection:'column',overflowY:forPDF?'visible':'auto'}}>
+      <div style={{width:'29%',flexShrink:0,background:'#f0fdfa',borderRight:'1px solid #f1f5f9',display:'flex',flexDirection:'column'}}>
         <div style={{position:'relative',width:'100%',paddingBottom:'100%',flexShrink:0}}>
           <div style={{position:'absolute',bottom:0,right:0,width:'86%',height:'86%',background:'#4f46e5',borderRadius:12,zIndex:0}}/>
           <div style={{position:'absolute',top:0,left:0,width:'86%',height:'86%',borderRadius:12,overflow:'hidden',border:'2.5px solid #fff',zIndex:1}}>
@@ -362,7 +371,7 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
           )}
         </div>
       </div>
-      <div style={{flex:1,overflowY:forPDF?'visible':'auto',background:'#fff'}}>
+      <div style={{flex:1,background:'#fff'}}>
         <div style={{padding:'14px 16px',display:'flex',flexDirection:'column',gap:16}}>
           {experience.length>0&&(
             <section>
@@ -448,9 +457,9 @@ export default function CVPreview({ data, template, lang, previewRef, forPDF }: 
   const renderTemplate = () => {
     switch (template) {
       case 'kompakt':   return <KompaktTemplate  data={data} lang={lang} forPDF={forPDF} />;
-      case 'modern':    return <ModernTemplate   data={data} lang={lang} forPDF={forPDF} />;
+      case 'modern':    return <ModernTemplate   data={data} lang={lang} />;
       case 'minimal':   return <MinimalTemplate  data={data} lang={lang} />;
-      case 'bold':      return <BoldTemplate     data={data} lang={lang} forPDF={forPDF} />;
+      case 'bold':      return <BoldTemplate     data={data} lang={lang} />;
       case 'elegant':   return <ElegantTemplate  data={data} lang={lang} forPDF={forPDF} />;
       case 'klassik':   return <KlassikTemplate  data={data} lang={lang} />;
       case 'designer':  return <DesignerTemplate data={data} lang={lang} forPDF={forPDF} />;
@@ -460,7 +469,7 @@ export default function CVPreview({ data, template, lang, previewRef, forPDF }: 
     }
   };
   return (
-    <div ref={previewRef} style={{ width: '100%', aspectRatio: '210/297', background: '#fff', borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
+    <div ref={previewRef} style={{ width: '100%', minHeight: 'calc(var(--preview-w, 100%) * 297 / 210)', background: '#fff', borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
       {renderTemplate()}
     </div>
   );

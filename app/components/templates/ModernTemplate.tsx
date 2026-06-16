@@ -14,7 +14,7 @@ function ContactSVG({ type }: { type: 'email'|'phone'|'pin'|'link' }) {
   return <svg {...s} viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>;
 }
 
-export default function ModernTemplate({ data, lang, forPDF }: { data: CVData; lang: 'az'|'en'; forPDF?: boolean }) {
+export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az'|'en' }) {
   const { personal:p, experience, education, skills, languages, additional } = data;
   const certs  = (data as any).certificates || [];
   const trains = (data as any).trainings    || [];
@@ -47,7 +47,7 @@ export default function ModernTemplate({ data, lang, forPDF }: { data: CVData; l
         </div>
       </div>
 
-      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, overflowY:forPDF?'visible':'auto', height:forPDF?'auto':'calc(100% - 120px)' }}>
+      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px' }}>
         {p.summary && (
           <div>
             <SecLabel>{lang==='az'?'Özəl':'Summary'}</SecLabel>

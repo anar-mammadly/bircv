@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --border: rgba(255,255,255,0.08);
+  --accent: #7C6EF8;
+  --accent-light: #a89ef8;
+  --text: #ffffff;
+  --muted: rgba(255,255,255,0.45);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Responsive helpers (override inline grid styles on small screens) ── */
+@media (max-width: 768px) {
+  .grid-resp-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .grid-resp-3 { grid-template-columns: 1fr !important; }
+  .grid-resp-2 { grid-template-columns: 1fr !important; }
+  .nav-shell   { padding: 0 1rem !important; }
+  .nav-links   { display: none !important; }
+  .hero-pad    { padding: 56px 18px 40px !important; }
+}
+@media (max-width: 480px) {
+  .grid-resp-4 { gap: 10px !important; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.6s ease forwards; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.9s linear infinite; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(124,110,248,0.15) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

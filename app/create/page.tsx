@@ -122,7 +122,16 @@ function CreatePageInner() {
     ].join('\n');
     document.head.appendChild(style);
 
+    // PDF fayl adı: "Ad-Soyad-bircv.az"
+    const fn = cvData.personal.firstName.trim();
+    const ln = cvData.personal.lastName.trim();
+    const prevTitle = document.title;
+    if (fn || ln) {
+      document.title = [fn, ln].filter(Boolean).join('-') + '-bircv.az';
+    }
+
     window.print();
+    document.title = prevTitle;
 
     document.body.removeChild(clone);
     const s = document.getElementById('__cv_print_style__');

@@ -30,6 +30,8 @@ interface CVContextType {
   setShowAuthModal: (v: boolean) => void;
   authMode: 'login' | 'register';
   setAuthMode: (m: 'login' | 'register') => void;
+  theme: 'dark' | 'light';
+  setTheme: (t: 'dark' | 'light') => void;
 }
 
 const CVContext = createContext<CVContextType | null>(null);
@@ -43,6 +45,18 @@ export function CVProvider({ children }: { children: ReactNode }) {
   useEffect(() => { setUserState(loadUser()); }, []);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
+  const [theme, setThemeState] = useState<'dark' | 'light'>('dark');
+  const setTheme = (t: 'dark' | 'light') => {
+    setThemeState(t);
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('bircv_theme', t);
+    }
+  };
+  useEffect(() => {
+    const saved = localStorage.getItem('bircv_theme') as 'dark'|'light'|null;
+    if (saved) { setThemeState(saved); document.documentElement.setAttribute('data-theme', saved); }
+  }, []);
 
   const setUser = (u: User | null) => { setUserState(u); saveUser(u); };
   const updatePersonal = (field: string, value: string) =>
@@ -56,6 +70,7 @@ export function CVProvider({ children }: { children: ReactNode }) {
       user, setUser,
       showAuthModal, setShowAuthModal,
       authMode, setAuthMode,
+      theme, setTheme,
     }}>
       {children}
     </CVContext.Provider>

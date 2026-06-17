@@ -62,3 +62,27 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+/* ── Light mode ──────────────────────────────────────────────────────────── */
+html[data-theme="light"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Re-invert: şablonlar, foto, svg rəsmlər öz rənglərini saxlasın */
+html[data-theme="light"] img,
+html[data-theme="light"] .cv-preview-wrap,
+html[data-theme="light"] .cv-preview-wrap * {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Print zamanı filter sıfırla — PDF həmişə düzgün çıxsın */
+@media print {
+  html, html[data-theme="light"] {
+    filter: none !important;
+  }
+  html[data-theme="light"] img,
+  html[data-theme="light"] .cv-preview-wrap,
+  html[data-theme="light"] .cv-preview-wrap * {
+    filter: none !important;
+  }
+}

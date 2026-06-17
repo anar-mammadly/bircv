@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
-
-type Entry = { code: string; expires: number };
-const store: Map<string, Entry> =
-  (globalThis as any).__OTP_STORE__ || ((globalThis as any).__OTP_STORE__ = new Map());
 
 const OTP_TTL_MS = 3 * 60 * 1000; // 3 dəqiqə
 
@@ -26,25 +23,18 @@ async function sendEmail(to: string, code: string): Promise<boolean> {
   `;
   const text = `BirCV təsdiq kodunuz: ${code}\nKod 3 dəqiqə etibarlıdır.`;
 
-  // ── Variant 1: Resend ───────────────────────────────────────────────────────
   if (process.env.RESEND_API_KEY) {
     try {
       const { Resend } = await import('resend');
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
-        from: process.env.RESEND_FROM || 'BirCV <noreply@yourdomain.com>',
-        to,
-        subject,
-        html,
+        from: process.env.RESEND_FROM || 'BirCV <onboarding@resend.dev>',
+        to, subject, html,
       });
       return true;
-    } catch (e) {
-      console.error('[otp] Resend error:', e);
-      return false;
-    }
+    } catch (e) { console.error('[otp] Resend error:', e); return false; }
   }
 
-  // ── Variant 2: SMTP (Gmail, vb.) ────────────────────────────────────────────
   if (process.env.SMTP_HOST && process.env.SMTP_USER) {
     try {
       const nodemailer = await import('nodemailer');
@@ -54,21 +44,11 @@ async function sendEmail(to: string, code: string): Promise<boolean> {
         secure: Number(process.env.SMTP_PORT) === 465,
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       });
-      await transporter.sendMail({
-        from: process.env.SMTP_FROM || process.env.SMTP_USER,
-        to,
-        subject,
-        html,
-        text,
-      });
+      await transporter.sendMail({ from: process.env.SMTP_FROM || process.env.SMTP_USER, to, subject, html, text });
       return true;
-    } catch (e) {
-      console.error('[otp] SMTP error:', e);
-      return false;
-    }
+    } catch (e) { console.error('[otp] SMTP error:', e); return false; }
   }
 
-  // ── Development: terminala yaz ──────────────────────────────────────────────
   console.log(`\n[OTP DEV] ${to} → KOD: ${code}\n`);
   return false;
 }
@@ -86,9 +66,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'valid email required' }, { status: 400 });
   }
 
+  // ── SEND ──────────────────────────────────────────────────────────────────
   if (action === 'send') {
     const newCode = genCode();
-    store.set(mail, { code: newCode, expires: Date.now() + OTP_TTL_MS });
+    const expiresAt = new Date(Date.now() + OTP_TTL_MS).toISOString();
+
+    // Supabase upsert (köhnə kodu əvəz et)
+    await supabaseAdmin.from('otp_codes').upsert({ email: mail, code: newCode, expires_at: expiresAt });
+
     const delivered = await sendEmail(mail, newCode);
     return NextResponse.json({
       ok: true,
@@ -98,17 +83,20 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // ── VERIFY ────────────────────────────────────────────────────────────────
   if (action === 'verify') {
-    const entry = store.get(mail);
+    const { data: entry } = await supabaseAdmin
+      .from('otp_codes').select('*').eq('email', mail).maybeSingle();
+
     if (!entry) return NextResponse.json({ ok: false, reason: 'no_code' }, { status: 400 });
-    if (Date.now() > entry.expires) {
-      store.delete(mail);
+    if (new Date(entry.expires_at).getTime() < Date.now()) {
+      await supabaseAdmin.from('otp_codes').delete().eq('email', mail);
       return NextResponse.json({ ok: false, reason: 'expired' }, { status: 400 });
     }
     if (String(code) !== entry.code) {
       return NextResponse.json({ ok: false, reason: 'mismatch' }, { status: 400 });
     }
-    store.delete(mail);
+    await supabaseAdmin.from('otp_codes').delete().eq('email', mail);
     return NextResponse.json({ ok: true });
   }
 

@@ -16,6 +16,23 @@ function saveUser(u: User | null) {
   u ? localStorage.setItem('bircv_user', JSON.stringify(u)) : localStorage.removeItem('bircv_user');
 }
 
+function loadCV(): CVData | null {
+  if (typeof window === 'undefined') return null;
+  try { const s = localStorage.getItem('bircv_data'); return s ? JSON.parse(s) : null; } catch { return null; }
+}
+function saveCV(d: CVData) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('bircv_data', JSON.stringify(d));
+  } catch {
+    // Quota aşılarsa (böyük foto) — fotosuz saxla ki, qalan data itməsin.
+    try {
+      const { photo, ...rest } = d.personal;
+      localStorage.setItem('bircv_data', JSON.stringify({ ...d, personal: rest }));
+    } catch {}
+  }
+}
+
 interface CVContextType {
   cvData: CVData;
   setCVData: (data: CVData | ((prev: CVData) => CVData)) => void;
@@ -43,6 +60,15 @@ export function CVProvider({ children }: { children: ReactNode }) {
   const [user, setUserState] = useState<User | null>(null);
 
   useEffect(() => { setUserState(loadUser()); }, []);
+  // İlk mount-da localStorage-dan yüklə (yalnız bir dəfə).
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    const saved = loadCV();
+    if (saved) setCVData(saved);
+    setHydrated(true);
+  }, []);
+  // Yalnız hydrate olduqdan sonra yaz — başlanğıc boş state köhnə datanı silməsin.
+  useEffect(() => { if (hydrated) saveCV(cvData); }, [cvData, hydrated]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
   const [theme, setThemeState] = useState<'dark' | 'light'>('dark');

@@ -1,36 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
 
-// In-memory user registry. NOTE: resets on restart and is per-instance.
-// Replace with a real database (Postgres, etc.) for production.
-type Row = { id: string; name: string; email: string; plan: string; createdAt: string };
-const users: Row[] =
-  (globalThis as any).__USERS__ || ((globalThis as any).__USERS__ = []);
-
 export async function GET(req: NextRequest) {
-  // Simple shared-secret gate for the admin list.
   const key = req.nextUrl.searchParams.get('key');
   if (process.env.ADMIN_KEY && key !== process.env.ADMIN_KEY) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
-  return NextResponse.json({ users });
-}
 
-export async function POST(req: NextRequest) {
-  let body: any;
-  try { body = await req.json(); } catch { return NextResponse.json({ error: 'bad body' }, { status: 400 }); }
-  const { id, name, email, plan } = body || {};
-  if (!email) return NextResponse.json({ error: 'email required' }, { status: 400 });
-  const mail = String(email).toLowerCase();
-  if (!users.some(u => u.email === mail)) {
-    users.push({
-      id: String(id || Date.now()),
-      name: name || mail.split('@')[0],
-      email: mail,
-      plan: plan || 'free',
-      createdAt: new Date().toISOString(),
-    });
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .select('id, name, email, plan, cv_count, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[users] fetch error:', error);
+    return NextResponse.json({ error: 'fetch failed' }, { status: 500 });
   }
-  return NextResponse.json({ ok: true, count: users.length });
+
+  const users = (data || []).map(u => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    plan: u.plan,
+    cvCount: u.cv_count,
+    createdAt: u.created_at,
+  }));
+
+  return NextResponse.json({ users, total: users.length });
 }

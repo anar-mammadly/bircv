@@ -68,6 +68,9 @@ export default function Navbar() {
                 {user.plan === 'premium' && (
                   <span style={{ marginLeft: 6, background: '#7C6EF8', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>PRO</span>
                 )}
+                {user.plan === 'admin' && (
+                  <span style={{ marginLeft: 6, background: '#059669', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>ADMIN</span>
+                )}
               </span>
               <button onClick={() => setUser(null)} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontSize: 12 }}>
                 {lang === 'az' ? 'Çıxış' : 'Logout'}

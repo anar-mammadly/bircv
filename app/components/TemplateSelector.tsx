@@ -9,11 +9,11 @@ const TEMPLATES: { id: TemplateId; name: string; premium: boolean; color: string
   { id: 'modern',   name: 'Modern',   premium: false, color: '#7C6EF8' },
   { id: 'minimal',  name: 'Minimal',  premium: false, color: '#6b7280' },
   { id: 'bold',     name: 'Bold',     premium: false, color: '#ca8a04' },
+  { id: 'designer', name: 'Designer', premium: false, color: '#6366f1' },
+  { id: 'header',   name: 'Header',   premium: false, color: '#0284c7' },
   { id: 'elegant',  name: 'Elegant',  premium: true,  color: '#92400e' },
   { id: 'klassik',  name: 'Klassik',  premium: true,  color: '#374151' },
-  { id: 'designer',  name: 'Designer',  premium: true,  color: '#6c63ff' },
-  { id: 'executive', name: 'Executive', premium: false, color: '#1e2a3a' },
-  { id: 'header',    name: 'Header',    premium: false, color: '#374151' },
+  { id: 'executive',name: 'Executive',premium: true,  color: '#1e2a3a' },
 ];
 
 function KompaktThumb() {
@@ -278,7 +278,7 @@ export default function TemplateSelector() {
   const [premiumModal, setPremiumModal] = React.useState(false);
 
   const handleSelect = (tpl: typeof TEMPLATES[0]) => {
-    if (tpl.premium && (!user || user.plan !== 'premium')) {
+    if (tpl.premium && (!user || (user.plan !== 'premium' && user.plan !== 'admin'))) {
       setSelectedTemplate(tpl.id); // preview göstər
       setPremiumModal(true);        // modal aç
       return;

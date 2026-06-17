@@ -4,12 +4,8 @@ import { CVProvider, useCVStore } from '@/app/store/cvStore';
 import Navbar from '@/app/components/Navbar';
 import AuthModal from '@/app/components/AuthModal';
 import ChatWidget from '@/app/components/ChatWidget';
+import { waLink, SUPPORT_EMAIL } from '@/lib/config';
 
-const WA_NUMBER = '994515600625'; // ← öz WhatsApp nömrənizi yazın
-
-function waLink(msg: string) {
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
-}
 
 function PricingInner() {
   const { lang } = useCVStore();
@@ -49,21 +45,21 @@ function PricingInner() {
 
   const oneTime = [
     {
-      icon: '🎯',
+      icon: 'consult',
       title: lang === 'az' ? 'HR Onlayn Konsultasiya' : 'HR Online Consultation',
       price: 20,
       desc: lang === 'az' ? 'Professional HR mütəxəssisi ilə 30 dəqiqəlik video görüş.' : '30-minute video call with an HR specialist.',
       wa: lang === 'az' ? 'Salam! HR Onlayn Konsultasiya sifariş etmək istəyirəm (20 AZN).' : 'Hello! I want to order HR Online Consultation (20 AZN).',
     },
     {
-      icon: '✍️',
+      icon: 'write',
       title: lang === 'az' ? 'Professional HR CV Yazımı' : 'Professional HR CV Writing',
       price: 15,
       desc: lang === 'az' ? 'HR mütəxəssisi CV-nizi sıfırdan yazır. 2 iş günü.' : 'An HR specialist writes your CV from scratch. 2 business days.',
       wa: lang === 'az' ? 'Salam! Professional HR CV Yazımı sifariş etmək istəyirəm (15 AZN).' : 'Hello! I want to order Professional HR CV Writing (15 AZN).',
     },
     {
-      icon: '📄',
+      icon: 'doc',
       title: lang === 'az' ? 'Əlavə CV' : 'Extra CV',
       price: 5,
       desc: lang === 'az' ? 'CV hazırlamaq (pulsuz plan üçün).' : 'Create an extra CV (for free plan).',
@@ -133,7 +129,11 @@ function PricingInner() {
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
           {oneTime.map(svc => (
             <div key={svc.title} style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.08)', borderRadius:16, padding:'24px 20px' }}>
-              <div style={{ fontSize:32, marginBottom:12 }}>{svc.icon}</div>
+              <div style={{ width:46, height:46, borderRadius:12, background:'rgba(124,110,248,0.12)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:14 }}>
+                {svc.icon === 'consult' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a89ef8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
+                {svc.icon === 'write' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a89ef8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>}
+                {svc.icon === 'doc' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a89ef8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>}
+              </div>
               <h3 style={{ fontSize:15, fontWeight:700, color:'#fff', marginBottom:8 }}>{svc.title}</h3>
               <p style={{ fontSize:12.5, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:16 }}>{svc.desc}</p>
               <div style={{ fontSize:24, fontWeight:800, color:'#7C6EF8', marginBottom:12 }}>{svc.price} AZN</div>
@@ -153,7 +153,7 @@ function PricingInner() {
           <p style={{ color:'rgba(255,255,255,0.55)', fontSize:14, marginBottom:4 }}>
             {lang === 'az' ? 'Suallarınız üçün bizimlə əlaqə saxlayın' : 'Contact us for any questions'}
           </p>
-          <a href="mailto:support@bircv.az" style={{ color:'#7C6EF8', textDecoration:'none', fontSize:15, fontWeight:700 }}>support@bircv.az</a>
+          <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color:'#7C6EF8', textDecoration:'none', fontSize:15, fontWeight:700 }}>{SUPPORT_EMAIL}</a>
         </div>
       </div>
     </div>

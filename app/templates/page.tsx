@@ -343,14 +343,14 @@ function TemplatesInner() {
         <div style={{ textAlign:'center', marginBottom:56 }}>
           <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(124,110,248,0.1)', border:'1px solid rgba(124,110,248,0.25)', borderRadius:20, padding:'6px 16px', marginBottom:20 }}>
             <div style={{ width:6, height:6, borderRadius:'50%', background:'#7C6EF8' }}/>
-            <span style={{ fontSize:12, color:'#a89ef8', fontWeight:600, fontFamily:'Inter,sans-serif' }}>
+            <span style={{ fontSize:12, color:'#a89ef8', fontWeight:600, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>
               {lang==='az' ? '9 Peşəkar Şablon' : '9 Professional Templates'}
             </span>
           </div>
-          <h1 style={{ fontSize:44, fontWeight:900, color:'#fff', margin:'0 0 14px', letterSpacing:-1, fontFamily:'Inter,sans-serif', lineHeight:1.1 }}>
+          <h1 style={{ fontSize:44, fontWeight:900, color:'#fff', margin:'0 0 14px', letterSpacing:-1, fontFamily:'Plus Jakarta Sans,Inter,sans-serif', lineHeight:1.1 }}>
             {lang==='az' ? 'CV Şablonları' : 'CV Templates'}
           </h1>
-          <p style={{ fontSize:16, color:'rgba(255,255,255,0.4)', fontFamily:'Inter,sans-serif', maxWidth:480, margin:'0 auto' }}>
+          <p style={{ fontSize:16, color:'rgba(255,255,255,0.4)', fontFamily:'Plus Jakarta Sans,Inter,sans-serif', maxWidth:480, margin:'0 auto' }}>
             {lang==='az'
               ? 'İşəgötürən diqqətini çəkəcək peşəkar şablon seç'
               : 'Choose a professional template that captures recruiter attention'}
@@ -372,7 +372,7 @@ function TemplatesInner() {
                 <div style={{ height:200, position:'relative', overflow:'hidden', background:'#f8f9fa' }}>
                   <div style={{ position:'absolute', inset:0 }}><Preview /></div>
                   {tpl.premium && (
-                    <div style={{ position:'absolute', top:10, right:10, background:'rgba(17,17,24,0.85)', backdropFilter:'blur(8px)', border:'1px solid rgba(255,214,10,0.4)', color:'#FFD60A', fontSize:9.5, fontWeight:700, padding:'3px 10px', borderRadius:6, zIndex:10, fontFamily:'Inter,sans-serif', letterSpacing:0.5 }}>
+                    <div style={{ position:'absolute', top:10, right:10, background:'rgba(17,17,24,0.85)', backdropFilter:'blur(8px)', border:'1px solid rgba(255,214,10,0.4)', color:'#FFD60A', fontSize:9.5, fontWeight:700, padding:'3px 10px', borderRadius:6, zIndex:10, fontFamily:'Plus Jakarta Sans,Inter,sans-serif', letterSpacing:0.5 }}>
                       PRO
                     </div>
                   )}
@@ -382,12 +382,12 @@ function TemplatesInner() {
                 {/* Info */}
                 <div style={{ padding:'14px 16px' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:4 }}>
-                    <h3 style={{ fontSize:15, fontWeight:700, color:'#fff', margin:0, fontFamily:'Inter,sans-serif' }}>{tpl.name}</h3>
-                    <span style={{ fontSize:10.5, color: tpl.premium ? '#FFD60A' : '#34d399', fontWeight:600, fontFamily:'Inter,sans-serif' }}>
+                    <h3 style={{ fontSize:15, fontWeight:700, color:'#fff', margin:0, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>{tpl.name}</h3>
+                    <span style={{ fontSize:10.5, color: tpl.premium ? '#FFD60A' : '#34d399', fontWeight:600, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>
                       {tpl.premium ? 'Premium' : (lang==='az' ? 'Pulsuz' : 'Free')}
                     </span>
                   </div>
-                  <p style={{ fontSize:12, color:'rgba(255,255,255,0.38)', margin:'0 0 14px', lineHeight:1.5, fontFamily:'Inter,sans-serif' }}>{tpl.desc}</p>
+                  <p style={{ fontSize:12, color:'rgba(255,255,255,0.38)', margin:'0 0 14px', lineHeight:1.5, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>{tpl.desc}</p>
                   <Link
                     href={`/create?template=${tpl.id}`}
                     style={{
@@ -396,7 +396,7 @@ function TemplatesInner() {
                       border:`1px solid ${tpl.premium ? 'rgba(255,214,10,0.25)' : tpl.color+'35'}`,
                       color: tpl.premium ? '#FFD60A' : tpl.color,
                       textDecoration:'none', borderRadius:9, padding:'9px',
-                      fontSize:12.5, fontWeight:600, fontFamily:'Inter,sans-serif',
+                      fontSize:12.5, fontWeight:600, fontFamily:'Plus Jakarta Sans,Inter,sans-serif',
                       letterSpacing:0.1,
                     }}
                   >
@@ -413,18 +413,18 @@ function TemplatesInner() {
         {/* Bottom CTA */}
         <div style={{ marginTop:56, background:'rgba(124,110,248,0.06)', border:'1px solid rgba(124,110,248,0.15)', borderRadius:20, padding:'36px 32px', display:'flex', justifyContent:'space-between', alignItems:'center', gap:24, flexWrap:'wrap' }}>
           <div>
-            <h3 style={{ fontSize:20, fontWeight:800, color:'#fff', margin:'0 0 6px', fontFamily:'Inter,sans-serif' }}>
+            <h3 style={{ fontSize:20, fontWeight:800, color:'#fff', margin:'0 0 6px', fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>
               {lang==='az' ? 'Premium şablonlar sizin üçün' : 'Premium templates for you'}
             </h3>
-            <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', margin:0, fontFamily:'Inter,sans-serif' }}>
+            <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', margin:0, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>
               {lang==='az' ? 'Elegant, Klassik, Executive — aylıq 20 AZN ilə' : 'Elegant, Klassik, Executive — 20 AZN/month'}
             </p>
           </div>
           <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-            <Link href="/create" style={{ background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.7)', textDecoration:'none', borderRadius:10, padding:'11px 24px', fontSize:13, fontWeight:600, fontFamily:'Inter,sans-serif' }}>
+            <Link href="/create" style={{ background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', color:'rgba(255,255,255,0.7)', textDecoration:'none', borderRadius:10, padding:'11px 24px', fontSize:13, fontWeight:600, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>
               {lang==='az' ? 'CV Yarat' : 'Create CV'}
             </Link>
-            <Link href="/pricing" style={{ background:'#7C6EF8', color:'#fff', textDecoration:'none', borderRadius:10, padding:'11px 24px', fontSize:13, fontWeight:700, fontFamily:'Inter,sans-serif' }}>
+            <Link href="/pricing" style={{ background:'#7C6EF8', color:'#fff', textDecoration:'none', borderRadius:10, padding:'11px 24px', fontSize:13, fontWeight:700, fontFamily:'Plus Jakarta Sans,Inter,sans-serif' }}>
               {lang==='az' ? 'Premium Al' : 'Get Premium'}
             </Link>
           </div>

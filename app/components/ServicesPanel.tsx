@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useCVStore } from '@/app/store/cvStore';
+import { waLink, SUPPORT_EMAIL } from '@/lib/config';
 import { Crown, Target, PenLine, FileText, Sparkles, MessageCircle, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -86,7 +87,7 @@ export default function ServicesPanel() {
               <span style={{ color:'#fff', fontSize:22, fontWeight:900 }}>{modal.price} AZN</span>
             </div>
             <a
-              href={`https://wa.me/994515600625?text=${encodeURIComponent(`${modal.title} xidmətini almaq istəyirəm`)}`}
+              href={waLink(`${modal.title} xidmətini almaq istəyirəm`)}
               target="_blank"
               rel="noopener noreferrer"
               style={{ display:'block', background:modal.color, color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', textAlign:'center', marginBottom:10 }}
@@ -140,7 +141,7 @@ export default function ServicesPanel() {
         <div style={{ marginTop:14, padding:'12px', background:'rgba(124,110,248,0.07)', borderRadius:10, border:'1px dashed rgba(124,110,248,0.25)' }}>
           <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)', margin:0, textAlign:'center' }}>
             <MessageCircle size={13} style={{ display:'inline', verticalAlign:'-2px', marginRight:4 }} />
-            {lang==='az' ? 'Suallarınız üçün: support@bircv.az' : 'Questions? support@bircv.az'}
+            {lang==='az' ? `Suallarınız üçün: ${SUPPORT_EMAIL}` : `Questions? ${SUPPORT_EMAIL}`}
           </p>
         </div>
       </div>

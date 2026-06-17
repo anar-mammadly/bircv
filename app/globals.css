@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +18,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   margin: 0;
 }
 
@@ -64,25 +64,31 @@ body {
 }
 
 /* ── Light mode ──────────────────────────────────────────────────────────── */
+/* Bütün səhifəni invert edirik (tünd → açıq). */
 html[data-theme="light"] {
   filter: invert(1) hue-rotate(180deg);
+  background: #fff;
 }
 
-/* Re-invert: şablonlar, foto, svg rəsmlər öz rənglərini saxlasın */
-html[data-theme="light"] img,
-html[data-theme="light"] .cv-preview-wrap,
-html[data-theme="light"] .cv-preview-wrap * {
+/* CV preview-u BÜTÖV blok kimi geri invert edirik — daxili elementlərə
+   ayrı-ayrı filtr tətbiq ETMİRİK ki, rənglər iki dəfə invert olub pozulmasın.
+   isolation:isolate + tək filter konteyneri = təmiz nəticə. */
+html[data-theme="light"] .cv-preview-wrap {
+  filter: invert(1) hue-rotate(180deg);
+  isolation: isolate;
+}
+
+/* Şəkillər (foto, real img) həmişə öz rəngində qalsın — onlar ayrıca geri invert olunur.
+   Amma yalnız CV-dən KƏNAR şəkillər (CV onsuz da yuxarıda geri invert olunub). */
+html[data-theme="light"] img:not(.cv-preview-wrap img) {
   filter: invert(1) hue-rotate(180deg);
 }
 
-/* Print zamanı filter sıfırla — PDF həmişə düzgün çıxsın */
+/* Print zamanı filtr tamamilə sıfırla — PDF həmişə əsl rəngdə çıxsın */
 @media print {
-  html, html[data-theme="light"] {
-    filter: none !important;
-  }
-  html[data-theme="light"] img,
+  html[data-theme="light"],
   html[data-theme="light"] .cv-preview-wrap,
-  html[data-theme="light"] .cv-preview-wrap * {
+  html[data-theme="light"] img {
     filter: none !important;
   }
 }

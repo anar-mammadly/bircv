@@ -456,16 +456,16 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
 export default function CVPreview({ data, template, lang, previewRef, forPDF }: CVPreviewProps) {
   const renderTemplate = () => {
     switch (template) {
-      case 'kompakt':   return <KompaktTemplate  data={data} lang={lang} forPDF={forPDF} />;
+      case 'kompakt':   return <KompaktTemplate  data={data} lang={lang} />;
       case 'modern':    return <ModernTemplate   data={data} lang={lang} />;
       case 'minimal':   return <MinimalTemplate  data={data} lang={lang} />;
       case 'bold':      return <BoldTemplate     data={data} lang={lang} />;
-      case 'elegant':   return <ElegantTemplate  data={data} lang={lang} forPDF={forPDF} />;
+      case 'elegant':   return <ElegantTemplate  data={data} lang={lang} />;
       case 'klassik':   return <KlassikTemplate  data={data} lang={lang} />;
-      case 'designer':  return <DesignerTemplate data={data} lang={lang} forPDF={forPDF} />;
-      case 'executive': return <ExecutiveTemplate data={data} lang={lang} forPDF={forPDF} />;
-      case 'header':    return <HeaderTemplate   data={data} lang={lang} forPDF={forPDF} />;
-      default:          return <KompaktTemplate  data={data} lang={lang} forPDF={forPDF} />;
+      case 'designer':  return <DesignerTemplate data={data} lang={lang} />;
+      case 'executive': return <ExecutiveTemplate data={data} lang={lang} />;
+      case 'header':    return <HeaderTemplate   data={data} lang={lang} />;
+      default:          return <KompaktTemplate  data={data} lang={lang} />;
     }
   };
   return (

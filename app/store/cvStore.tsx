@@ -1,20 +1,20 @@
 'use client';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { CVData, TemplateId, AppLanguage, User } from '@/app/types/cv';
 
 const defaultCV: CVData = {
-  personal: {
-    firstName: '', lastName: '', email: '', phone: '',
-    city: '', country: '', jobTitle: '', photo: '', summary: '', linkedin: ''
-  },
-  experience: [],
-  education: [],
-  skills: [],
-  languages: [],
-  certificates: [],
-  trainings: [],
-  additional: ''
+  personal: { firstName:'', lastName:'', email:'', phone:'', city:'', country:'', jobTitle:'', photo:'', summary:'', linkedin:'' },
+  experience: [], education: [], skills: [], languages: [], certificates: [], trainings: [], additional: ''
 };
+
+function loadUser(): User | null {
+  if (typeof window === 'undefined') return null;
+  try { const s = localStorage.getItem('bircv_user'); return s ? JSON.parse(s) : null; } catch { return null; }
+}
+function saveUser(u: User | null) {
+  if (typeof window === 'undefined') return;
+  u ? localStorage.setItem('bircv_user', JSON.stringify(u)) : localStorage.removeItem('bircv_user');
+}
 
 interface CVContextType {
   cvData: CVData;
@@ -38,13 +38,15 @@ export function CVProvider({ children }: { children: ReactNode }) {
   const [cvData, setCVData] = useState<CVData>(defaultCV);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('kompakt');
   const [lang, setLang] = useState<AppLanguage>('az');
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(null);
+
+  useEffect(() => { setUserState(loadUser()); }, []);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
 
-  const updatePersonal = (field: string, value: string) => {
+  const setUser = (u: User | null) => { setUserState(u); saveUser(u); };
+  const updatePersonal = (field: string, value: string) =>
     setCVData(prev => ({ ...prev, personal: { ...prev.personal, [field]: value } }));
-  };
 
   return (
     <CVContext.Provider value={{
@@ -53,7 +55,7 @@ export function CVProvider({ children }: { children: ReactNode }) {
       lang, setLang,
       user, setUser,
       showAuthModal, setShowAuthModal,
-      authMode, setAuthMode
+      authMode, setAuthMode,
     }}>
       {children}
     </CVContext.Provider>

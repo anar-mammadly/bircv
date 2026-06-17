@@ -469,7 +469,7 @@ export default function CVPreview({ data, template, lang, previewRef, forPDF }: 
     }
   };
   return (
-    <div ref={previewRef} style={{ width: '100%', minHeight: 'calc(var(--preview-w, 100%) * 297 / 210)', background: '#fff', borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
+    <div ref={previewRef} style={{ width: '100%', aspectRatio: '210/297', background: '#fff', borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
       {renderTemplate()}
     </div>
   );

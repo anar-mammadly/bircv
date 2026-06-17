@@ -59,6 +59,7 @@ function CreatePageInner() {
   const previewRef = useRef<HTMLDivElement>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const [demoActive, setDemoActive] = useState(false);
   const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
   const [isMobile, setIsMobile] = useState(false);
@@ -79,10 +80,8 @@ function CreatePageInner() {
 
   const handleDownload = () => {
     if (!user) { setAuthMode('register'); setShowAuthModal(true); return; }
-    if (user.plan === 'free' && user.cvCount >= 1) {
-      alert(lang === 'az'
-        ? 'Pulsuz plan yalnız 1 CV yükləməyə icazə verir. Əlavə CV üçün Premium-a keçin.'
-        : 'The free plan allows only 1 CV download. Upgrade to Premium for more.');
+    if (user.plan !== 'admin' && user.plan === 'free' && user.cvCount >= 2) {
+      setShowLimitModal(true);
       return;
     }
 
@@ -114,7 +113,7 @@ function CreatePageInner() {
     style.textContent = [
       '@media print {',
       '  @page { size:210mm 297mm; margin:0; }',
-      '  html, body { width:210mm!important; margin:0!important; padding:0!important; }',
+      '  html, body { width:210mm!important; height:297mm!important; overflow:hidden!important; margin:0!important; padding:0!important; }',
       '  body > *:not(#__cv_print_root__) { display:none!important; }',
       '  #__cv_print_root__ { display:block!important; position:absolute!important; top:0!important; left:0!important; }',
       '  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }',
@@ -129,7 +128,16 @@ function CreatePageInner() {
     const s = document.getElementById('__cv_print_style__');
     if (s) s.remove();
 
-    setUser({ ...user, cvCount: user.cvCount + 1 });
+    // DB-də CV sayını artır
+    fetch('/api/cv-download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user.id }),
+    })
+      .then(r => r.json())
+      .then(data => { if (data.ok) setUser({ ...user, cvCount: data.cvCount }); })
+      .catch(() => setUser({ ...user, cvCount: user.cvCount + 1 }));
+
     setPdfSuccess(true);
     setTimeout(() => setPdfSuccess(false), 2500);
   }
@@ -216,6 +224,33 @@ function CreatePageInner() {
     </div>
   );
 
+  // ── Limit modal ──────────────────────────────────────────────────────────
+  const limitModal = showLimitModal && (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'0 16px' }}>
+      <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, padding:32, maxWidth:400, width:'100%', textAlign:'center' }}>
+        <div style={{ width:56, height:56, borderRadius:'50%', background:'rgba(124,110,248,0.15)', border:'2px solid rgba(124,110,248,0.3)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C6EF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/>
+          </svg>
+        </div>
+        <h2 style={{ color:'#fff', fontSize:20, fontWeight:800, margin:'0 0 10px' }}>
+          {lang==='az' ? 'CV limitinə çatdınız' : 'CV limit reached'}
+        </h2>
+        <p style={{ color:'rgba(255,255,255,0.55)', fontSize:14, lineHeight:1.6, margin:'0 0 24px' }}>
+          {lang==='az'
+            ? 'Pulsuz planda 2 CV yükləmək mümkündür. Limitsiz CV üçün Premium plana keçin.'
+            : 'Free plan allows 2 CV downloads. Upgrade to Premium for unlimited CVs.'}
+        </p>
+        <a href="/pricing" style={{ display:'block', background:'#7C6EF8', color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', marginBottom:12 }}>
+          {lang==='az' ? '✨ Premium-a keç' : '✨ Upgrade to Premium'}
+        </a>
+        <button onClick={()=>setShowLimitModal(false)} style={{ background:'transparent', border:'1px solid rgba(255,255,255,0.15)', color:'rgba(255,255,255,0.5)', borderRadius:12, padding:'11px 0', fontSize:14, cursor:'pointer', width:'100%' }}>
+          {lang==='az' ? 'Bağla' : 'Close'}
+        </button>
+      </div>
+    </div>
+  );
+
   // ── Mobile layout ─────────────────────────────────────────────────────────
   if (isMobile) {
     return (
@@ -245,6 +280,7 @@ function CreatePageInner() {
       <Navbar />
       <AuthModal />
       <ChatWidget />
+      {limitModal}
       <div style={{
         maxWidth: 1440, margin: '0 auto', padding: '24px 20px',
         display: 'grid',

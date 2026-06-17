@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useCVStore } from '@/app/store/cvStore';
 
 export default function Navbar() {
-  const { lang, setLang, user, setShowAuthModal, setAuthMode } = useCVStore();
+  const { lang, setLang, user, setUser, setShowAuthModal, setAuthMode } = useCVStore();
 
   return (
     <nav className="nav-shell" style={{
@@ -59,6 +59,9 @@ export default function Navbar() {
                   <span style={{ marginLeft: 6, background: '#7C6EF8', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>PRO</span>
                 )}
               </span>
+              <button onClick={() => setUser(null)} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontSize: 12 }}>
+                {lang === 'az' ? 'Çıxış' : 'Logout'}
+              </button>
             </div>
           ) : (
             <div style={{ display: 'flex', gap: 10 }}>

@@ -7,6 +7,12 @@
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
+	"vars": {
+		"NEXT_PUBLIC_SUPABASE_URL": "https://pexejsrgdvceznsljkjh.supabase.co",
+		"NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBleGVqc3JnZHZjZXpuc2xqa2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2ODU0NzgsImV4cCI6MjA5NzI2MTQ3OH0.SEPAlgmRxzhpm0X1iT2RYjQPXmp_ArF47-up1Zeuf7E",
+		"RESEND_FROM": "BirCV <no-reply@bircv.az>",
+		"ADMIN_EMAIL": "support@bircv.az"
+	},
 	"assets": {
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"

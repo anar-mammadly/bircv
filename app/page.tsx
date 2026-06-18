@@ -114,7 +114,7 @@ function LandingInner() {
             {lang === 'az' ? 'İstifadə Şərtləri' : 'Terms of Service'}
           </Link>
         </div>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: 0 }}>© 2025 BirCV · bircv.az · support@bircv.az</p>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: 0 }}>© 2026 BirCV · bircv.az · support@bircv.az</p>
       </footer>
     </div>
   );

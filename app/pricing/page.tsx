@@ -126,7 +126,7 @@ function PricingInner() {
           {lang === 'az' ? 'Bir dəfəlik ödənişlər' : 'One-time payments'}
         </p>
 
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
+        <div className="grid-resp-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
           {oneTime.map(svc => (
             <div key={svc.title} style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.08)', borderRadius:16, padding:'24px 20px' }}>
               <div style={{ width:46, height:46, borderRadius:12, background:'rgba(124,110,248,0.12)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:14 }}>

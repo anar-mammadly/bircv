@@ -8,7 +8,7 @@ import { User, Briefcase, GraduationCap, Zap, Globe, Award, BookOpen, Pin, Chevr
 const MONTH_LABELS_AZ = ['Yanvar','Fevral','Mart','Aprel','May','İyun','İyul','Avqust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
 const MONTH_LABELS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const LEVELS = ['A1','A2','B1','B2','C1','C2','Ana dili','Native'];
-const YEARS = Array.from({ length: 40 }, (_, i) => String(2025 - i));
+const YEARS = Array.from({ length: 40 }, (_, i) => String(new Date().getFullYear() - i));
 
 const inp: React.CSSProperties = {
   width: '100%', background: 'rgba(255,255,255,0.04)',

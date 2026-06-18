@@ -36,7 +36,7 @@ function LandingInner() {
         </h1>
 
         <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.55)', maxWidth: 520, margin: '0 auto 40px', lineHeight: 1.7 }}>
-          {lang === 'az' ? 'AI texnologiyası ilə işçi təcrübənizi peşəkar şəkildə yazın, anında PDF yükləyin.' : 'Use AI to professionally write your work experience and download a PDF instantly.'}
+          {lang === 'az' ? 'AI dəstəyi ilə təcrübənizi və bacarıqlarınızı peşəkar CV formatında təqdim edin, hazır CV-nizi isə dərhal PDF olaraq yükləyin.' : 'Use AI to professionally write your work experience and download a PDF instantly.'}
         </p>
 
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -86,8 +86,8 @@ function LandingInner() {
           <div className="grid-resp-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
             {[
               { name: lang === 'az' ? 'Pulsuz' : 'Free', price: '0', showPrice: true, features: ['1 CV', lang === 'az' ? '3 pulsuz şablon' : '3 free templates', 'PDF yüklə'], color: '#374151', highlight: false },
-              { name: 'Premium', price: 'Premium', showPrice: false, features: [lang === 'az' ? 'Sınırsız CV' : 'Unlimited CVs', lang === 'az' ? 'Bütün şablonlar' : 'All templates', 'HR Dəstəyi'], color: '#7C6EF8', highlight: true },
-              { name: 'HR', price: 'Premium', showPrice: false, features: [lang === 'az' ? 'HR CV yazımı' : 'HR CV writing', lang === 'az' ? 'Onlayn konsultasiya' : 'Online consultation', lang === 'az' ? 'Ekspert baxışı' : 'Expert review'], color: '#059669', highlight: false },
+              { name: 'Premium', price: '20', showPrice: true, features: [lang === 'az' ? 'Limitsiz CV' : 'Unlimited CVs', lang === 'az' ? 'Bütün şablonlar' : 'All templates', 'HR Dəstəyi'], color: '#7C6EF8', highlight: true },
+              { name: 'HR', price: lang === 'az' ? 'Təklif al' : 'Get a quote', showPrice: false, features: [lang === 'az' ? 'CV Yazılması' : 'CV writing', lang === 'az' ? 'Onlayn konsultasiya' : 'Online consultation', lang === 'az' ? 'Ekspert rəyi' : 'Expert review'], color: '#059669', highlight: false },
             ].map(plan => (
               <div key={plan.name} style={{ background: plan.highlight ? 'rgba(124,110,248,0.08)' : 'rgba(255,255,255,0.03)', border: `1px solid ${plan.highlight ? 'rgba(124,110,248,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 16, padding: '28px 20px', position: 'relative' }}>
                 {plan.highlight && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#7C6EF8', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 12px', borderRadius: 20 }}>{lang === 'az' ? 'Tövsiyə edilir' : 'Recommended'}</div>}
@@ -105,6 +105,14 @@ function LandingInner() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginBottom: 8 }}>
           <span style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>bir</span>
           <span style={{ fontSize: 18, fontWeight: 800, color: '#7C6EF8' }}>CV</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 10 }}>
+          <Link href="/privacy" style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
+            {lang === 'az' ? 'Gizlilik Siyasəti' : 'Privacy Policy'}
+          </Link>
+          <Link href="/terms" style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
+            {lang === 'az' ? 'İstifadə Şərtləri' : 'Terms of Service'}
+          </Link>
         </div>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: 0 }}>© 2025 BirCV · bircv.az · support@bircv.az</p>
       </footer>

@@ -88,36 +88,26 @@ function CreatePageInner() {
     const el = previewRef.current;
     if (!el) return;
 
-    // Preview-un cari render ölçüsünü al
-    const rect = el.getBoundingClientRect();
-    const W = Math.round(rect.width);
-    const H = Math.round(rect.height);
-
-    // 210mm @ 96dpi = 793.7px. Klonu bu ölçüyə çatdırmaq üçün scale hesabla.
-    // transform: scale() layout dəyişmir — klon W×H piksel qalır, vizual A4 olur.
-    // Buna görə overflow/layout problemi yoxdur, page 2 yoxdur.
-    const scale = (793.7 / W).toFixed(6);
-
+    // CVPreview artıq previewRef daxilində nəzarət olunan səhifə sayı qədər,
+    // hər biri dəqiq 210mm×297mm ölçüdə, overflow:hidden olan səhifə qutuları render edir
+    // (ekranda göstərilən "vərəq-vərəq" önizləmə ilə tam eyni sayda). Çapda brauzerin öz
+    // pagination alqoritminə güvənmirik — bu, ekranla çap nəticəsi arasında uyğunsuzluq
+    // (məs. boş 2-ci səhifə) yaranmasının qarşısını tam kəsir.
     const clone = el.cloneNode(true) as HTMLElement;
     clone.id = '__cv_print_root__';
-    clone.style.cssText = [
-      'position:absolute', 'top:0', 'left:0',
-      `width:${W}px`, `height:${H}px`,
-      'overflow:hidden', 'border-radius:0', 'box-shadow:none',
-      `transform:scale(${scale})`, 'transform-origin:top left',
-    ].join(';');
+    clone.style.cssText = 'position:absolute;top:0;left:0;visibility:visible;';
     document.body.appendChild(clone);
 
     const style = document.createElement('style');
     style.id = '__cv_print_style__';
     style.textContent = [
       '@media print {',
-      '  @page { size:210mm 297mm; margin:0; }',
-      '  html, body { width:210mm!important; height:297mm!important; overflow:hidden!important; margin:0!important; padding:0!important; }',
+      '  @page { size:A4; margin:0; }',
+      '  html, body { margin:0!important; padding:0!important; }',
       '  body > *:not(#__cv_print_root__) { display:none!important; }',
-      '  #__cv_print_root__ { display:block!important; position:absolute!important; top:0!important; left:0!important; }',
+      '  #__cv_print_root__ { display:block!important; position:absolute!important; top:0!important; left:0!important; visibility:visible!important; }',
+      '  #__cv_print_root__ .__print_page { break-inside:avoid; }',
       '  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }',
-      '  @page { break-inside:avoid; }',
       '}',
     ].join('\n');
     document.head.appendChild(style);

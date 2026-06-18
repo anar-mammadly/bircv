@@ -2,7 +2,7 @@
 import React from 'react';
 import { useCVStore } from '@/app/store/cvStore';
 import { TemplateId } from '@/app/types/cv';
-import { Crown } from 'lucide-react';
+import { Crown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const TEMPLATES: { id: TemplateId; name: string; premium: boolean; color: string }[] = [
   { id: 'kompakt',  name: 'Kompakt',  premium: false, color: '#4f46e5' },
@@ -276,6 +276,30 @@ export default function TemplateSelector() {
   const { selectedTemplate, setSelectedTemplate, user } = useCVStore();
 
   const [premiumModal, setPremiumModal] = React.useState(false);
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = React.useState(false);
+  const [canScrollRight, setCanScrollRight] = React.useState(false);
+
+  const updateScrollState = React.useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }, []);
+
+  React.useEffect(() => {
+    updateScrollState();
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    const ro = new ResizeObserver(updateScrollState);
+    ro.observe(el);
+    return () => { el.removeEventListener('scroll', updateScrollState); ro.disconnect(); };
+  }, [updateScrollState]);
+
+  const scrollByCards = (dir: 1 | -1) => {
+    scrollerRef.current?.scrollBy({ left: dir * 220, behavior: 'smooth' });
+  };
 
   const handleSelect = (tpl: typeof TEMPLATES[0]) => {
     if (tpl.premium && (!user || (user.plan !== 'premium' && user.plan !== 'admin'))) {
@@ -288,7 +312,36 @@ export default function TemplateSelector() {
 
   return (
     <>
-    <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '4px 0 12px' }} className="scrollbar-hide">
+    <div style={{ position: 'relative' }}>
+      {canScrollLeft && (
+        <button
+          aria-label="previous templates"
+          onClick={() => scrollByCards(-1)}
+          style={{
+            position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 2,
+            width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(17,17,24,0.85)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+          }}
+        >
+          <ChevronLeft size={16} />
+        </button>
+      )}
+      {canScrollRight && (
+        <button
+          aria-label="next templates"
+          onClick={() => scrollByCards(1)}
+          style={{
+            position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', zIndex: 2,
+            width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(17,17,24,0.85)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+          }}
+        >
+          <ChevronRight size={16} />
+        </button>
+      )}
+    <div ref={scrollerRef} style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '4px 0 12px' }} className="scrollbar-hide">
       {TEMPLATES.map(tpl => {
         const Thumb = THUMBS[tpl.id];
         const active = selectedTemplate === tpl.id;
@@ -331,6 +384,7 @@ export default function TemplateSelector() {
           </button>
         );
       })}
+    </div>
     </div>
 
     {/* Premium Modal */}

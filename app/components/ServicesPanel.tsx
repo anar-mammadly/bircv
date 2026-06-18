@@ -80,14 +80,18 @@ export default function ServicesPanel() {
             <p style={{ color:'rgba(255,255,255,0.5)', fontSize:13, lineHeight:1.6, margin:'0 0 24px' }}>
               {lang==='az' ? modal.desc : modal.descEn}
             </p>
-            <div style={{ background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'14px 16px', marginBottom:24, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-              <span style={{ color:'rgba(255,255,255,0.5)', fontSize:13 }}>
-                {lang==='az' ? modal.badge : modal.badgeEn}
-              </span>
-              <span style={{ color:'#fff', fontSize:22, fontWeight:900 }}>{modal.price} AZN</span>
-            </div>
+            {modal.id !== 'hr_consult' && (
+              <div style={{ background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'14px 16px', marginBottom:24, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <span style={{ color:'rgba(255,255,255,0.5)', fontSize:13 }}>
+                  {lang==='az' ? modal.badge : modal.badgeEn}
+                </span>
+                <span style={{ color:'#fff', fontSize:22, fontWeight:900 }}>{modal.price} AZN</span>
+              </div>
+            )}
             <a
-              href={waLink(`${modal.title} xidmətini almaq istəyirəm`)}
+              href={waLink(modal.id === 'hr_consult'
+                ? `${modal.title} xidməti haqqında sorğum var`
+                : `${modal.title} xidmətini almaq istəyirəm`)}
               target="_blank"
               rel="noopener noreferrer"
               style={{ display:'block', background:modal.color, color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', textAlign:'center', marginBottom:10 }}
@@ -132,7 +136,9 @@ export default function ServicesPanel() {
                 onClick={() => handleBuy(svc)}
                 style={{ background:svc.color, color:'#fff', border:'none', borderRadius:8, padding:'8px 12px', cursor:'pointer', fontSize:12, fontWeight:700, flexShrink:0, whiteSpace:'nowrap' as const }}
               >
-                {svc.price} AZN
+                {svc.id === 'hr_consult'
+                  ? (lang==='az' ? 'Sorğu göndər' : 'Send inquiry')
+                  : `${svc.price} AZN`}
               </button>
             </div>
           ))}

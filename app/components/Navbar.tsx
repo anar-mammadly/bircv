@@ -38,12 +38,13 @@ export default function Navbar() {
         </div>
 
         {/* Right side */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="nav-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {/* Lang toggle */}
           <button
+            className="nav-icon-btn"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-            style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', gap: 4 }}
+            style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}
           >
             {theme === 'dark'
               ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -51,11 +52,12 @@ export default function Navbar() {
             }
           </button>
           <button
+            className="nav-lang-btn"
             onClick={() => setLang(lang === 'az' ? 'en' : 'az')}
             style={{
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: 8, padding: '5px 12px', color: 'rgba(255,255,255,0.7)',
-              fontSize: 13, fontWeight: 600, cursor: 'pointer', letterSpacing: 0.5
+              fontSize: 13, fontWeight: 600, cursor: 'pointer', letterSpacing: 0.5, flexShrink: 0
             }}
           >
             {lang === 'az' ? 'AZ' : 'EN'} <span style={{ opacity: 0.4 }}>|</span> {lang === 'az' ? 'EN' : 'AZ'}
@@ -63,7 +65,7 @@ export default function Navbar() {
 
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
+              <span className="nav-username" style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
                 {user.name}
                 {user.plan === 'premium' && (
                   <span style={{ marginLeft: 6, background: '#7C6EF8', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>PRO</span>
@@ -72,25 +74,25 @@ export default function Navbar() {
                   <span style={{ marginLeft: 6, background: '#059669', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>ADMIN</span>
                 )}
               </span>
-              <button onClick={() => setUser(null)} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontSize: 12 }}>
+              <button onClick={() => setUser(null)} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontSize: 12, flexShrink: 0 }}>
                 {lang === 'az' ? 'Çıxış' : 'Logout'}
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', gap: 10 }}>
-              <button onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} style={{
+            <div className="nav-auth-group" style={{ display: 'flex', gap: 10 }}>
+              <button className="nav-login-btn" onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} style={{
                 background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
                 color: 'rgba(255,255,255,0.8)', borderRadius: 8, padding: '7px 16px',
-                fontSize: 13, fontWeight: 500, cursor: 'pointer'
+                fontSize: 13, fontWeight: 500, cursor: 'pointer', flexShrink: 0
               }}>
                 {lang === 'az' ? 'Daxil Ol' : 'Login'}
               </button>
-              <Link href="/create" style={{
+              <Link className="nav-cta-btn" href="/create" style={{
                 background: '#7C6EF8', color: '#fff', border: 'none',
                 borderRadius: 8, padding: '7px 18px', fontSize: 13, fontWeight: 600,
-                cursor: 'pointer', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6
+                cursor: 'pointer', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, whiteSpace: 'nowrap'
               }}>
-                {lang === 'az' ? 'CV Yarat →' : 'Create CV →'}
+                {lang === 'az' ? 'CV Yarat' : 'Create CV'}<span className="nav-cta-arrow">→</span>
               </Link>
             </div>
           )}

@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import { CVData, TemplateId } from '@/app/types/cv';
 import KompaktTemplate from '@/app/components/templates/KompaktTemplate';
 import ModernTemplate  from '@/app/components/templates/ModernTemplate';
@@ -453,6 +454,10 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
+// A4 @ 96dpi (CSS reference px — sabit, brauzerdən asılı olmayan dəyər).
+const A4_PX_W = 793.7;
+const A4_PX_H = 1122.52;
+
 export default function CVPreview({ data, template, lang, previewRef, forPDF }: CVPreviewProps) {
   const renderTemplate = () => {
     switch (template) {
@@ -468,9 +473,96 @@ export default function CVPreview({ data, template, lang, previewRef, forPDF }: 
       default:          return <KompaktTemplate  data={data} lang={lang} />;
     }
   };
+
+  // Səhifə sayı HƏMİŞƏ "həqiqi" A4 enində (793.7px = 210mm) ölçülür — şablonların
+  // mm-based minHeight kimi mütləq dəyərləri yalnız bu enə uyğun mənalıdır.
+  // Ekranda göstərilən kart nə qədər dar olsa da, məzmun bu kanonik ölçüdə
+  // render olunur və sonra CSS transform: scale() ilə kartın enine uyğunlaşdırılır —
+  // beləliklə mətn/sidebar nisbətləri də həmişə düzgün qalır.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
+
+  useEffect(() => {
+    const measure = () => {
+      const w = wrapRef.current?.clientWidth || A4_PX_W;
+      setScale(w / A4_PX_W);
+      const contentH = contentRef.current?.scrollHeight || A4_PX_H;
+      // Bəzi şablonlar minHeight:'297mm' istifadə edir — brauzer bunu 1px-ə qədər
+      // yuvarlaqlaşdırdığı üçün məzmun tam 1 səhifəlik olanda belə hesablanan
+      // hündürlük A4_PX_H-i cüzi keçə bilər. Kiçik tolerans bunu aradan qaldırır,
+      // həqiqi məzmun artıqlığını (ən az bir sətir ≈ 12-15px) təsirsiz qoyur.
+      const PAGE_TOLERANCE = 6;
+      setPageCount(Math.max(1, Math.ceil((contentH - PAGE_TOLERANCE) / A4_PX_H)));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (wrapRef.current) ro.observe(wrapRef.current);
+    if (contentRef.current) ro.observe(contentRef.current);
+    return () => ro.disconnect();
+  }, [data, template, lang]);
+
   return (
-    <div ref={previewRef} className="cv-preview-wrap" style={{ width: '100%', aspectRatio: '210/297', background: '#fff', borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
-      {renderTemplate()}
+    <div ref={wrapRef} style={{ width: '100%' }}>
+      {/* Gizli, kanonik (210mm) enində tam render — yalnız ölçmə üçün (pageCount). */}
+      <div
+        style={{ position: 'absolute', top: 0, left: -99999, width: A4_PX_W, visibility: 'hidden', pointerEvents: 'none' }}
+        aria-hidden="true"
+      >
+        <div ref={contentRef}>{renderTemplate()}</div>
+      </div>
+
+      {/* Çap/PDF mənbəyi — ekranda göstərilənlə EYNİ pageCount qədər, hər biri
+          dəqiq 210mm×297mm ölçüdə, overflow:hidden ilə kəsilmiş səhifə qutusu.
+          Brauzerin öz native pagination-undan asılı qalmırıq — neçə səhifə
+          ekranda görünürsə, çapda da məhz o qədər səhifə çıxır, artıq boş
+          səhifə yarana bilmir. */}
+      <div ref={previewRef} style={{ position: 'absolute', top: 0, left: -99999, visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
+        {Array.from({ length: pageCount }).map((_, i) => (
+          <div
+            key={i}
+            className="__print_page"
+            style={{
+              width: '210mm', height: '297mm', overflow: 'hidden', position: 'relative',
+              breakAfter: i < pageCount - 1 ? 'page' : 'auto',
+            }}
+          >
+            <div style={{ position: 'absolute', top: -i * A4_PX_H, left: 0, width: A4_PX_W }}>
+              {renderTemplate()}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Ekranda görünən, "vərəq-vərəq" önizləmə */}
+      {Array.from({ length: pageCount }).map((_, i) => (
+        <div
+          key={i}
+          className="cv-preview-wrap"
+          style={{
+            width: '100%', aspectRatio: '210/297', background: '#fff', borderRadius: 4,
+            overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.15)', position: 'relative',
+            marginBottom: i < pageCount - 1 ? 18 : 0,
+          }}
+        >
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: A4_PX_W,
+            transform: `scale(${scale}) translateY(${-i * A4_PX_H}px)`,
+            transformOrigin: 'top left',
+          }}>
+            {renderTemplate()}
+          </div>
+          {pageCount > 1 && (
+            <div style={{
+              position: 'absolute', bottom: 6, right: 8, fontSize: 9, color: '#9ca3af',
+              fontFamily: 'Inter,sans-serif', background: 'rgba(255,255,255,0.85)', padding: '1px 6px', borderRadius: 4,
+            }}>
+              {i + 1}/{pageCount}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

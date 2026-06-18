@@ -369,7 +369,7 @@ function TemplatesInner() {
                 onMouseLeave={e => { const d = e.currentTarget as HTMLDivElement; d.style.borderColor = 'rgba(255,255,255,0.07)'; d.style.transform = 'translateY(0)'; }}
               >
                 {/* Preview */}
-                <div style={{ height:200, position:'relative', overflow:'hidden', background:'#f8f9fa' }}>
+                <div className="cv-preview-wrap" style={{ height:200, position:'relative', overflow:'hidden', background:'#f8f9fa' }}>
                   <div style={{ position:'absolute', inset:0 }}><Preview /></div>
                   {tpl.premium && (
                     <div style={{ position:'absolute', top:10, right:10, background:'rgba(17,17,24,0.85)', backdropFilter:'blur(8px)', border:'1px solid rgba(255,214,10,0.4)', color:'#FFD60A', fontSize:9.5, fontWeight:700, padding:'3px 10px', borderRadius:6, zIndex:10, fontFamily:'Plus Jakarta Sans,Inter,sans-serif', letterSpacing:0.5 }}>

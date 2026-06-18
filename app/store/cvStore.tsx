@@ -71,7 +71,7 @@ export function CVProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (hydrated) saveCV(cvData); }, [cvData, hydrated]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
-  const [theme, setThemeState] = useState<'dark' | 'light'>('dark');
+  const [theme, setThemeState] = useState<'dark' | 'light'>('light');
   const setTheme = (t: 'dark' | 'light') => {
     setThemeState(t);
     if (typeof window !== 'undefined') {
@@ -81,7 +81,9 @@ export function CVProvider({ children }: { children: ReactNode }) {
   };
   useEffect(() => {
     const saved = localStorage.getItem('bircv_theme') as 'dark'|'light'|null;
-    if (saved) { setThemeState(saved); document.documentElement.setAttribute('data-theme', saved); }
+    const t = saved || 'light';
+    setThemeState(t);
+    document.documentElement.setAttribute('data-theme', t);
   }, []);
 
   const setUser = (u: User | null) => { setUserState(u); saveUser(u); };

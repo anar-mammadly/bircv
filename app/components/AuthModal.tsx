@@ -21,11 +21,12 @@ export default function AuthModal() {
   const [otp, setOtp]         = useState('');
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [devCode, setDevCode] = useState('');
+  const [agreed, setAgreed] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     setStep('form'); setOtp(''); setError(''); setDevCode(''); setPassword('');
-    setFirstName(''); setLastName('');
+    setFirstName(''); setLastName(''); setAgreed(false);
     if (timerRef.current) clearInterval(timerRef.current);
   }, [showAuthModal, authMode]);
 
@@ -50,6 +51,7 @@ export default function AuthModal() {
   const handleSendOtp = async () => {
     if (!email || !password) { setError('Email və şifrə tələb olunur'); return; }
     if (password.length < 4) { setError('Şifrə minimum 4 simvol olmalıdır'); return; }
+    if (!agreed) { setError('Davam etmək üçün İstifadə Şərtləri ilə razılaşmalısınız'); return; }
     setLoading(true); setError('');
     try {
       const res = await fetch('/api/otp', {
@@ -155,8 +157,28 @@ export default function AuthModal() {
               type="email" style={{ ...inputStyle, marginBottom:12 }} />
             <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Şifrə"
               type="password" style={{ ...inputStyle, marginBottom:16 }} />
+            {authMode === 'register' && (
+              <label style={{ display:'flex', alignItems:'flex-start', gap:8, marginBottom:16, cursor:'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={e => setAgreed(e.target.checked)}
+                  style={{ marginTop:2, width:16, height:16, flexShrink:0, accentColor:'#7C6EF8', cursor:'pointer' }}
+                />
+                <span style={{ fontSize:12.5, color:'rgba(255,255,255,0.55)', lineHeight:1.5 }}>
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color:'#a89ef8', textDecoration:'underline' }}>İstifadə Şərtləri</a>
+                  {' '}və{' '}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color:'#a89ef8', textDecoration:'underline' }}>Gizlilik Siyasəti</a>
+                  {' '}ilə razıyam
+                </span>
+              </label>
+            )}
             {error && <p style={{ color:'#f87171', fontSize:13, marginBottom:12 }}>{error}</p>}
-            <button onClick={authMode==='login' ? handleLogin : handleSendOtp} disabled={loading} style={btn}>
+            <button
+              onClick={authMode==='login' ? handleLogin : handleSendOtp}
+              disabled={loading || (authMode==='register' && !agreed)}
+              style={{ ...btn, opacity: (authMode==='register' && !agreed) ? 0.5 : 1, cursor: (authMode==='register' && !agreed) ? 'not-allowed' : 'pointer' }}
+            >
               {loading ? 'Gözləyin...' : authMode==='login' ? 'Daxil ol' : 'Kodu göndər'}
             </button>
             <p style={{ textAlign:'center', color:'rgba(255,255,255,0.4)', fontSize:13, marginTop:16 }}>

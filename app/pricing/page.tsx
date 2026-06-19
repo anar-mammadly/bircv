@@ -84,20 +84,20 @@ function PricingInner() {
         </div>
 
         {/* Plans */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 60, maxWidth: 700, margin: '0 auto 60px' }}>
+        <div className="grid-resp-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 60, maxWidth: 700, margin: '0 auto 60px' }}>
           {plans.map(plan => (
             <div key={plan.name} style={{
               background: plan.highlight ? 'rgba(124,110,248,0.08)' : '#111118',
               border: `1px solid ${plan.highlight ? 'rgba(124,110,248,0.4)' : 'rgba(255,255,255,0.08)'}`,
-              borderRadius: 20, padding: '32px 24px', position: 'relative'
+              borderRadius: 20, padding: plan.highlight ? '40px 24px 32px' : '32px 24px', position: 'relative'
             }}>
               {plan.highlight && (
-                <div style={{ position:'absolute', top:-14, left:'50%', transform:'translateX(-50%)', background:'#7C6EF8', color:'#fff', fontSize:12, fontWeight:700, padding:'4px 16px', borderRadius:20 }}>
+                <div style={{ position:'absolute', top:-14, left:'50%', transform:'translateX(-50%)', background:'#7C6EF8', color:'#fff', fontSize:12, fontWeight:700, padding:'4px 16px', borderRadius:20, whiteSpace:'nowrap' }}>
                   {lang === 'az' ? '⭐ Tövsiyə edilir' : '⭐ Recommended'}
                 </div>
               )}
               <h2 style={{ fontSize:20, fontWeight:800, color:'#fff', marginBottom:8 }}>{plan.name}</h2>
-              <div style={{ fontSize:40, fontWeight:900, color:plan.color, marginBottom:24 }}>
+              <div style={{ fontSize:32, fontWeight:900, color:plan.color, marginBottom:24, whiteSpace:'nowrap' }}>
                 {plan.price} AZN<span style={{ fontSize:16, fontWeight:500, color:'rgba(255,255,255,0.4)' }}>{plan.period}</span>
               </div>
               <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:28 }}>

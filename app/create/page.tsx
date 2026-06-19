@@ -13,26 +13,58 @@ import { t } from '@/app/store/translations';
 import { CVData } from '@/app/types/cv';
 import { Eye, Lock, UserPlus, FileText, Pencil, Check } from 'lucide-react';
 
-const d1 = 'Playwright & Selenium ile test avtomatlasdirmasi. Postman ile API testi. GitHub vasitesile kod idaresi.';
-const d2 = 'Avtomatlasdirma sistemlerini inkisaf etdirdi. Komanda ile Agile metodologiya uzre isledi.';
-const d3 = 'QA problemlerinin hellline cavabdeh oldu. Musteri daxili sistemlerini saxladi.';
-
-const DEMO_CV: CVData = {
+const DEMO_CV_AZ: CVData = {
   personal: {
-    firstName: 'Anar', lastName: 'Mammadov', email: 'anar@gmail.com',
-    phone: '+994 51 560 06 25', city: 'Baku', country: 'Azerbaijan',
-    jobTitle: 'QA Automation Engineer', photo: '',
+    firstName: 'Anar', lastName: 'Məmmədov', email: 'anar.memmedov@gmail.com',
+    phone: '+99451 123 45 67', city: 'Bakı', country: 'Azərbaycan',
+    jobTitle: 'QA Avtomasiya Mühəndisi', photo: '',
     linkedin: 'linkedin.com/in/anarmammadly',
-    summary: 'Automation test solutions engineer with expertise in Playwright, Selenium and Postman.',
+    summary: 'Playwright, Selenium və Postman üzrə təcrübəli QA avtomasiya mühəndisi. Komanda daxilində səmərəli ünsiyyət və analitik yanaşma ilə layihələrin keyfiyyətini artırır.',
   },
   experience: [
-    { id:'e1', jobTitle:'QA Automation Engineer', company:'Google',    city:'Baku', country:'Azerbaijan', startMonth:'8', startYear:'2023', endMonth:'',  endYear:'',     current:true,  description:d1 },
-    { id:'e2', jobTitle:'QA Engineer',            company:'Microsoft', city:'Baku', country:'Azerbaijan', startMonth:'3', startYear:'2021', endMonth:'7',  endYear:'2023', current:false, description:d2 },
-    { id:'e3', jobTitle:'Junior QA Engineer',     company:'Amazon',    city:'Baku', country:'Azerbaijan', startMonth:'1', startYear:'2019', endMonth:'2',  endYear:'2021', current:false, description:d3 },
+    { id:'e1', jobTitle:'QA Avtomasiya Mühəndisi', company:'Google',    city:'Bakı', country:'Azərbaycan', startMonth:'8', startYear:'2023', endMonth:'',  endYear:'',     current:true,  description:'Playwright və Selenium ilə test avtomatlaşdırma çərçivələri qurdu. Postman vasitəsilə API testlərini həyata keçirdi. GitHub üzərindən kod idarəetməsini təmin etdi.' },
+    { id:'e2', jobTitle:'QA Mühəndisi',            company:'Microsoft', city:'Bakı', country:'Azərbaycan', startMonth:'3', startYear:'2021', endMonth:'7',  endYear:'2023', current:false, description:'Avtomatlaşdırma sistemlərini inkişaf etdirərək səmərəliliyi artırdı. Komanda ilə Agile metodologiyası üzrə işlədi.' },
+    { id:'e3', jobTitle:'Kiçik QA Mühəndisi',      company:'Amazon',    city:'Bakı', country:'Azərbaycan', startMonth:'1', startYear:'2019', endMonth:'2',  endYear:'2021', current:false, description:'Müxtəlif relizlər üzrə QA problemlərinin həllinə cavabdeh oldu. Daxili müştəri sistemlərinin saxlanılmasını təmin etdi.' },
   ],
   education: [
-    { id:'edu1', institutionType:'university' as const, institutionTypeCustom:'', school:'MIT',     degree:'Computer Science',     educationLevel:'Master',   city:'Boston', country:'USA', startYear:'2022', endYear:'2024' },
-    { id:'edu2', institutionType:'university' as const, institutionTypeCustom:'', school:'Harvard', degree:'Software Engineering', educationLevel:'Bachelor', city:'Boston', country:'USA', startYear:'2016', endYear:'2020' },
+    { id:'edu1', institutionType:'university' as const, institutionTypeCustom:'', school:'ADA Universiteti',          degree:'Kompüter Elmləri, Magistr',      educationLevel:'Magistr',  city:'Bakı', country:'Azərbaycan', startYear:'2022', endYear:'2024' },
+    { id:'edu2', institutionType:'university' as const, institutionTypeCustom:'', school:'Bakı Dövlət Universiteti',  degree:'Tətbiqi Riyaziyyat, Bakalavr',    educationLevel:'Bakalavr', city:'Bakı', country:'Azərbaycan', startYear:'2015', endYear:'2019' },
+  ],
+  skills: ['Playwright', 'Selenium', 'Postman', 'RestAssured', 'GitHub', 'Agile/Scrum', 'SQL', 'JIRA'],
+  languages: [
+    { id:'l1', name:'Azərbaycan dili', level:'Ana dili' },
+    { id:'l2', name:'İngilis dili',    level:'B2' },
+    { id:'l3', name:'Rus dili',        level:'B1' },
+  ],
+  certificates: [
+    { id:'c1', name:'ISTQB Foundation Level',     issuer:'Coursera', year:'2022' },
+    { id:'c2', name:'Automation QA Certificate',  issuer:'Udemy',    year:'2023' },
+    { id:'c3', name:'AWS Cloud Practitioner',     issuer:'Amazon',   year:'2023' },
+  ],
+  trainings: [
+    { id:'t1', name:'QA Avtomasiya Bootcamp',     provider:'Narix Academy',              year:'2022', description:'Selenium, Playwright, TestNG' },
+    { id:'t2', name:'Qabaqcıl API Testi',          provider:'Test Automation University', year:'2023', description:'REST, GraphQL, Postman' },
+    { id:'t3', name:'Jenkins ilə CI/CD',           provider:'Udemy',                      year:'2023', description:'Jenkins, GitHub Actions' },
+  ],
+  additional: 'GitHub: github.com/anarmammadov',
+};
+
+const DEMO_CV_EN: CVData = {
+  personal: {
+    firstName: 'Anar', lastName: 'Mammadov', email: 'anar.mammadov@gmail.com',
+    phone: '+99451 123 45 67', city: 'Baku', country: 'Azerbaijan',
+    jobTitle: 'QA Automation Engineer', photo: '',
+    linkedin: 'linkedin.com/in/anarmammadly',
+    summary: 'Results-driven QA Automation Engineer experienced in Playwright, Selenium and Postman. Brings strong analytical thinking and effective collaboration to improve product quality.',
+  },
+  experience: [
+    { id:'e1', jobTitle:'QA Automation Engineer', company:'Google',    city:'Baku', country:'Azerbaijan', startMonth:'8', startYear:'2023', endMonth:'',  endYear:'',     current:true,  description:'Built test automation frameworks using Playwright and Selenium. Conducted API testing with Postman. Managed source control workflows through GitHub.' },
+    { id:'e2', jobTitle:'QA Engineer',            company:'Microsoft', city:'Baku', country:'Azerbaijan', startMonth:'3', startYear:'2021', endMonth:'7',  endYear:'2023', current:false, description:'Improved efficiency by developing and maintaining automation systems. Collaborated with cross-functional teams using Agile methodology.' },
+    { id:'e3', jobTitle:'Junior QA Engineer',     company:'Amazon',    city:'Baku', country:'Azerbaijan', startMonth:'1', startYear:'2019', endMonth:'2',  endYear:'2021', current:false, description:'Resolved QA issues across multiple product releases. Maintained and supported internal customer-facing systems.' },
+  ],
+  education: [
+    { id:'edu1', institutionType:'university' as const, institutionTypeCustom:'', school:'ADA University',         degree:"Computer Science, Master's",       educationLevel:"Master's",   city:'Baku', country:'Azerbaijan', startYear:'2022', endYear:'2024' },
+    { id:'edu2', institutionType:'university' as const, institutionTypeCustom:'', school:'Baku State University',  degree:"Applied Mathematics, Bachelor's",  educationLevel:"Bachelor's", city:'Baku', country:'Azerbaijan', startYear:'2015', endYear:'2019' },
   ],
   skills: ['Playwright', 'Selenium', 'Postman', 'RestAssured', 'GitHub', 'Agile/Scrum', 'SQL', 'JIRA'],
   languages: [
@@ -74,7 +106,7 @@ function CreatePageInner() {
   }, []);
 
   const handleLoadDemo = () => {
-    setCVData(DEMO_CV);
+    setCVData(lang === 'az' ? DEMO_CV_AZ : DEMO_CV_EN);
     setDemoActive(true);
     setTimeout(() => setDemoActive(false), 2000);
   };

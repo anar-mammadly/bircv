@@ -243,8 +243,47 @@ export default function CVForm() {
   const tr = t[lang];
   const [skillInput, setSkillInput] = useState('');
   const photoRef = useRef<HTMLInputElement>(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [summaryError, setSummaryError] = useState('');
 
   const p = cvData.personal;
+  const canSummaryAI = p.jobTitle.trim().length > 0;
+
+  const handleSummaryAI = async () => {
+    if (!canSummaryAI) return;
+    setSummaryLoading(true);
+    setSummaryError('');
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'summary',
+          jobTitle: p.jobTitle.trim(),
+          city: [p.city, p.country].filter(Boolean).join(', '),
+          skills: cvData.skills.slice(0, 6).join(', '),
+          language: lang,
+        }),
+      });
+
+      if (!res.ok) throw new Error(`${res.status}`);
+
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let acc = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        updatePersonal('summary', acc);
+      }
+    } catch (e: any) {
+      setSummaryError(lang === 'az' ? 'Xəta baş verdi, yenidən cəhd edin' : 'Error occurred, please try again');
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
 
   const setCV = (updater: (prev: CVData) => CVData) => {
     setCVData((prev: CVData) => updater(prev));
@@ -356,7 +395,37 @@ export default function CVForm() {
               placeholder={lang === 'az' ? 'Frontend Proqramçı, Mühasib...' : 'Frontend Developer, Accountant...'} />
           </div>
           <div style={{ gridColumn: '1/-1' }}>
-            <label style={lbl}>{tr.summary}</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+              <label style={{ ...lbl, marginBottom: 0 }}>{tr.summary}</label>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
+                {!canSummaryAI && (
+                  <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>
+                    {lang === 'az' ? '* Vəzifə adı yazın' : '* Enter job title first'}
+                  </span>
+                )}
+                <button
+                  onClick={handleSummaryAI}
+                  disabled={!canSummaryAI || summaryLoading}
+                  title={!canSummaryAI ? (lang === 'az' ? 'Əvvəlcə vəzifə adı yazın' : 'Enter job title first') : ''}
+                  style={{
+                    background: canSummaryAI && !summaryLoading ? 'rgba(124,110,248,0.2)' : 'rgba(255,255,255,0.04)',
+                    border: `1px solid ${canSummaryAI && !summaryLoading ? 'rgba(124,110,248,0.4)' : 'rgba(255,255,255,0.1)'}`,
+                    borderRadius: 6, color: canSummaryAI ? '#a89ef8' : 'rgba(255,255,255,0.25)',
+                    padding: '4px 10px', cursor: canSummaryAI && !summaryLoading ? 'pointer' : 'not-allowed',
+                    fontSize: 11.5, fontWeight: 600, transition: 'all 0.2s'
+                  }}
+                >
+                  {summaryLoading
+                    ? <span style={{display:'inline-flex',alignItems:'center',gap:5}}><RefreshCw size={12} className="spin" />{lang === 'az' ? 'Yazılır...' : 'Writing...'}</span>
+                    : <span style={{display:'inline-flex',alignItems:'center',gap:5}}><Sparkles size={12} />{lang === 'az' ? 'AI ilə yaz' : 'Write with AI'}</span>}
+                </button>
+              </div>
+            </div>
+            {summaryError && (
+              <div style={{ fontSize: 11, color: '#f87171', marginBottom: 6, padding: '5px 8px', background: 'rgba(248,113,113,0.1)', borderRadius: 6 }}>
+                ⚠ {summaryError}
+              </div>
+            )}
             <textarea style={{ ...inp, minHeight: 72, resize: 'vertical' }} value={p.summary || ''}
               onChange={e => updatePersonal('summary', e.target.value)}
               placeholder={lang === 'az' ? 'Özünüz haqqında qısa məlumat...' : 'Brief about yourself...'} />

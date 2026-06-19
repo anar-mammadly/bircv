@@ -30,8 +30,9 @@ export default function MinimalTemplate({ data, lang }: { data: CVData; lang: 'a
     <div style={{
       fontFamily: '"Inter","Segoe UI",Arial,sans-serif',
       background: '#fff', color: '#1c1c1c',
-      width: '100%', height: '100%',
-      padding: '28px 32px', overflow: 'hidden', fontSize: 10
+      width: '100%', minHeight: '297mm',
+      padding: '28px 32px', fontSize: 10,
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
     }}>
 
       {/* Header */}

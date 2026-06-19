@@ -18,7 +18,7 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
   );
 
   return (
-    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#0a0a0a', width:'100%', height:'100%', overflow:'hidden', fontSize:10 }}>
+    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#0a0a0a', width:'100%', minHeight:'297mm', fontSize:10, display:'flex', flexDirection:'column' }}>
 
       {/* Header */}
       <div style={{ background:'#111', padding:'24px 26px 18px', color:'#fff' }}>
@@ -40,7 +40,7 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
         </div>
       </div>
 
-      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px' }}>
+      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px', flex:1, justifyContent:'space-between' }}>
         {p.summary && (
           <div style={{ fontSize:10, color:'#374151', lineHeight:1.7, borderLeft:'4px solid #FFD60A', paddingLeft:10 }}>{p.summary}</div>
         )}

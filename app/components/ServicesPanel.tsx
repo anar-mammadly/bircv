@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useCVStore } from '@/app/store/cvStore';
 import { waLink, SUPPORT_EMAIL } from '@/lib/config';
-import { Crown, Target, PenLine, FileText, Sparkles, MessageCircle, X } from 'lucide-react';
+import { Crown, Target, PenLine, FileText, Sparkles, MessageCircle, X, ChevronDown } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const services: {
@@ -42,6 +42,7 @@ const services: {
 export default function ServicesPanel() {
   const { lang, user } = useCVStore();
   const [modal, setModal] = useState<typeof services[0] | null>(null);
+  const [open, setOpen] = useState(false);
 
   const handleBuy = (svc: typeof services[0]) => {
     if (svc.id === 'premium_sub') {
@@ -105,51 +106,62 @@ export default function ServicesPanel() {
         </div>
       )}
 
-      {/* ── Panel ────────────────────────────────────────────────────────── */}
-      <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.07)', borderRadius:16, padding:'20px' }}>
-        <h3 style={{ fontSize:14, fontWeight:700, color:'#fff', marginBottom:4, display:'flex', alignItems:'center', gap:8 }}>
-          <Sparkles size={16} style={{ color:'#a89ef8' }} />
-          {lang==='az' ? 'Əlavə Xidmətlər' : 'Extra Services'}
-        </h3>
-        <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', marginBottom:16 }}>
-          {lang==='az' ? 'Karyera inkişafınızı sürətləndirin' : 'Accelerate your career growth'}
-        </p>
+      {/* ── Panel (accordion) ───────────────────────────────────────────── */}
+      <div style={{ border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden' }}>
+        <button onClick={() => setOpen(!open)} style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '14px 18px', background: 'rgba(255,255,255,0.03)', border: 'none', cursor: 'pointer', color: '#fff'
+        }}>
+          <span style={{ fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 9 }}>
+            <span style={{ display: 'inline-flex', color: '#a89ef8' }}><Sparkles size={16} /></span>
+            {lang==='az' ? 'Əlavə Xidmətlər' : 'Extra Services'}
+          </span>
+          <ChevronDown size={18} style={{ opacity: 0.45, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
+        </button>
 
-        <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-          {services.map(svc => (
-            <div key={svc.id} style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'14px', display:'flex', alignItems:'center', gap:12 }}>
-              <span style={{ flexShrink:0, color:svc.color, display:'inline-flex' }}><svc.Icon size={24} /></span>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:2 }}>
-                  <span style={{ fontSize:13, fontWeight:700, color:'#fff' }}>
-                    {lang==='az' ? svc.title : svc.titleEn}
-                  </span>
-                  <span style={{ fontSize:10, background:`${svc.color}25`, color:svc.color, padding:'2px 6px', borderRadius:4, fontWeight:600, flexShrink:0 }}>
-                    {lang==='az' ? svc.badge : svc.badgeEn}
-                  </span>
+        {open && (
+          <div style={{ padding: '16px 18px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', marginBottom:16, marginTop:0 }}>
+              {lang==='az' ? 'Karyera inkişafınızı sürətləndirin' : 'Accelerate your career growth'}
+            </p>
+
+            <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+              {services.map(svc => (
+                <div key={svc.id} style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'14px', display:'flex', alignItems:'center', gap:12 }}>
+                  <span style={{ flexShrink:0, color:svc.color, display:'inline-flex' }}><svc.Icon size={24} /></span>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:2 }}>
+                      <span style={{ fontSize:13, fontWeight:700, color:'#fff' }}>
+                        {lang==='az' ? svc.title : svc.titleEn}
+                      </span>
+                      <span style={{ fontSize:10, background:`${svc.color}25`, color:svc.color, padding:'2px 6px', borderRadius:4, fontWeight:600, flexShrink:0 }}>
+                        {lang==='az' ? svc.badge : svc.badgeEn}
+                      </span>
+                    </div>
+                    <p style={{ fontSize:11, color:'rgba(255,255,255,0.4)', margin:0, lineHeight:1.4 }}>
+                      {lang==='az' ? svc.desc : svc.descEn}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleBuy(svc)}
+                    style={{ background:svc.color, color:'#fff', border:'none', borderRadius:8, padding:'8px 12px', cursor:'pointer', fontSize:12, fontWeight:700, flexShrink:0, whiteSpace:'nowrap' as const }}
+                  >
+                    {svc.id === 'hr_consult'
+                      ? (lang==='az' ? 'Sorğu göndər' : 'Send inquiry')
+                      : `${svc.price} AZN`}
+                  </button>
                 </div>
-                <p style={{ fontSize:11, color:'rgba(255,255,255,0.4)', margin:0, lineHeight:1.4 }}>
-                  {lang==='az' ? svc.desc : svc.descEn}
-                </p>
-              </div>
-              <button
-                onClick={() => handleBuy(svc)}
-                style={{ background:svc.color, color:'#fff', border:'none', borderRadius:8, padding:'8px 12px', cursor:'pointer', fontSize:12, fontWeight:700, flexShrink:0, whiteSpace:'nowrap' as const }}
-              >
-                {svc.id === 'hr_consult'
-                  ? (lang==='az' ? 'Sorğu göndər' : 'Send inquiry')
-                  : `${svc.price} AZN`}
-              </button>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div style={{ marginTop:14, padding:'12px', background:'rgba(124,110,248,0.07)', borderRadius:10, border:'1px dashed rgba(124,110,248,0.25)' }}>
-          <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)', margin:0, textAlign:'center' }}>
-            <MessageCircle size={13} style={{ display:'inline', verticalAlign:'-2px', marginRight:4 }} />
-            {lang==='az' ? `Suallarınız üçün: ${SUPPORT_EMAIL}` : `Questions? ${SUPPORT_EMAIL}`}
-          </p>
-        </div>
+            <div style={{ marginTop:14, padding:'12px', background:'rgba(124,110,248,0.07)', borderRadius:10, border:'1px dashed rgba(124,110,248,0.25)' }}>
+              <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)', margin:0, textAlign:'center' }}>
+                <MessageCircle size={13} style={{ display:'inline', verticalAlign:'-2px', marginRight:4 }} />
+                {lang==='az' ? `Suallarınız üçün: ${SUPPORT_EMAIL}` : `Questions? ${SUPPORT_EMAIL}`}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

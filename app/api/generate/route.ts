@@ -87,7 +87,7 @@ Rules: exactly 3 bullets starting with "•", each on new line, strong past-tens
           // model sometimes adds despite being told not to.
           let acc = '';
           for await (const chunk of stream) acc += chunk.choices[0]?.delta?.content || '';
-          acc = acc.trim().replace(/^["“'](.*)["”']$/s, '$1').trim();
+          acc = acc.trim().replace(/^["“']([\s\S]*)["”']$/, '$1').trim();
           controller.enqueue(encoder.encode(acc));
         } else {
           for await (const chunk of stream) {

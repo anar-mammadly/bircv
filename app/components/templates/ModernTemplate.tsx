@@ -27,7 +27,7 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
   );
 
   return (
-    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#1a1a2e', width:'100%', height:'100%', overflow:'hidden', fontSize:10 }}>
+    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#1a1a2e', width:'100%', minHeight:'297mm', fontSize:10, display:'flex', flexDirection:'column' }}>
 
       {/* Header */}
       <div style={{ background:'#6c5ce7', padding:'22px 26px 18px', color:'#fff' }}>
@@ -47,7 +47,7 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
         </div>
       </div>
 
-      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px' }}>
+      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px', flex:1, justifyContent:'space-between' }}>
         {p.summary && (
           <div>
             <SecLabel>{lang==='az'?'Özəl':'Summary'}</SecLabel>

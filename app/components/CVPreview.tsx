@@ -114,7 +114,7 @@ function ElegantTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:
     <div style={{fontSize:9,fontWeight:700,textTransform:'uppercase' as const,letterSpacing:2.5,color:'#8a7f6a',borderBottom:'0.5px solid #c8c0a8',paddingBottom:5,marginBottom:10}}>{c}</div>
   );}
   return(
-    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fafaf8',color:'#2d2d2d',width:'100%',height:'100%',overflow:'hidden',fontSize:10}}>
+    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fafaf8',color:'#2d2d2d',width:'100%',minHeight:'297mm',fontSize:10,display:'flex',flexDirection:'column'}}>
       <div style={{padding:'24px 30px 16px',textAlign:'center',borderBottom:'0.5px solid #c8c0a8',background:'#fff'}}>
         {p.photo&&<img src={p.photo} alt="photo" style={{width:56,height:56,borderRadius:'50%',objectFit:'cover',border:'1px solid #c8c0a8',marginBottom:10}}/>}
         <div style={{fontSize:22,fontWeight:700,letterSpacing:2,textTransform:'uppercase' as const,color:'#1a1a1a',marginBottom:3}}>{p.firstName} {p.lastName}</div>
@@ -124,14 +124,14 @@ function ElegantTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:
           {p.city&&<span>{p.city}{p.country?', '+p.country:''}</span>}{p.linkedin&&<span>{p.linkedin}</span>}
         </div>
       </div>
-      <div style={{padding:'16px 30px',display:'flex',gap:22,paddingBottom:'14px'}}>
-        <div style={{width:'34%',borderRight:'0.5px solid #d4cfc0',paddingRight:18,flexShrink:0,display:'flex',flexDirection:'column',gap:14}}>
+      <div style={{padding:'16px 30px',display:'flex',gap:22,paddingBottom:'14px',flex:1}}>
+        <div style={{width:'34%',borderRight:'0.5px solid #d4cfc0',paddingRight:18,flexShrink:0,display:'flex',flexDirection:'column',gap:14,justifyContent:'space-between'}}>
           {skills.length>0&&(<div><ST c={lang==='az'?'Bacarıqlar':'Skills'}/>{skills.map((s,i)=><div key={i} style={{fontSize:10,color:'#4a4438',borderBottom:'0.5px solid #ede8dc',padding:'4px 0'}}>{s}</div>)}</div>)}
           {languages.length>0&&(<div><ST c={lang==='az'?'Dillər':'Languages'}/>{languages.map((l,i)=><div key={i} style={{fontSize:10,color:'#4a4438',display:'flex',justifyContent:'space-between',borderBottom:'0.5px solid #ede8dc',padding:'4px 0'}}><span style={{fontWeight:600}}>{l.name}</span><span style={{color:'#8a7f6a',fontSize:9}}>{l.level}</span></div>)}</div>)}
           {education.length>0&&(<div><ST c={lang==='az'?'Təhsil':'Education'}/>{education.map(edu=><div key={edu.id} style={{marginBottom:9}}><div style={{fontWeight:600,fontSize:10.5,lineHeight:1.3}}>{edu.degree||edu.school}</div>{edu.school&&edu.degree&&<div style={{fontSize:10,color:'#8a7f6a',fontStyle:'italic'}}>{edu.school}</div>}<div style={{fontSize:9,color:'#a09585'}}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div></div>)}</div>)}
           {trains.length>0&&(<div><ST c={lang==='az'?'Təlimlər':'Training'}/>{trains.map((tr:any,i:number)=><div key={i} style={{marginBottom:7}}><div style={{fontWeight:600,fontSize:10}}>{tr.name}</div><div style={{fontSize:9.5,color:'#8a7f6a'}}>{tr.provider}{tr.year?' · '+tr.year:''}</div></div>)}</div>)}
         </div>
-        <div style={{flex:1,display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{flex:1,display:'flex',flexDirection:'column',gap:14,justifyContent:'space-between'}}>
           {p.summary&&(<div><ST c={lang==='az'?'Haqqımda':'About'}/><div style={{fontSize:10,color:'#4a4438',lineHeight:1.8,fontStyle:'italic'}}>{p.summary}</div></div>)}
           {experience.length>0&&(<div><ST c={lang==='az'?'Karyera':'Career'}/>{experience.map(exp=><div key={exp.id} style={{marginBottom:12}}><div style={{fontWeight:700,fontSize:11,lineHeight:1.3}}>{exp.jobTitle}</div><div style={{fontSize:10,color:'#8a7f6a',display:'flex',justifyContent:'space-between',marginBottom:4,gap:8}}><span style={{fontStyle:'italic'}}>{exp.company}</span><span style={{fontSize:9,flexShrink:0}}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span></div>{exp.description&&<div style={{fontSize:9.5,color:'#4a4438',lineHeight:1.7}}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:2}}><span style={{color:'#b8a898',flexShrink:0,marginTop:1}}>•</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div>)}</div>)}
           {certs.length>0&&(<div><ST c={lang==='az'?'Sertifikatlar':'Certificates'}/>{certs.map((c:any,i:number)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10,marginBottom:3}}><div><span style={{fontWeight:600}}>{c.name}</span>{c.issuer&&<span style={{color:'#8a7f6a'}}> · {c.issuer}</span>}</div>{c.year&&<span style={{color:'#8a7f6a',flexShrink:0,marginLeft:8}}>{c.year}</span>}</div>)}</div>)}
@@ -151,7 +151,7 @@ function KlassikTemplate({data,lang}:{data:CVData;lang:'az'|'en'}){
     <div style={{fontSize:10,fontWeight:700,textTransform:'uppercase' as const,letterSpacing:1.5,borderBottom:'1px solid #bbb',paddingBottom:4,marginBottom:10,color:'#222'}}>{c}</div>
   );}
   return(
-    <div style={{fontFamily:'"Georgia","Times New Roman",Times,serif',background:'#fff',color:'#111',width:'100%',height:'100%',padding:'26px 30px',overflow:'hidden',fontSize:10}}>
+    <div style={{fontFamily:'"Georgia","Times New Roman",Times,serif',background:'#fff',color:'#111',width:'100%',minHeight:'297mm',padding:'26px 30px',fontSize:10,display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
       <div style={{textAlign:'center',borderBottom:'2px solid #111',paddingBottom:12,marginBottom:16}}>
         {p.photo&&<img src={p.photo} alt="photo" style={{width:52,height:52,borderRadius:'50%',objectFit:'cover',float:'right'}}/>}
         <div style={{fontSize:22,fontWeight:700,marginBottom:3,textTransform:'uppercase' as const,letterSpacing:1}}>{p.firstName} {p.lastName}</div>
@@ -202,7 +202,7 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
     </div>
   );}
   return(
-    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fff',width:'100%',height:'100%',display:'flex',overflow:'hidden',fontSize:10}}>
+    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fff',width:'100%',minHeight:'297mm',display:'flex',fontSize:10}}>
       <div style={{width:'30%',background:'#1e2a3a',display:'flex',flexDirection:'column',flexShrink:0}}>
         <div style={{padding:'20px 14px 12px',display:'flex',justifyContent:'center'}}>
           <div style={{width:80,height:80,borderRadius:'50%',overflow:'hidden',border:'3px solid rgba(255,255,255,0.25)'}}>
@@ -210,7 +210,7 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
               :<div style={{width:'100%',height:'100%',background:'rgba(255,255,255,0.08)',display:'flex',alignItems:'center',justifyContent:'center'}}><svg width="32" height="32" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>}
           </div>
         </div>
-        <div style={{padding:'0 14px 16px',display:'flex',flexDirection:'column',gap:12}}>
+        <div style={{padding:'0 14px 16px',display:'flex',flexDirection:'column',gap:12,flex:1,justifyContent:'space-between'}}>
           <div><LeftSec title={lang==='az'?'Əlaqə':'Contact'}/>
             <div style={{display:'flex',flexDirection:'column',gap:6}}>
               {p.phone&&<div style={{display:'flex',alignItems:'flex-start',gap:7}}><div style={{marginTop:2}}><CIcon type="phone" fill="transparent" stroke="rgba(255,255,255,0.7)" size={11}/></div><span style={{fontSize:9.5,color:'rgba(255,255,255,0.8)',lineHeight:1.4}}>{p.phone}</span></div>}
@@ -229,7 +229,7 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
           <div style={{fontSize:22,fontWeight:900,color:'#fff',letterSpacing:0.3,textTransform:'uppercase' as const,lineHeight:1.1}}>{p.firstName} {p.lastName}</div>
           {p.jobTitle&&<div style={{fontSize:10.5,color:'rgba(255,255,255,0.65)',marginTop:4,letterSpacing:1.2,textTransform:'uppercase' as const}}>{p.jobTitle}</div>}
         </div>
-        <div style={{flex:1,padding:'14px 20px',display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{flex:1,padding:'14px 20px',display:'flex',flexDirection:'column',gap:14,justifyContent:'space-between'}}>
           {p.summary&&<div><RightSec title={lang==='az'?'Profil':'Profile'}/><div style={{fontSize:10,color:'#444',lineHeight:1.7}}>{p.summary}</div></div>}
           {experience.length>0&&<div><RightSec title={lang==='az'?'İş Təcrübəsi':'Work Experience'}/><div style={{display:'flex',flexDirection:'column',gap:9}}>{experience.map(exp=><div key={exp.id} style={{display:'flex',gap:0}}><div style={{display:'flex',flexDirection:'column',alignItems:'center',width:18,flexShrink:0}}><div style={{width:7,height:7,borderRadius:'50%',border:'2px solid #1e2a3a',background:'#fff',flexShrink:0,marginTop:3}}/><div style={{width:1,flex:1,background:'#ddd',marginTop:2}}/></div><div style={{flex:1,paddingBottom:7,paddingLeft:8}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:6}}><div style={{fontSize:11,fontWeight:700,color:'#1e2a3a',lineHeight:1.3}}>{exp.jobTitle}</div><div style={{fontSize:9,color:'#777',flexShrink:0,fontStyle:'italic'}}>{exp.startYear}{exp.endYear||exp.current?' – '+(exp.current?present:exp.endYear):''}</div></div><div style={{fontSize:10,color:'#555',marginBottom:3}}>{exp.company}{exp.city?' · '+exp.city:''}</div>{exp.description&&<div style={{fontSize:9.5,color:'#444',lineHeight:1.65}}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:2}}><span style={{flexShrink:0,marginTop:1}}>•</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div></div>)}</div></div>}
           {education.length>0&&<div><RightSec title={lang==='az'?'Təhsil':'Education'}/><div style={{display:'flex',flexDirection:'column',gap:7}}>{education.map(edu=><div key={edu.id} style={{display:'flex',gap:0}}><div style={{display:'flex',flexDirection:'column',alignItems:'center',width:18,flexShrink:0}}><div style={{width:7,height:7,borderRadius:'50%',border:'2px solid #1e2a3a',background:'#fff',flexShrink:0,marginTop:3}}/></div><div style={{flex:1,paddingLeft:8}}><div style={{display:'flex',justifyContent:'space-between',gap:6}}><div style={{fontSize:11,fontWeight:700,color:'#1e2a3a',lineHeight:1.3}}>{edu.degree||edu.school}</div><span style={{fontSize:9,color:'#777',fontStyle:'italic',flexShrink:0}}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</span></div>{edu.school&&edu.degree&&<div style={{fontSize:10,color:'#555'}}>{edu.school}</div>}</div></div>)}</div></div>}
@@ -250,7 +250,7 @@ function HeaderTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:b
     <div style={{marginBottom:7}}><div style={{fontSize:9,fontWeight:800,letterSpacing:1.5,textTransform:'uppercase' as const,color:'#1a1a2e',marginBottom:4}}>{title}</div><div style={{height:1.5,background:'#1a1a2e'}}/></div>
   );}
   return(
-    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fff',width:'100%',height:'100%',display:'flex',flexDirection:'column',overflow:'hidden',fontSize:10,color:'#1a1a2e'}}>
+    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#fff',width:'100%',minHeight:'297mm',display:'flex',flexDirection:'column',fontSize:10,color:'#1a1a2e'}}>
       <div style={{background:'#1a1a2e',padding:'16px 22px',display:'flex',alignItems:'flex-start',gap:16,flexShrink:0}}>
         <div style={{width:68,height:68,borderRadius:'50%',overflow:'hidden',border:'3px solid rgba(255,255,255,0.25)',flexShrink:0}}>
           {p.photo?<img src={p.photo} alt="" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'top',display:'block'}}/>
@@ -268,14 +268,14 @@ function HeaderTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:b
         {p.linkedin&&<div style={{display:'flex',alignItems:'flex-start',gap:4}}><div style={{marginTop:2}}><CIcon type="link" fill="transparent" stroke="#1a6ef5" size={10}/></div><span style={{fontSize:9.5,color:'#1a6ef5'}}>{p.linkedin}</span></div>}
       </div>
       <div style={{flex:1,display:'flex'}}>
-        <div style={{width:'33%',padding:'13px 14px',borderRight:'1px solid #e5e5e5',display:'flex',flexDirection:'column',gap:13,flexShrink:0}}>
+        <div style={{width:'33%',padding:'13px 14px',borderRight:'1px solid #e5e5e5',display:'flex',flexDirection:'column',gap:13,flexShrink:0,justifyContent:'space-between'}}>
           {p.summary&&<div><Sec title={lang==='az'?'Haqqımda':'About Me'}/><div style={{fontSize:9.5,color:'#444',lineHeight:1.65,marginTop:7}}>{p.summary}</div></div>}
           {education.length>0&&<div><Sec title={lang==='az'?'Təhsil':'Education'}/><div style={{display:'flex',flexDirection:'column',gap:7,marginTop:7}}>{education.map(edu=><div key={edu.id}><div style={{fontSize:10,fontWeight:700,color:'#1a1a2e',lineHeight:1.3}}>{edu.degree||edu.school}</div>{edu.school&&edu.degree&&<div style={{fontSize:9.5,color:'#555',fontStyle:'italic'}}>{edu.school}</div>}<div style={{fontSize:9,color:'#777'}}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div></div>)}</div></div>}
           {skills.length>0&&<div><Sec title={lang==='az'?'Bacarıqlar':'Skills'}/><div style={{display:'flex',flexDirection:'column',gap:5,marginTop:7}}>{skills.map((s,i)=><Bul key={i} color="#1a1a2e" text={s}/>)}</div></div>}
           {languages.length>0&&<div><Sec title={lang==='az'?'Dillər':'Languages'}/><div style={{display:'flex',flexDirection:'column',gap:4,marginTop:7}}>{languages.map((l,i)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10}}><span>{l.name}</span>{l.level&&<span style={{color:'#777',fontSize:9}}>{l.level}</span>}</div>)}</div></div>}
           {trains.length>0&&<div><Sec title={lang==='az'?'Təlimlər':'Training'}/><div style={{display:'flex',flexDirection:'column',gap:6,marginTop:7}}>{trains.map((tr:any,i:number)=><div key={i}><div style={{fontSize:10,fontWeight:600,color:'#1a1a2e',lineHeight:1.3}}>{tr.name}</div><div style={{fontSize:9,color:'#777'}}>{tr.provider}{tr.year?' · '+tr.year:''}</div></div>)}</div></div>}
         </div>
-        <div style={{flex:1,padding:'13px 16px',display:'flex',flexDirection:'column',gap:13}}>
+        <div style={{flex:1,padding:'13px 16px',display:'flex',flexDirection:'column',gap:13,justifyContent:'space-between'}}>
           {experience.length>0&&<div><Sec title={lang==='az'?'İş Təcrübəsi':'Experience'}/><div style={{display:'flex',flexDirection:'column',gap:9,marginTop:7}}>{experience.map(exp=><div key={exp.id} style={{display:'flex',gap:0}}><div style={{display:'flex',flexDirection:'column',alignItems:'center',width:16,flexShrink:0}}><div style={{width:7,height:7,borderRadius:'50%',border:'2px solid #1a1a2e',background:'#fff',flexShrink:0,marginTop:3}}/><div style={{width:1,flex:1,background:'#ddd',marginTop:2}}/></div><div style={{flex:1,paddingLeft:7,paddingBottom:7}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:6}}><div style={{fontSize:11,fontWeight:700,color:'#1a1a2e',lineHeight:1.3}}>{exp.jobTitle}</div><div style={{fontSize:9,color:'#777',fontStyle:'italic',flexShrink:0}}>{exp.startYear}{exp.endYear||exp.current?' – '+(exp.current?present:exp.endYear):''}</div></div><div style={{fontSize:10,color:'#555',marginBottom:3}}>{exp.company}{exp.city?' · '+exp.city:''}</div>{exp.description&&<div style={{fontSize:9.5,color:'#444',lineHeight:1.65}}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:2}}><span style={{flexShrink:0,marginTop:1}}>•</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div></div>)}</div></div>}
           {certs.length>0&&<div><Sec title={lang==='az'?'Sertifikatlar':'Certificates'}/><div style={{display:'flex',flexDirection:'column',gap:4,marginTop:7}}>{certs.map((c:any,i:number)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10}}><div><span style={{fontWeight:600}}>{c.name}</span>{c.issuer&&<span style={{color:'#777'}}> · {c.issuer}</span>}</div>{c.year&&<span style={{color:'#777',flexShrink:0,marginLeft:8}}>{c.year}</span>}</div>)}</div></div>}
           {additional&&<div><Sec title={lang==='az'?'Əlavə':'Additional'}/><div style={{fontSize:10,color:'#444',lineHeight:1.65,marginTop:7,whiteSpace:'pre-line'}}>{additional}</div></div>}
@@ -305,7 +305,7 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
   ].filter((x):x is {l:string;v:string;t:'email'|'link'|'phone'|'pin'} => x!==null);
 
   return(
-    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#f8fafc',width:'100%',height:'100%',display:'flex',overflow:'hidden',fontSize:10}}>
+    <div style={{fontFamily:'"Inter","Segoe UI",Arial,sans-serif',background:'#f8fafc',width:'100%',minHeight:'297mm',display:'flex',fontSize:10}}>
       <div style={{width:'29%',flexShrink:0,background:'#f0fdfa',borderRight:'1px solid #f1f5f9',display:'flex',flexDirection:'column'}}>
         <div style={{position:'relative',width:'100%',paddingBottom:'100%',flexShrink:0}}>
           <div style={{position:'absolute',bottom:0,right:0,width:'86%',height:'86%',background:'#4f46e5',borderRadius:12,zIndex:0}}/>
@@ -314,7 +314,7 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
               :<div style={{width:'100%',height:'100%',background:'#ddd6fe',display:'flex',alignItems:'center',justifyContent:'center'}}><svg width="36" height="36" viewBox="0 0 24 24" fill="rgba(124,58,237,0.3)"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>}
           </div>
         </div>
-        <div style={{padding:'12px 14px 16px',display:'flex',flexDirection:'column',gap:10}}>
+        <div style={{padding:'12px 14px 16px',display:'flex',flexDirection:'column',gap:10,flex:1,justifyContent:'space-between'}}>
           <div style={{textAlign:'center'}}>
             <div style={{fontSize:16,fontWeight:800,color:'#111827',marginBottom:2,lineHeight:1.2}}>{p.firstName} {p.lastName}</div>
             <div style={{fontSize:10,fontWeight:700,color:'#4f46e5'}}>{p.jobTitle}</div>
@@ -372,8 +372,8 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
           )}
         </div>
       </div>
-      <div style={{flex:1,background:'#fff'}}>
-        <div style={{padding:'14px 16px',display:'flex',flexDirection:'column',gap:16}}>
+      <div style={{flex:1,background:'#fff',display:'flex',flexDirection:'column'}}>
+        <div style={{padding:'14px 16px',display:'flex',flexDirection:'column',gap:16,flex:1,justifyContent:'space-between'}}>
           {experience.length>0&&(
             <section>
               <SecT>{lang==='az'?'İş Təcrübəsi':'Experience'}</SecT>

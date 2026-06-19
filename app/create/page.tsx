@@ -78,13 +78,63 @@ function CreatePageInner() {
     setTimeout(() => setDemoActive(false), 2000);
   };
 
-  const handleDownload = () => {
-    if (!user) { setAuthMode('register'); setShowAuthModal(true); return; }
-    if (user.plan !== 'admin' && user.plan === 'free' && user.cvCount >= 2) {
-      setShowLimitModal(true);
-      return;
-    }
+  const registerDownload = () => {
+    // DB-də CV sayını artır
+    fetch('/api/cv-download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user!.id }),
+    })
+      .then(r => r.json())
+      .then(data => { if (data.ok) setUser({ ...user!, cvCount: data.cvCount }); })
+      .catch(() => setUser({ ...user!, cvCount: user!.cvCount + 1 }));
 
+    setPdfSuccess(true);
+    setTimeout(() => setPdfSuccess(false), 2500);
+  };
+
+  const isMobileDevice = () =>
+    typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // ── Mobil (iOS/Android): birbaşa A4 PDF generasiya edib yükləyir, native print
+  // dialoqundan istifadə etmir (ikisində də çap interfeysi qeyri-sabit/səliqəsizdir) ──
+  const handleDownloadMobile = async () => {
+    const el = previewRef.current;
+    if (!el) return;
+    setPdfLoading(true);
+    // Clone into a detached node (like the desktop print path) instead of mutating the live
+    // React-controlled ref directly — React re-renders (triggered by setPdfLoading above) would
+    // otherwise reset any inline style we set on it back to its original off-screen position.
+    const clone = el.cloneNode(true) as HTMLElement;
+    clone.id = '__cv_mobile_pdf_root__';
+    clone.style.cssText = `position:absolute;top:${window.scrollY}px;left:${window.scrollX}px;visibility:visible;z-index:9998;pointer-events:none;`;
+    document.body.appendChild(clone);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf'),
+      ]);
+      const pages = Array.from(clone.querySelectorAll<HTMLElement>('.__print_page'));
+      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      for (let i = 0; i < pages.length; i++) {
+        const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+      }
+      const fn = cvData.personal.firstName.trim();
+      const ln = cvData.personal.lastName.trim();
+      const filename = ([fn, ln].filter(Boolean).join('-') || 'CV') + '-bircv.az.pdf';
+      pdf.save(filename);
+      registerDownload();
+    } finally {
+      document.body.removeChild(clone);
+      setPdfLoading(false);
+    }
+  };
+
+  // ── Desktop: brauzerin native çap dialoqu (Save as PDF) ──
+  const handleDownloadDesktop = () => {
     const el = previewRef.current;
     if (!el) return;
 
@@ -127,18 +177,21 @@ function CreatePageInner() {
     const s = document.getElementById('__cv_print_style__');
     if (s) s.remove();
 
-    // DB-də CV sayını artır
-    fetch('/api/cv-download', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user.id }),
-    })
-      .then(r => r.json())
-      .then(data => { if (data.ok) setUser({ ...user, cvCount: data.cvCount }); })
-      .catch(() => setUser({ ...user, cvCount: user.cvCount + 1 }));
+    registerDownload();
+  };
 
-    setPdfSuccess(true);
-    setTimeout(() => setPdfSuccess(false), 2500);
+  const handleDownload = () => {
+    if (!user) { setAuthMode('register'); setShowAuthModal(true); return; }
+    if (user.plan !== 'admin' && user.plan === 'free' && user.cvCount >= 2) {
+      setShowLimitModal(true);
+      return;
+    }
+
+    if (isMobileDevice()) {
+      handleDownloadMobile();
+    } else {
+      handleDownloadDesktop();
+    }
   }
 
   // ── Shared top bar ────────────────────────────────────────────────────────
@@ -250,6 +303,16 @@ function CreatePageInner() {
     </div>
   );
 
+  // ── PDF generasiya overlay (mobil) ──────────────────────────────────────────
+  const pdfOverlay = pdfLoading && (
+    <div style={{ position: 'fixed', inset: 0, background: '#0a0a0f', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, zIndex: 9999 }}>
+      <div style={{ width: 40, height: 40, border: '3px solid rgba(124,110,248,0.25)', borderTopColor: '#7C6EF8', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, fontWeight: 600, margin: 0 }}>
+        {lang === 'az' ? 'PDF hazırlanır...' : 'Generating PDF...'}
+      </p>
+    </div>
+  );
+
   // ── Mobile layout ─────────────────────────────────────────────────────────
   if (isMobile) {
     return (
@@ -257,6 +320,7 @@ function CreatePageInner() {
         <Navbar />
         <AuthModal />
         <ChatWidget />
+        {pdfOverlay}
         <div style={{ padding: '16px 14px' }}>
           <TopBar />
           <MobileTabs />
@@ -280,6 +344,7 @@ function CreatePageInner() {
       <AuthModal />
       <ChatWidget />
       {limitModal}
+      {pdfOverlay}
       <div style={{
         maxWidth: 1440, margin: '0 auto', padding: '24px 20px',
         display: 'grid',

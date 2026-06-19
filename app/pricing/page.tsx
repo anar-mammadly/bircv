@@ -84,12 +84,13 @@ function PricingInner() {
         </div>
 
         {/* Plans */}
-        <div className="grid-resp-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 60, maxWidth: 700, margin: '0 auto 60px' }}>
+        <div className="grid-resp-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'stretch', gap: 20, marginBottom: 60, maxWidth: 700, margin: '0 auto 60px' }}>
           {plans.map(plan => (
             <div key={plan.name} style={{
               background: plan.highlight ? 'rgba(124,110,248,0.08)' : '#111118',
               border: `1px solid ${plan.highlight ? 'rgba(124,110,248,0.4)' : 'rgba(255,255,255,0.08)'}`,
-              borderRadius: 20, padding: plan.highlight ? '40px 24px 32px' : '32px 24px', position: 'relative'
+              borderRadius: 20, padding: '32px 24px', position: 'relative',
+              display: 'flex', flexDirection: 'column', height: '100%'
             }}>
               {plan.highlight && (
                 <div style={{ position:'absolute', top:-14, left:'50%', transform:'translateX(-50%)', background:'#7C6EF8', color:'#fff', fontSize:12, fontWeight:700, padding:'4px 16px', borderRadius:20, whiteSpace:'nowrap' }}>
@@ -106,11 +107,11 @@ function PricingInner() {
                 ))}
               </div>
               {plan.href ? (
-                <Link href={plan.href} style={{ display:'block', textAlign:'center', background:'transparent', border:`1px solid ${plan.color}`, color:'#fff', textDecoration:'none', borderRadius:10, padding:'12px', fontSize:14, fontWeight:700 }}>
+                <Link href={plan.href} style={{ display:'block', textAlign:'center', background:'transparent', border:`1px solid ${plan.color}`, color:'#fff', textDecoration:'none', borderRadius:10, padding:'12px', fontSize:14, fontWeight:700, marginTop:'auto' }}>
                   {plan.cta}
                 </Link>
               ) : (
-                <a href={waLink(plan.wa!)} target="_blank" rel="noopener noreferrer" style={{ display:'block', textAlign:'center', background:plan.color, color:'#fff', textDecoration:'none', borderRadius:10, padding:'12px', fontSize:14, fontWeight:700 }}>
+                <a href={waLink(plan.wa!)} target="_blank" rel="noopener noreferrer" style={{ display:'block', textAlign:'center', background:plan.color, color:'#fff', textDecoration:'none', borderRadius:10, padding:'12px', fontSize:14, fontWeight:700, marginTop:'auto' }}>
                   {plan.cta}
                 </a>
               )}

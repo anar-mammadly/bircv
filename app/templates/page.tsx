@@ -7,11 +7,20 @@ import ChatWidget from '@/app/components/ChatWidget';
 
 // ── Mini preview components ───────────────────────────────────────────────────
 
+function AvatarIcon({ size, color }: { size:number; color:string }) {
+  return (
+    <svg width={size*0.52} height={size*0.52} viewBox="0 0 24 24" fill={color} style={{flexShrink:0}}>
+      <circle cx="12" cy="8.2" r="4.2"/>
+      <path d="M4 20.2c0-4.2 3.6-7.2 8-7.2s8 3 8 7.2V21H4v-0.8z"/>
+    </svg>
+  );
+}
+
 function KompaktPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
       <div style={{width:'36%',background:'#1a1a2e',padding:'12px 8px',display:'flex',flexDirection:'column',gap:6}}>
-        <div style={{width:32,height:32,borderRadius:'50%',background:'#2d2d5a',margin:'0 auto 4px',border:'2px solid rgba(255,255,255,0.2)'}}/>
+        <div style={{width:32,height:32,borderRadius:'50%',background:'#2d2d5a',margin:'0 auto 4px',border:'2px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={32} color="rgba(255,255,255,0.7)"/></div>
         <div style={{color:'#fff',fontWeight:800,fontSize:7,textAlign:'center',lineHeight:1.2}}>Əli Əliyev</div>
         <div style={{color:'#a5b4fc',fontSize:5,textAlign:'center',marginBottom:4}}>Frontend Dev</div>
         {[['Əlaqə','ali@gmail.com','+994 50 123 45 67'],['Bacarıqlar','React','TypeScript','Node.js']].map(([h,...items])=>(
@@ -42,7 +51,7 @@ function ModernPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#fff',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
       <div style={{background:'#7C6EF8',padding:'12px 14px',display:'flex',alignItems:'flex-start',gap:10}}>
-        <div style={{width:38,height:38,borderRadius:'50%',background:'rgba(255,255,255,0.25)',border:'2px solid rgba(255,255,255,0.45)',flexShrink:0}}/>
+        <div style={{width:38,height:38,borderRadius:'50%',background:'rgba(255,255,255,0.25)',border:'2px solid rgba(255,255,255,0.45)',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={38} color="#fff"/></div>
         <div>
           <div style={{color:'#fff',fontWeight:900,fontSize:10,letterSpacing:-0.3}}>Əli Əliyev</div>
           <div style={{color:'rgba(255,255,255,0.85)',fontSize:6,marginTop:2}}>Frontend Developer</div>
@@ -88,12 +97,16 @@ function MinimalPreview() {
           <div style={{fontWeight:700,fontSize:6.5,color:'#111'}}>Frontend Developer</div>
           <div style={{color:'#6b7280',fontSize:5,fontFamily:'Inter,sans-serif'}}>Kapital Bank · 2022–Now</div>
           <div style={{color:'#374151',fontSize:5,lineHeight:1.7,marginTop:2,fontFamily:'Inter,sans-serif'}}>— React development<br/>— API integrations</div>
+          <div style={{fontWeight:700,fontSize:6.5,color:'#111',marginTop:6}}>UI Developer</div>
+          <div style={{color:'#6b7280',fontSize:5,fontFamily:'Inter,sans-serif'}}>SoftCo · 2020–2022</div>
         </div>
         <div style={{width:'32%'}}>
           <div style={{fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,color:'#9ca3af',marginBottom:4,fontFamily:'Inter,sans-serif'}}>Skills</div>
           {['React','TypeScript','Node.js','Git'].map(s=>(
             <div key={s} style={{fontSize:5,color:'#374151',borderBottom:'0.5px solid #f3f4f6',padding:'2px 0',fontFamily:'Inter,sans-serif'}}>{s}</div>
           ))}
+          <div style={{fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,color:'#9ca3af',marginTop:7,marginBottom:4,fontFamily:'Inter,sans-serif'}}>Languages</div>
+          <div style={{fontSize:5,color:'#374151',fontFamily:'Inter,sans-serif'}}>AZ, EN, RU</div>
         </div>
       </div>
     </div>
@@ -104,7 +117,7 @@ function BoldPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#0f0f0f',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
       <div style={{background:'#FFD60A',padding:'12px 14px',display:'flex',alignItems:'flex-start',gap:10}}>
-        <div style={{width:38,height:38,borderRadius:6,background:'#0f0f0f',flexShrink:0}}/>
+        <div style={{width:38,height:38,borderRadius:6,background:'#0f0f0f',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={38} color="#FFD60A"/></div>
         <div>
           <div style={{color:'#0f0f0f',fontWeight:900,fontSize:11,letterSpacing:-0.5,textTransform:'uppercase'}}>Əli Əliyev</div>
           <div style={{color:'rgba(0,0,0,0.65)',fontSize:6,fontWeight:700}}>Frontend Developer</div>
@@ -135,7 +148,7 @@ function ElegantPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#faf7f4',fontSize:6,fontFamily:'Georgia,serif',overflow:'hidden'}}>
       <div style={{background:'#3d2b1f',padding:'14px',textAlign:'center'}}>
-        <div style={{width:36,height:36,borderRadius:'50%',background:'#6b4c35',margin:'0 auto 6px',border:'1.5px solid rgba(200,169,126,0.5)'}}/>
+        <div style={{width:36,height:36,borderRadius:'50%',background:'#6b4c35',margin:'0 auto 6px',border:'1.5px solid rgba(200,169,126,0.5)',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={36} color="#c8a97e"/></div>
         <div style={{color:'#c8a97e',fontWeight:700,fontSize:10,letterSpacing:1}}>Əli Əliyev</div>
         <div style={{color:'rgba(200,169,126,0.7)',fontSize:5.5,marginTop:2,fontStyle:'italic'}}>Frontend Developer</div>
         <div style={{color:'rgba(200,169,126,0.45)',fontSize:5,marginTop:3}}>ali@gmail.com · Bakı</div>
@@ -178,13 +191,17 @@ function KlassikPreview() {
           • RESTful API integrations, 30% speed improvement
         </div>
       </div>
-      <div>
+      <div style={{marginBottom:7}}>
         <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1px solid #111',marginBottom:4,paddingBottom:1.5}}>Education</div>
         <div style={{display:'flex',justifyContent:'space-between'}}>
           <span style={{fontWeight:700,fontSize:6}}>Baku State University</span>
           <span style={{fontSize:5.5,color:'#6b7280'}}>2018–2022</span>
         </div>
         <div style={{color:'#374151',fontSize:5}}>Computer Engineering, Bachelor</div>
+      </div>
+      <div>
+        <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1px solid #111',marginBottom:4,paddingBottom:1.5}}>Skills</div>
+        <div style={{color:'#374151',fontSize:5}}>React · TypeScript · Node.js · SQL · Git</div>
       </div>
     </div>
   );
@@ -194,7 +211,7 @@ function DesignerPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#f8fafc',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden',display:'flex'}}>
       <div style={{width:'34%',background:'#f0fdfa',borderRight:'1px solid #e2e8f0',padding:'10px 8px',display:'flex',flexDirection:'column',gap:6}}>
-        <div style={{width:48,height:48,borderRadius:10,background:'#6366f1',flexShrink:0,margin:'0 auto'}}/>
+        <div style={{width:48,height:48,borderRadius:10,background:'#6366f1',flexShrink:0,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={48} color="#fff"/></div>
         <div style={{textAlign:'center'}}>
           <div style={{fontSize:7,fontWeight:800,color:'#111'}}>Əli Əliyev</div>
           <div style={{fontSize:5,color:'#6366f1',fontWeight:600}}>Frontend Dev</div>
@@ -234,7 +251,7 @@ function ExecutivePreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
       <div style={{width:'34%',background:'#1e2a3a',padding:'12px 8px',display:'flex',flexDirection:'column',gap:6}}>
-        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.15)',margin:'0 auto 4px',border:'2px solid rgba(255,255,255,0.2)'}}/>
+        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.15)',margin:'0 auto 4px',border:'2px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={34} color="rgba(255,255,255,0.7)"/></div>
         <div style={{color:'rgba(255,255,255,0.9)',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:0.5,borderBottom:'0.5px solid rgba(255,255,255,0.15)',paddingBottom:3,marginBottom:2}}>Contact</div>
         {['ali@gmail.com','+994501234567','Bakı, AZ'].map(c=>(
           <div key={c} style={{color:'rgba(255,255,255,0.65)',fontSize:4.5}}>{c}</div>
@@ -257,9 +274,17 @@ function ExecutivePreview() {
             <svg width={14} height={14} viewBox="0 0 20 20"><circle cx={10} cy={10} r={10} fill="#1e2a3a"/><circle cx={10} cy={10} r={3} fill="white"/></svg>
             <div><div style={{fontSize:5,fontWeight:800,color:'#1e2a3a'}}>Work Experience</div><div style={{height:1,background:'#1e2a3a',marginTop:2}}/></div>
           </div>
-          <div style={{paddingLeft:6,borderLeft:'1.5px solid #ddd'}}>
+          <div style={{paddingLeft:6,borderLeft:'1.5px solid #ddd',marginBottom:7}}>
             <div style={{fontWeight:700,fontSize:6,color:'#1e2a3a'}}>Frontend Developer</div>
             <div style={{fontSize:5,color:'#555'}}>Kapital Bank · 2022–Now</div>
+          </div>
+          <div style={{display:'flex',alignItems:'flex-start',gap:6,marginBottom:5}}>
+            <svg width={14} height={14} viewBox="0 0 20 20"><circle cx={10} cy={10} r={10} fill="#1e2a3a"/><circle cx={10} cy={10} r={3} fill="white"/></svg>
+            <div><div style={{fontSize:5,fontWeight:800,color:'#1e2a3a'}}>Education</div><div style={{height:1,background:'#1e2a3a',marginTop:2}}/></div>
+          </div>
+          <div style={{paddingLeft:6,borderLeft:'1.5px solid #ddd'}}>
+            <div style={{fontWeight:700,fontSize:6,color:'#1e2a3a'}}>Baku State University</div>
+            <div style={{fontSize:5,color:'#555'}}>Computer Engineering · 2018–2022</div>
           </div>
         </div>
       </div>
@@ -271,7 +296,7 @@ function HeaderPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',flexDirection:'column',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
       <div style={{background:'#1a1a2e',padding:'10px 12px',display:'flex',alignItems:'flex-start',gap:8}}>
-        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.15)',border:'2px solid rgba(255,255,255,0.25)',flexShrink:0}}/>
+        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.15)',border:'2px solid rgba(255,255,255,0.25)',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={34} color="rgba(255,255,255,0.7)"/></div>
         <div style={{paddingTop:2}}>
           <div style={{fontSize:10,fontWeight:900,color:'#fff',textTransform:'uppercase'}}>Əli Əliyev</div>
           <div style={{fontSize:5.5,color:'rgba(255,255,255,0.55)',marginTop:1.5}}>FRONTEND DEVELOPER</div>

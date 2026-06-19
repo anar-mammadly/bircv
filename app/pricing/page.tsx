@@ -47,9 +47,9 @@ function PricingInner() {
     {
       icon: 'consult',
       title: lang === 'az' ? 'HR Onlayn Konsultasiya' : 'HR Online Consultation',
-      price: 20,
+      price: null,
       desc: lang === 'az' ? 'Professional HR mütəxəssisi ilə 30 dəqiqəlik video görüş.' : '30-minute video call with an HR specialist.',
-      wa: lang === 'az' ? 'Salam! HR Onlayn Konsultasiya sifariş etmək istəyirəm (20 AZN).' : 'Hello! I want to order HR Online Consultation (20 AZN).',
+      wa: lang === 'az' ? 'Salam! HR Onlayn Konsultasiya xidməti haqqında sorğum var.' : 'Hello! I have an inquiry about the HR Online Consultation service.',
     },
     {
       icon: 'write',
@@ -126,9 +126,9 @@ function PricingInner() {
           {lang === 'az' ? 'Bir dəfəlik ödənişlər' : 'One-time payments'}
         </p>
 
-        <div className="grid-resp-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:16 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))', gap:16 }}>
           {oneTime.map(svc => (
-            <div key={svc.title} style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.08)', borderRadius:16, padding:'24px 20px' }}>
+            <div key={svc.title} style={{ display:'flex', flexDirection:'column', background:'#111118', border:'1px solid rgba(255,255,255,0.08)', borderRadius:16, padding:'24px 20px' }}>
               <div style={{ width:46, height:46, borderRadius:12, background:'rgba(124,110,248,0.12)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:14 }}>
                 {svc.icon === 'consult' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a89ef8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>}
                 {svc.icon === 'write' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a89ef8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>}
@@ -136,14 +136,16 @@ function PricingInner() {
               </div>
               <h3 style={{ fontSize:15, fontWeight:700, color:'#fff', marginBottom:8 }}>{svc.title}</h3>
               <p style={{ fontSize:12.5, color:'rgba(255,255,255,0.45)', lineHeight:1.6, marginBottom:16 }}>{svc.desc}</p>
-              <div style={{ fontSize:24, fontWeight:800, color:'#7C6EF8', marginBottom:12 }}>{svc.price} AZN</div>
+              <div style={{ fontSize:24, fontWeight:800, color:'#7C6EF8', marginBottom:12 }}>
+                {svc.price != null ? `${svc.price} AZN` : (lang === 'az' ? 'Təklif al' : 'Get a quote')}
+              </div>
               <a
                 href={waLink(svc.wa)}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ display:'block', textAlign:'center', background:'rgba(124,110,248,0.15)', border:'1px solid rgba(124,110,248,0.3)', color:'#a89ef8', borderRadius:8, padding:'10px', fontSize:13, fontWeight:600, textDecoration:'none' }}
+                style={{ display:'block', textAlign:'center', background:'rgba(124,110,248,0.15)', border:'1px solid rgba(124,110,248,0.3)', color:'#a89ef8', borderRadius:8, padding:'10px', fontSize:13, fontWeight:600, textDecoration:'none', marginTop:'auto' }}
               >
-                {lang === 'az' ? 'Sifariş et' : 'Order'}
+                {lang === 'az' ? 'Təklif al' : 'Get a quote'}
               </a>
             </div>
           ))}

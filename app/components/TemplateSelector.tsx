@@ -4,7 +4,7 @@ import { useCVStore } from '@/app/store/cvStore';
 import { TemplateId } from '@/app/types/cv';
 import { Crown, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const TEMPLATES: { id: TemplateId; name: string; premium: boolean; color: string }[] = [
+export const TEMPLATES: { id: TemplateId; name: string; premium: boolean; color: string }[] = [
   { id: 'kompakt',  name: 'Kompakt',  premium: false, color: '#4f46e5' },
   { id: 'modern',   name: 'Modern',   premium: false, color: '#7C6EF8' },
   { id: 'minimal',  name: 'Minimal',  premium: false, color: '#6b7280' },

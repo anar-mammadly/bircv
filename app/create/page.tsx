@@ -4,7 +4,7 @@ import { useCVStore } from '@/app/store/cvStore';
 import Navbar from '@/app/components/Navbar';
 import CVForm from '@/app/components/CVForm';
 import CVPreview from '@/app/components/CVPreview';
-import TemplateSelector from '@/app/components/TemplateSelector';
+import TemplateSelector, { TEMPLATES } from '@/app/components/TemplateSelector';
 import AuthModal from '@/app/components/AuthModal';
 import ServicesPanel from '@/app/components/ServicesPanel';
 import ChatWidget from '@/app/components/ChatWidget';
@@ -60,6 +60,7 @@ function CreatePageInner() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfSuccess, setPdfSuccess] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [demoActive, setDemoActive] = useState(false);
   const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
   const [isMobile, setIsMobile] = useState(false);
@@ -186,6 +187,13 @@ function CreatePageInner() {
       setShowLimitModal(true);
       return;
     }
+    // Premium şablon yalnız premium/admin plana sahib istifadəçilər üçün yüklənə bilər —
+    // selectedTemplate UI-da seçilə bilsə də (önizləmə üçün), endirmə anında yenidən yoxlanılır.
+    const isPremiumTemplate = TEMPLATES.find(t => t.id === selectedTemplate)?.premium;
+    if (isPremiumTemplate && user.plan !== 'premium' && user.plan !== 'admin') {
+      setShowPremiumModal(true);
+      return;
+    }
 
     if (isMobileDevice()) {
       handleDownloadMobile();
@@ -303,6 +311,31 @@ function CreatePageInner() {
     </div>
   );
 
+  // ── Premium şablon modal ────────────────────────────────────────────────────
+  const premiumModal = showPremiumModal && (
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'0 16px' }}>
+      <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, padding:32, maxWidth:400, width:'100%', textAlign:'center' }}>
+        <div style={{ width:56, height:56, borderRadius:'50%', background:'rgba(255,214,10,0.12)', border:'2px solid rgba(255,214,10,0.3)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
+          <Lock size={24} style={{ color: '#FFD60A' }} />
+        </div>
+        <h2 style={{ color:'#fff', fontSize:20, fontWeight:800, margin:'0 0 10px' }}>
+          {lang==='az' ? 'Bu şablon Premium-dur' : 'This template is Premium'}
+        </h2>
+        <p style={{ color:'rgba(255,255,255,0.55)', fontSize:14, lineHeight:1.6, margin:'0 0 24px' }}>
+          {lang==='az'
+            ? 'Bu şablonla CV yükləmək üçün Premium plana keçməlisiniz. Pulsuz plan üçün başqa şablon seçin.'
+            : 'Downloading with this template requires Premium. Choose a free template, or upgrade.'}
+        </p>
+        <a href="/pricing" style={{ display:'block', background:'#7C6EF8', color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', marginBottom:12 }}>
+          {lang==='az' ? '✨ Premium-a keç' : '✨ Upgrade to Premium'}
+        </a>
+        <button onClick={()=>setShowPremiumModal(false)} style={{ background:'transparent', border:'1px solid rgba(255,255,255,0.15)', color:'rgba(255,255,255,0.5)', borderRadius:12, padding:'11px 0', fontSize:14, cursor:'pointer', width:'100%' }}>
+          {lang==='az' ? 'Bağla' : 'Close'}
+        </button>
+      </div>
+    </div>
+  );
+
   // ── PDF generasiya overlay (mobil) ──────────────────────────────────────────
   const pdfOverlay = pdfLoading && (
     <div style={{ position: 'fixed', inset: 0, background: '#0a0a0f', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, zIndex: 9999 }}>
@@ -320,6 +353,8 @@ function CreatePageInner() {
         <Navbar />
         <AuthModal />
         <ChatWidget />
+        {limitModal}
+        {premiumModal}
         {pdfOverlay}
         <div style={{ padding: '16px 14px' }}>
           <TopBar />
@@ -344,6 +379,7 @@ function CreatePageInner() {
       <AuthModal />
       <ChatWidget />
       {limitModal}
+      {premiumModal}
       {pdfOverlay}
       <div style={{
         maxWidth: 1440, margin: '0 auto', padding: '24px 20px',

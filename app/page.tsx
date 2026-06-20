@@ -115,6 +115,12 @@ function LandingInner() {
           </Link>
         </div>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: 0 }}>© 2026 BirCV · bircv.az · support@bircv.az</p>
+        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: '6px 0 0' }}>
+          Developed by{' '}
+          <a href="https://narix.az" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'underline' }}>
+            Narix
+          </a>
+        </p>
       </footer>
     </div>
   );

@@ -24,7 +24,6 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
 
       {/* Header */}
       <div style={{ background:'#0a0a0a', padding:'30px 28px 22px', color:'#fff', position:'relative', overflow:'hidden' }}>
-        <div style={{ position:'absolute', top:0, right:0, width:160, height:'100%', background:'linear-gradient(135deg,transparent 40%,#FFD60A 40%,#FFD60A 44%,transparent 44%)', opacity:0.9 }}/>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:14, position:'relative' }}>
           <div>
             <div style={{ display:'flex', gap:9, alignItems:'flex-end', flexWrap:'wrap' as const, fontFamily:'"Archivo",sans-serif' }}>

@@ -59,11 +59,16 @@ export function CVProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<AppLanguage>('az');
   const setLang = (l: AppLanguage) => {
     setLangState(l);
-    if (typeof window !== 'undefined') localStorage.setItem('bircv_lang', l);
+    if (typeof window !== 'undefined') {
+      document.documentElement.setAttribute('lang', l);
+      localStorage.setItem('bircv_lang', l);
+    }
   };
   useEffect(() => {
     const saved = localStorage.getItem('bircv_lang') as AppLanguage | null;
-    if (saved === 'az' || saved === 'en') setLangState(saved);
+    const l = saved === 'az' || saved === 'en' ? saved : 'az';
+    setLangState(l);
+    document.documentElement.setAttribute('lang', l);
   }, []);
   const [user, setUserState] = useState<User | null>(null);
 

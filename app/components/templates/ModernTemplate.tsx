@@ -21,55 +21,55 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
   const present = lang==='az'?'İndiyə qədər':'Present';
 
   const SecLabel = ({ children }: { children: string }) => (
-    <div style={{ fontSize:9, fontWeight:800, color:'#6c5ce7', textTransform:'uppercase' as const, letterSpacing:1.5, borderBottom:'2px solid #6c5ce7', paddingBottom:5, marginBottom:10 }}>
+    <div style={{ fontSize:9.5, fontWeight:800, color:'#6c5ce7', textTransform:'uppercase' as const, letterSpacing:1.5, borderBottom:'2px solid #6c5ce7', paddingBottom:6, marginBottom:12 }}>
       {children}
     </div>
   );
 
   return (
-    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#1a1a2e', width:'100%', minHeight:'297mm', fontSize:10, display:'flex', flexDirection:'column' }}>
+    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#1a1a2e', width:'100%', minHeight:'297mm', fontSize:10.5, display:'flex', flexDirection:'column' }}>
 
       {/* Header */}
-      <div style={{ background:'#6c5ce7', padding:'22px 26px 18px', color:'#fff' }}>
+      <div style={{ background:'#6c5ce7', padding:'26px 28px 20px', color:'#fff' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:14 }}>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:22, fontWeight:800, letterSpacing:-0.5, lineHeight:1.15 }}>{p.firstName} {p.lastName}</div>
-            {p.jobTitle && <div style={{ fontSize:11, marginTop:3, fontWeight:500, letterSpacing:0.8, color:'rgba(255,255,255,0.9)' }}>{p.jobTitle}</div>}
+            <div style={{ fontSize:24, fontWeight:800, letterSpacing:-0.5, lineHeight:1.2 }}>{p.firstName} {p.lastName}</div>
+            {p.jobTitle && <div style={{ fontSize:12, marginTop:4, fontWeight:500, letterSpacing:0.8, color:'rgba(255,255,255,0.9)' }}>{p.jobTitle}</div>}
             {/* SVG icons — no emoji */}
-            <div style={{ display:'flex', alignItems:'flex-start', gap:12, marginTop:10, flexWrap:'wrap' as const }}>
-              {p.email    && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="email"/></div><span style={{ fontSize:9.5, color:'rgba(255,255,255,0.9)' }}>{p.email}</span></div>}
-              {p.phone    && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="phone"/></div><span style={{ fontSize:9.5, color:'rgba(255,255,255,0.9)' }}>{p.phone}</span></div>}
-              {p.city     && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="pin"/></div><span style={{ fontSize:9.5, color:'rgba(255,255,255,0.9)' }}>{p.city}{p.country?', '+p.country:''}</span></div>}
-              {p.linkedin && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="link"/></div><span style={{ fontSize:9.5, color:'rgba(255,255,255,0.9)' }}>{p.linkedin}</span></div>}
+            <div style={{ display:'flex', alignItems:'flex-start', gap:12, marginTop:12, flexWrap:'wrap' as const }}>
+              {p.email    && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="email"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.email}</span></div>}
+              {p.phone    && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="phone"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.phone}</span></div>}
+              {p.city     && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="pin"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.city}{p.country?', '+p.country:''}</span></div>}
+              {p.linkedin && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="link"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.linkedin}</span></div>}
             </div>
           </div>
-          {p.photo && <img src={p.photo} alt="photo" style={{ width:68, height:68, borderRadius:'50%', objectFit:'cover', border:'3px solid rgba(255,255,255,0.4)', flexShrink:0 }} />}
+          {p.photo && <img src={p.photo} alt="photo" style={{ width:72, height:72, borderRadius:'50%', objectFit:'cover', border:'3px solid rgba(255,255,255,0.4)', flexShrink:0 }} />}
         </div>
       </div>
 
-      <div style={{ padding:'16px 26px', display:'flex', flexDirection:'column', gap:14, paddingBottom:'14px', flex:1, justifyContent:'space-between' }}>
+      <div style={{ padding:'20px 28px', display:'flex', flexDirection:'column', gap:20, paddingBottom:'20px' }}>
         {p.summary && (
           <div>
             <SecLabel>{lang==='az'?'Özəl':'Summary'}</SecLabel>
-            <div style={{ fontSize:10, color:'#374151', lineHeight:1.7 }}>{p.summary}</div>
+            <div style={{ fontSize:10.5, color:'#374151', lineHeight:1.75 }}>{p.summary}</div>
           </div>
         )}
 
         {experience.length>0 && (
           <div>
             <SecLabel>{lang==='az'?'İş Təcrübəsi':'Work Experience'}</SecLabel>
-            <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
               {experience.map(exp => (
-                <div key={exp.id} style={{ paddingLeft:10, borderLeft:'2px solid #e0d9ff' }}>
+                <div key={exp.id} style={{ paddingLeft:12, borderLeft:'2px solid #e0d9ff' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
-                    <span style={{ fontWeight:700, fontSize:11, color:'#1a1a2e', lineHeight:1.3 }}>{exp.jobTitle}</span>
-                    <span style={{ fontSize:9, color:'#9ca3af', flexShrink:0, fontWeight:500 }}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span>
+                    <span style={{ fontWeight:700, fontSize:11.5, color:'#1a1a2e', lineHeight:1.35 }}>{exp.jobTitle}</span>
+                    <span style={{ fontSize:9.5, color:'#9ca3af', flexShrink:0, fontWeight:500 }}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span>
                   </div>
-                  <div style={{ fontSize:10, color:'#6c5ce7', fontWeight:600, marginBottom:3 }}>{exp.company}{exp.city?' · '+exp.city:''}</div>
+                  <div style={{ fontSize:10.5, color:'#6c5ce7', fontWeight:600, marginBottom:4 }}>{exp.company}{exp.city?' · '+exp.city:''}</div>
                   {exp.description && (
-                    <div style={{ fontSize:9.5, color:'#4b5563', lineHeight:1.65 }}>
+                    <div style={{ fontSize:10, color:'#4b5563', lineHeight:1.7 }}>
                       {exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number) => (
-                        <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:5, marginBottom:2 }}>
+                        <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:5, marginBottom:3 }}>
                           <span style={{ color:'#6c5ce7', flexShrink:0, marginTop:1 }}>•</span>
                           <span>{line.replace(/^[•\-]\s*/,'')}</span>
                         </div>
@@ -82,28 +82,28 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
           </div>
         )}
 
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:18 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:22 }}>
           {education.length>0 && (
             <div>
               <SecLabel>{lang==='az'?'Təhsil':'Education'}</SecLabel>
-              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 {education.map(edu => (
                   <div key={edu.id}>
-                    <div style={{ fontWeight:700, fontSize:10.5, lineHeight:1.3 }}>{edu.degree||edu.school}</div>
-                    {edu.school&&edu.degree && <div style={{ fontSize:9.5, color:'#6b7280' }}>{edu.school}</div>}
-                    <div style={{ fontSize:9, color:'#9ca3af', fontWeight:500 }}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div>
+                    <div style={{ fontWeight:700, fontSize:11, lineHeight:1.35 }}>{edu.degree||edu.school}</div>
+                    {edu.school&&edu.degree && <div style={{ fontSize:10, color:'#6b7280' }}>{edu.school}</div>}
+                    <div style={{ fontSize:9.5, color:'#9ca3af', fontWeight:500 }}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div>
                   </div>
                 ))}
               </div>
             </div>
           )}
-          <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
             {skills.length>0 && (
               <div>
                 <SecLabel>{lang==='az'?'Bacarıqlar':'Skills'}</SecLabel>
-                <div style={{ display:'flex', flexWrap:'wrap' as const, gap:4, marginTop:4 }}>
+                <div style={{ display:'flex', flexWrap:'wrap' as const, gap:5, marginTop:4 }}>
                   {skills.map((s,i) => (
-                    <div key={i} style={{ fontSize:9.5, padding:'3px 8px', background:'#f0eeff', color:'#6c5ce7', borderRadius:4, fontWeight:600, display:'block' }}>{s}</div>
+                    <div key={i} style={{ fontSize:10, padding:'4px 9px', background:'#f0eeff', color:'#6c5ce7', borderRadius:4, fontWeight:600, display:'block' }}>{s}</div>
                   ))}
                 </div>
               </div>
@@ -111,9 +111,9 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
             {languages.length>0 && (
               <div>
                 <SecLabel>{lang==='az'?'Dillər':'Languages'}</SecLabel>
-                <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
                   {languages.map((l,i) => (
-                    <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10 }}>
+                    <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}>
                       <span style={{ fontWeight:500 }}>{l.name}</span>
                       <span style={{ color:'#9ca3af' }}>{l.level}</span>
                     </div>
@@ -127,9 +127,9 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
         {certs.length>0 && (
           <div>
             <SecLabel>{lang==='az'?'Sertifikatlar':'Certificates'}</SecLabel>
-            <div style={{ display:'flex', flexDirection:'column', gap:3 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
               {certs.map((c:any,i:number) => (
-                <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10 }}>
+                <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}>
                   <div><span style={{ fontWeight:600 }}>{c.name}</span>{c.issuer&&<span style={{ color:'#9ca3af', marginLeft:5 }}>· {c.issuer}</span>}</div>
                   {c.year&&<span style={{ color:'#9ca3af', flexShrink:0, marginLeft:8 }}>{c.year}</span>}
                 </div>
@@ -141,9 +141,9 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
         {trains.length>0 && (
           <div>
             <SecLabel>{lang==='az'?'Təlimlər':'Training'}</SecLabel>
-            <div style={{ display:'flex', flexDirection:'column', gap:3 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
               {trains.map((tr:any,i:number) => (
-                <div key={i} style={{ fontSize:10 }}>
+                <div key={i} style={{ fontSize:10.5 }}>
                   <span style={{ fontWeight:600 }}>{tr.name}</span>
                   {tr.provider&&<span style={{ color:'#9ca3af' }}> · {tr.provider}</span>}
                   {tr.year&&<span style={{ color:'#9ca3af' }}> · {tr.year}</span>}
@@ -156,7 +156,7 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
         {additional && (
           <div>
             <SecLabel>{lang==='az'?'Əlavə':'Additional'}</SecLabel>
-            <div style={{ fontSize:10, color:'#4b5563', lineHeight:1.65, whiteSpace:'pre-line' }}>{additional}</div>
+            <div style={{ fontSize:10.5, color:'#4b5563', lineHeight:1.7, whiteSpace:'pre-line' }}>{additional}</div>
           </div>
         )}
       </div>

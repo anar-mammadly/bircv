@@ -147,6 +147,7 @@ function CreatePageInner() {
         import('html2canvas'),
         import('jspdf'),
       ]);
+      if (typeof document !== 'undefined' && 'fonts' in document) await document.fonts.ready;
       const pages = Array.from(clone.querySelectorAll<HTMLElement>('.__print_page'));
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
       for (let i = 0; i < pages.length; i++) {

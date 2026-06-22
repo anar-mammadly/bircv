@@ -13,7 +13,9 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
 
   const SecHead = ({ children }: { children: string }) => (
     <div style={{ marginBottom:12 }}>
-      <div style={{ display:'inline-block', fontSize:10, fontWeight:900, textTransform:'uppercase' as const, letterSpacing:1.5, background:'#111', color:'#fff', padding:'4px 11px', marginBottom:8 }}>{children}</div>
+      <div style={{ display:'inline-block', fontFamily:'"Archivo",sans-serif', fontSize:10, fontWeight:900, textTransform:'uppercase' as const, letterSpacing:1.5, background:'#0a0a0a', color:'#fff', padding:'5px 12px', marginBottom:8, transform:'skewX(-6deg)' }}>
+        <span style={{ display:'inline-block', transform:'skewX(6deg)' }}>{children}</span>
+      </div>
     </div>
   );
 
@@ -21,14 +23,15 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
     <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#0a0a0a', width:'100%', minHeight:'297mm', fontSize:10.5, display:'flex', flexDirection:'column' }}>
 
       {/* Header */}
-      <div style={{ background:'#111', padding:'28px 28px 20px', color:'#fff' }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:14 }}>
+      <div style={{ background:'#0a0a0a', padding:'30px 28px 22px', color:'#fff', position:'relative', overflow:'hidden' }}>
+        <div style={{ position:'absolute', top:0, right:0, width:160, height:'100%', background:'linear-gradient(135deg,transparent 40%,#FFD60A 40%,#FFD60A 44%,transparent 44%)', opacity:0.9 }}/>
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:14, position:'relative' }}>
           <div>
-            <div style={{ display:'flex', gap:8, alignItems:'flex-end', flexWrap:'wrap' as const }}>
-              <span style={{ fontSize:26, fontWeight:900, letterSpacing:-1, lineHeight:1.15, textTransform:'uppercase' as const }}>{p.firstName}</span>
-              <span style={{ fontSize:26, fontWeight:900, letterSpacing:-1, lineHeight:1.15, textTransform:'uppercase' as const, color:'#FFD60A' }}>{p.lastName}</span>
+            <div style={{ display:'flex', gap:9, alignItems:'flex-end', flexWrap:'wrap' as const, fontFamily:'"Archivo",sans-serif' }}>
+              <span style={{ fontSize:30, fontWeight:900, letterSpacing:-1, lineHeight:1.1, textTransform:'uppercase' as const }}>{p.firstName}</span>
+              <span style={{ fontSize:30, fontWeight:900, letterSpacing:-1, lineHeight:1.1, textTransform:'uppercase' as const, color:'#FFD60A' }}>{p.lastName}</span>
             </div>
-            {p.jobTitle && <div style={{ fontSize:11, fontWeight:600, color:'rgba(255,255,255,0.65)', marginTop:6, textTransform:'uppercase' as const, letterSpacing:1.8 }}>{p.jobTitle}</div>}
+            {p.jobTitle && <div style={{ fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.65)', marginTop:7, textTransform:'uppercase' as const, letterSpacing:1.8, fontFamily:'"Archivo",sans-serif' }}>{p.jobTitle}</div>}
             <div style={{ display:'flex', gap:14, marginTop:10, fontSize:10, color:'rgba(255,255,255,0.55)', flexWrap:'wrap' as const }}>
               {p.email    && <span>{p.email}</span>}
               {p.phone    && <span>{p.phone}</span>}
@@ -52,7 +55,7 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
               {experience.map(exp => (
                 <div key={exp.id} style={{ borderLeft:'3px solid #FFD60A', paddingLeft:12 }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
-                    <span style={{ fontWeight:800, fontSize:11.5, textTransform:'uppercase' as const, letterSpacing:0.2, lineHeight:1.35 }}>{exp.jobTitle}</span>
+                    <span style={{ fontWeight:800, fontSize:11.5, textTransform:'uppercase' as const, letterSpacing:0.2, lineHeight:1.35, fontFamily:'"Archivo",sans-serif' }}>{exp.jobTitle}</span>
                     <span style={{ fontSize:9.5, color:'#6b7280', fontWeight:500, flexShrink:0 }}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span>
                   </div>
                   <div style={{ fontSize:10.5, color:'#6b7280', fontWeight:600, marginBottom:4 }}>{exp.company}{exp.city?' · '+exp.city:''}</div>
@@ -79,7 +82,7 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
               <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
                 {education.map(edu => (
                   <div key={edu.id}>
-                    <div style={{ fontWeight:700, fontSize:11 }}>{edu.degree||edu.school}</div>
+                    <div style={{ fontWeight:700, fontSize:11, fontFamily:'"Archivo",sans-serif' }}>{edu.degree||edu.school}</div>
                     {edu.school&&edu.degree && <div style={{ fontSize:10.5, color:'#6b7280' }}>{edu.school}</div>}
                     <div style={{ fontSize:9.5, color:'#9ca3af' }}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div>
                   </div>

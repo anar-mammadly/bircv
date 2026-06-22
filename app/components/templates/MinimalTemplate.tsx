@@ -19,38 +19,38 @@ export default function MinimalTemplate({ data, lang }: { data: CVData; lang: 'a
 
   const SecHead = ({ children }: { children: string }) => (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: 2, color: '#6b7280', marginBottom: 5 }}>
+      <div style={{ fontSize: 9.5, fontWeight: 500, textTransform: 'uppercase' as const, letterSpacing: 3, color: '#a8a8a8', marginBottom: 6, fontFamily: '"Work Sans",sans-serif' }}>
         {children}
       </div>
-      <div style={{ height: 0.5, background: '#d1d5db' }} />
+      <div style={{ height: 0.5, background: '#e8e8e8' }} />
     </div>
   );
 
   return (
     <div style={{
-      fontFamily: '"Inter","Segoe UI",Arial,sans-serif',
+      fontFamily: '"Work Sans","Segoe UI",Arial,sans-serif',
       background: '#fff', color: '#1c1c1c',
       width: '100%', minHeight: '297mm',
-      padding: '32px 36px', fontSize: 10.5,
+      padding: '38px 40px', fontSize: 10.5,
       display: 'flex', flexDirection: 'column'
     }}>
 
       {/* Header */}
-      <div style={{ marginBottom: 22, paddingBottom: 16, borderBottom: '1px solid #e5e7eb' }}>
+      <div style={{ marginBottom: 26, paddingBottom: 18, borderBottom: '1px solid #ececec' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14 }}>
           <div style={{ flex: 1 }}>
             <h1 style={{
-              fontSize: 25, fontWeight: 700, margin: '0 0 4px',
-              letterSpacing: -0.5, lineHeight: 1.2, color: '#111'
+              fontSize: 28, fontWeight: 300, margin: '0 0 5px',
+              letterSpacing: 0.5, lineHeight: 1.2, color: '#0a0a0a'
             }}>
-              {p.firstName} {p.lastName}
+              {p.firstName} <span style={{ fontWeight: 600 }}>{p.lastName}</span>
             </h1>
             {p.jobTitle && (
-              <p style={{ fontSize: 12, color: '#6b7280', margin: '0 0 10px', fontWeight: 400, letterSpacing: 0.2 }}>
+              <p style={{ fontSize: 11, color: '#a8a8a8', margin: '0 0 12px', fontWeight: 500, letterSpacing: 2.5, textTransform: 'uppercase' as const }}>
                 {p.jobTitle}
               </p>
             )}
-            <div style={{ display: 'flex', gap: 14, fontSize: 10, color: '#6b7280', flexWrap: 'wrap' as const }}>
+            <div style={{ display: 'flex', gap: 16, fontSize: 9.5, color: '#888', flexWrap: 'wrap' as const }}>
               {p.email && <span>{p.email}</span>}
               {p.phone && <span>{p.phone}</span>}
               {p.city && <span>{p.city}{p.country ? ', ' + p.country : ''}</span>}
@@ -59,8 +59,8 @@ export default function MinimalTemplate({ data, lang }: { data: CVData; lang: 'a
           </div>
           {p.photo && (
             <img src={p.photo} alt="photo" style={{
-              width: 62, height: 62, borderRadius: '50%',
-              objectFit: 'cover', flexShrink: 0, border: '1px solid #e5e7eb'
+              width: 58, height: 58, borderRadius: '50%',
+              objectFit: 'cover', flexShrink: 0
             }} />
           )}
         </div>
@@ -95,7 +95,7 @@ export default function MinimalTemplate({ data, lang }: { data: CVData; lang: 'a
                     <div style={{ fontSize: 10, color: '#4b5563', lineHeight: 1.7 }}>
                       {exp.description.split('\n').filter((l: string) => l.trim()).map((line: string, i: number) => (
                         <div key={i} style={{ display: 'flex', gap: 5, marginBottom: 3 }}>
-                          <span style={{ flexShrink: 0, color: '#9ca3af' }}>•</span>
+                          <span style={{ flexShrink: 0, color: '#c4c4c4' }}>–</span>
                           <span>{line.replace(/^[•\-]\s*/, '')}</span>
                         </div>
                       ))}

@@ -20,9 +20,12 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
   const trains = (data as any).trainings    || [];
   const present = lang==='az'?'İndiyə qədər':'Present';
 
+  const ACCENT = '#6D28D9';
+
   const SecLabel = ({ children }: { children: string }) => (
-    <div style={{ fontSize:9.5, fontWeight:800, color:'#6c5ce7', textTransform:'uppercase' as const, letterSpacing:1.5, borderBottom:'2px solid #6c5ce7', paddingBottom:6, marginBottom:12 }}>
+    <div style={{ fontSize:9.5, fontWeight:700, color:ACCENT, textTransform:'uppercase' as const, letterSpacing:1.8, marginBottom:12, fontFamily:'"Space Grotesk",sans-serif', display:'flex', alignItems:'center', gap:8 }}>
       {children}
+      <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(109,40,217,0.35),transparent)' }}/>
     </div>
   );
 
@@ -30,10 +33,10 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
     <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#1a1a2e', width:'100%', minHeight:'297mm', fontSize:10.5, display:'flex', flexDirection:'column' }}>
 
       {/* Header */}
-      <div style={{ background:'#6c5ce7', padding:'26px 28px 20px', color:'#fff' }}>
+      <div style={{ background:`linear-gradient(120deg,${ACCENT} 0%,#8B5CF6 100%)`, padding:'28px 28px 22px', color:'#fff' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:14 }}>
           <div style={{ flex:1 }}>
-            <div style={{ fontSize:24, fontWeight:800, letterSpacing:-0.5, lineHeight:1.2 }}>{p.firstName} {p.lastName}</div>
+            <div style={{ fontFamily:'"Space Grotesk",sans-serif', fontSize:26, fontWeight:700, letterSpacing:-0.5, lineHeight:1.2 }}>{p.firstName} {p.lastName}</div>
             {p.jobTitle && <div style={{ fontSize:12, marginTop:4, fontWeight:500, letterSpacing:0.8, color:'rgba(255,255,255,0.9)' }}>{p.jobTitle}</div>}
             {/* SVG icons — no emoji */}
             <div style={{ display:'flex', alignItems:'flex-start', gap:12, marginTop:12, flexWrap:'wrap' as const }}>
@@ -60,17 +63,17 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
             <SecLabel>{lang==='az'?'İş Təcrübəsi':'Work Experience'}</SecLabel>
             <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
               {experience.map(exp => (
-                <div key={exp.id} style={{ paddingLeft:12, borderLeft:'2px solid #e0d9ff' }}>
+                <div key={exp.id} style={{ paddingLeft:12, borderLeft:'2px solid #ede4fc' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
                     <span style={{ fontWeight:700, fontSize:11.5, color:'#1a1a2e', lineHeight:1.35 }}>{exp.jobTitle}</span>
                     <span style={{ fontSize:9.5, color:'#9ca3af', flexShrink:0, fontWeight:500 }}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span>
                   </div>
-                  <div style={{ fontSize:10.5, color:'#6c5ce7', fontWeight:600, marginBottom:4 }}>{exp.company}{exp.city?' · '+exp.city:''}</div>
+                  <div style={{ fontSize:10.5, color:ACCENT, fontWeight:600, marginBottom:4 }}>{exp.company}{exp.city?' · '+exp.city:''}</div>
                   {exp.description && (
                     <div style={{ fontSize:10, color:'#4b5563', lineHeight:1.7 }}>
                       {exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number) => (
                         <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:5, marginBottom:3 }}>
-                          <span style={{ color:'#6c5ce7', flexShrink:0, marginTop:1 }}>•</span>
+                          <span style={{ color:ACCENT, flexShrink:0, marginTop:1 }}>•</span>
                           <span>{line.replace(/^[•\-]\s*/,'')}</span>
                         </div>
                       ))}
@@ -103,7 +106,7 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
                 <SecLabel>{lang==='az'?'Bacarıqlar':'Skills'}</SecLabel>
                 <div style={{ display:'flex', flexWrap:'wrap' as const, gap:5, marginTop:4 }}>
                   {skills.map((s,i) => (
-                    <div key={i} style={{ fontSize:10, padding:'4px 9px', background:'#f0eeff', color:'#6c5ce7', borderRadius:4, fontWeight:600, display:'block' }}>{s}</div>
+                    <div key={i} style={{ fontSize:10, padding:'4px 9px', background:'#f3eefc', color:ACCENT, borderRadius:4, fontWeight:600, display:'block' }}>{s}</div>
                   ))}
                 </div>
               </div>

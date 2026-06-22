@@ -18,27 +18,27 @@ function AvatarIcon({ size, color }: { size:number; color:string }) {
 
 function KompaktPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
-      <div style={{width:'36%',background:'#1a1a2e',padding:'12px 8px',display:'flex',flexDirection:'column',gap:6}}>
-        <div style={{width:32,height:32,borderRadius:'50%',background:'#2d2d5a',margin:'0 auto 4px',border:'2px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={32} color="rgba(255,255,255,0.7)"/></div>
-        <div style={{color:'#fff',fontWeight:800,fontSize:7,textAlign:'center',lineHeight:1.2}}>Əli Əliyev</div>
-        <div style={{color:'#a5b4fc',fontSize:5,textAlign:'center',marginBottom:4}}>Frontend Dev</div>
+    <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',fontSize:6,fontFamily:'Manrope,Inter,sans-serif',overflow:'hidden'}}>
+      <div style={{width:'36%',background:'#f7f7fb',padding:'12px 8px',display:'flex',flexDirection:'column',gap:6}}>
+        <div style={{width:32,height:32,borderRadius:'50%',background:'linear-gradient(135deg,#4338CA,#7C6EF8)',margin:'0 auto 4px',padding:2,display:'flex',alignItems:'center',justifyContent:'center'}}><div style={{width:'100%',height:'100%',borderRadius:'50%',background:'#e2e1f5',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={26} color="#4338CA"/></div></div>
+        <div style={{color:'#16162c',fontWeight:800,fontSize:7,textAlign:'center',lineHeight:1.2}}>Əli Əliyev</div>
+        <div style={{color:'#4338CA',fontSize:5,textAlign:'center',marginBottom:4,fontWeight:700}}>Frontend Dev</div>
         {[['Əlaqə','ali@gmail.com','+994 50 123 45 67'],['Bacarıqlar','React','TypeScript','Node.js']].map(([h,...items])=>(
-          <div key={h} style={{borderTop:'0.5px solid rgba(255,255,255,0.12)',paddingTop:5}}>
-            <div style={{color:'#7C6EF8',fontSize:4.5,fontWeight:700,marginBottom:3,textTransform:'uppercase',letterSpacing:0.8}}>{h}</div>
-            {items.map(i=><div key={i} style={{color:'rgba(255,255,255,0.65)',fontSize:5,marginBottom:2}}>• {i}</div>)}
+          <div key={h} style={{borderTop:'0.5px solid rgba(67,56,202,0.12)',paddingTop:5}}>
+            <div style={{color:'#4338CA',fontSize:4.5,fontWeight:700,marginBottom:3,textTransform:'uppercase',letterSpacing:0.8}}>{h}</div>
+            {items.map(i=><div key={i} style={{color:'#5b5a73',fontSize:5,marginBottom:2}}>• {i}</div>)}
           </div>
         ))}
       </div>
       <div style={{flex:1,padding:'12px 9px',display:'flex',flexDirection:'column',gap:7}}>
-        <div style={{borderBottom:'1.5px solid #4f46e5',paddingBottom:3,marginBottom:4}}>
-          <div style={{fontSize:11,fontWeight:900,color:'#1a1a2e',letterSpacing:-0.3}}>ƏLİ ƏLİYEV</div>
-          <div style={{fontSize:5.5,color:'#555'}}>Frontend Developer</div>
+        <div style={{borderBottom:'1.5px solid #ececf3',paddingBottom:3,marginBottom:4}}>
+          <div style={{fontSize:11,fontWeight:800,color:'#16162c',letterSpacing:-0.3}}>Əli Əliyev</div>
+          <div style={{fontSize:5.5,color:'#4338CA',fontWeight:700}}>Frontend Developer</div>
         </div>
-        {[['Work Experience','Frontend Dev','Kapital Bank · 2022–Now'],['Education','BDU','Kompüter Müh. · 2018–2022']].map(([sec,t,s])=>(
+        {[['Peşəkar Təcrübə','Frontend Dev','Kapital Bank · 2022–Now'],['Təhsil','BDU','Kompüter Müh. · 2018–2022']].map(([sec,t,s])=>(
           <div key={sec}>
-            <div style={{color:'#4f46e5',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:0.8,borderBottom:'1px solid #4f46e5',paddingBottom:2,marginBottom:3}}>{sec}</div>
-            <div style={{fontWeight:700,fontSize:6,color:'#111'}}>{t}</div>
+            <div style={{display:'flex',alignItems:'center',gap:3,marginBottom:3}}><div style={{width:3,height:3,background:'#4338CA',transform:'rotate(45deg)',flexShrink:0}}/><div style={{color:'#16162c',fontSize:4.5,fontWeight:800,textTransform:'uppercase',letterSpacing:0.6}}>{sec}</div></div>
+            <div style={{fontWeight:700,fontSize:6,color:'#16162c'}}>{t}</div>
             <div style={{color:'#6b7280',fontSize:5}}>{s}</div>
           </div>
         ))}
@@ -49,32 +49,32 @@ function KompaktPreview() {
 
 function ModernPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#fff',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
-      <div style={{background:'#7C6EF8',padding:'12px 14px',display:'flex',alignItems:'flex-start',gap:10}}>
+    <div style={{width:'100%',height:'100%',background:'#fff',fontSize:6,fontFamily:'"Space Grotesk",Inter,sans-serif',overflow:'hidden'}}>
+      <div style={{background:'linear-gradient(120deg,#1E40AF,#3B82F6)',padding:'12px 14px',display:'flex',alignItems:'flex-start',gap:10}}>
         <div style={{width:38,height:38,borderRadius:'50%',background:'rgba(255,255,255,0.25)',border:'2px solid rgba(255,255,255,0.45)',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={38} color="#fff"/></div>
         <div>
-          <div style={{color:'#fff',fontWeight:900,fontSize:10,letterSpacing:-0.3}}>Əli Əliyev</div>
-          <div style={{color:'rgba(255,255,255,0.85)',fontSize:6,marginTop:2}}>Frontend Developer</div>
-          <div style={{color:'rgba(255,255,255,0.6)',fontSize:5,marginTop:2}}>ali@gmail.com · Bakı</div>
+          <div style={{color:'#fff',fontWeight:700,fontSize:10,letterSpacing:-0.3}}>Əli Əliyev</div>
+          <div style={{color:'rgba(255,255,255,0.9)',fontSize:6,marginTop:2,fontFamily:'Inter,sans-serif'}}>Frontend Developer</div>
+          <div style={{color:'rgba(255,255,255,0.65)',fontSize:5,marginTop:2,fontFamily:'Inter,sans-serif'}}>ali@gmail.com · Bakı</div>
         </div>
       </div>
-      <div style={{padding:'9px 14px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+      <div style={{padding:'9px 14px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,fontFamily:'Inter,sans-serif'}}>
         <div>
-          <div style={{color:'#7C6EF8',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1,marginBottom:4,borderBottom:'1.5px solid #7C6EF8',paddingBottom:2}}>Experience</div>
-          <div style={{fontWeight:700,fontSize:6,color:'#111'}}>Frontend Developer</div>
-          <div style={{color:'#7C6EF8',fontSize:5,fontWeight:600}}>Kapital Bank</div>
+          <div style={{color:'#1E40AF',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1,marginBottom:4,display:'flex',alignItems:'center',gap:3}}>Experience<div style={{flex:1,height:1,background:'rgba(30,64,175,0.3)'}}/></div>
+          <div style={{fontWeight:700,fontSize:6,color:'#1a1a2e'}}>Frontend Developer</div>
+          <div style={{color:'#1E40AF',fontSize:5,fontWeight:600}}>Kapital Bank</div>
           <div style={{color:'#6b7280',fontSize:5,lineHeight:1.6,marginTop:2}}>• React, TypeScript<br/>• 30% performance gain</div>
         </div>
         <div>
-          <div style={{color:'#7C6EF8',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1,marginBottom:4,borderBottom:'1.5px solid #7C6EF8',paddingBottom:2}}>Skills</div>
+          <div style={{color:'#1E40AF',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1,marginBottom:4,display:'flex',alignItems:'center',gap:3}}>Skills<div style={{flex:1,height:1,background:'rgba(30,64,175,0.3)'}}/></div>
           {[['React',90],['TypeScript',80],['Node.js',70]].map(([s,p])=>(
             <div key={s} style={{marginBottom:4}}>
               <div style={{display:'flex',justifyContent:'space-between',marginBottom:1}}>
                 <span style={{color:'#374151',fontSize:5}}>{s}</span>
-                <span style={{color:'#7C6EF8',fontSize:4.5}}>{p}%</span>
+                <span style={{color:'#1E40AF',fontSize:4.5}}>{p}%</span>
               </div>
               <div style={{height:2.5,background:'#e5e7eb',borderRadius:2}}>
-                <div style={{height:'100%',width:`${p}%`,background:'#7C6EF8',borderRadius:2}}/>
+                <div style={{height:'100%',width:`${p}%`,background:'#1E40AF',borderRadius:2}}/>
               </div>
             </div>
           ))}
@@ -86,27 +86,26 @@ function ModernPreview() {
 
 function MinimalPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#fff',padding:'14px',fontSize:6,fontFamily:'Georgia,serif',overflow:'hidden'}}>
-      <div style={{borderBottom:'0.5px solid #d1d5db',paddingBottom:8,marginBottom:8}}>
-        <div style={{fontSize:12,fontWeight:800,color:'#111',letterSpacing:-0.5}}>Əli Əliyev</div>
-        <div style={{fontSize:5.5,color:'#6b7280',marginTop:2,fontFamily:'Inter,sans-serif'}}>Frontend Developer · ali@gmail.com · Bakı</div>
+    <div style={{width:'100%',height:'100%',background:'#fff',padding:'14px',fontSize:6,fontFamily:'"Work Sans",Inter,sans-serif',overflow:'hidden'}}>
+      <div style={{borderBottom:'0.5px solid #ececec',paddingBottom:8,marginBottom:8}}>
+        <div style={{fontSize:12,fontWeight:300,color:'#0a0a0a',letterSpacing:0.2}}>Əli <span style={{fontWeight:600}}>Əliyev</span></div>
+        <div style={{fontSize:5.5,color:'#a8a8a8',marginTop:3,fontWeight:500,letterSpacing:1,textTransform:'uppercase'}}>Frontend Developer</div>
+        <div style={{fontSize:5,color:'#888',marginTop:3}}>ali@gmail.com · Bakı</div>
       </div>
       <div style={{display:'flex',gap:10}}>
         <div style={{flex:1}}>
-          <div style={{fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,color:'#9ca3af',marginBottom:4,fontFamily:'Inter,sans-serif'}}>Experience</div>
+          <div style={{fontSize:4.5,fontWeight:500,textTransform:'uppercase',letterSpacing:2,color:'#a8a8a8',marginBottom:4}}>Experience</div>
           <div style={{fontWeight:700,fontSize:6.5,color:'#111'}}>Frontend Developer</div>
-          <div style={{color:'#6b7280',fontSize:5,fontFamily:'Inter,sans-serif'}}>Kapital Bank · 2022–Now</div>
-          <div style={{color:'#374151',fontSize:5,lineHeight:1.7,marginTop:2,fontFamily:'Inter,sans-serif'}}>— React development<br/>— API integrations</div>
+          <div style={{color:'#6b7280',fontSize:5}}>Kapital Bank · 2022–Now</div>
+          <div style={{color:'#374151',fontSize:5,lineHeight:1.7,marginTop:2}}>– React development<br/>– API integrations</div>
           <div style={{fontWeight:700,fontSize:6.5,color:'#111',marginTop:6}}>UI Developer</div>
-          <div style={{color:'#6b7280',fontSize:5,fontFamily:'Inter,sans-serif'}}>SoftCo · 2020–2022</div>
+          <div style={{color:'#6b7280',fontSize:5}}>SoftCo · 2020–2022</div>
         </div>
         <div style={{width:'32%'}}>
-          <div style={{fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,color:'#9ca3af',marginBottom:4,fontFamily:'Inter,sans-serif'}}>Skills</div>
-          {['React','TypeScript','Node.js','Git'].map(s=>(
-            <div key={s} style={{fontSize:5,color:'#374151',borderBottom:'0.5px solid #f3f4f6',padding:'2px 0',fontFamily:'Inter,sans-serif'}}>{s}</div>
-          ))}
-          <div style={{fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,color:'#9ca3af',marginTop:7,marginBottom:4,fontFamily:'Inter,sans-serif'}}>Languages</div>
-          <div style={{fontSize:5,color:'#374151',fontFamily:'Inter,sans-serif'}}>AZ, EN, RU</div>
+          <div style={{fontSize:4.5,fontWeight:500,textTransform:'uppercase',letterSpacing:2,color:'#a8a8a8',marginBottom:4}}>Skills</div>
+          <div style={{fontSize:5,color:'#374151',lineHeight:2}}>React · TypeScript · Node.js · Git</div>
+          <div style={{fontSize:4.5,fontWeight:500,textTransform:'uppercase',letterSpacing:2,color:'#a8a8a8',marginTop:7,marginBottom:4}}>Languages</div>
+          <div style={{fontSize:5,color:'#374151'}}>AZ, EN, RU</div>
         </div>
       </div>
     </div>
@@ -115,28 +114,25 @@ function MinimalPreview() {
 
 function BoldPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#0f0f0f',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
-      <div style={{background:'#FFD60A',padding:'12px 14px',display:'flex',alignItems:'flex-start',gap:10}}>
-        <div style={{width:38,height:38,borderRadius:6,background:'#0f0f0f',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={38} color="#FFD60A"/></div>
-        <div>
-          <div style={{color:'#0f0f0f',fontWeight:900,fontSize:11,letterSpacing:-0.5,textTransform:'uppercase'}}>Əli Əliyev</div>
-          <div style={{color:'rgba(0,0,0,0.65)',fontSize:6,fontWeight:700}}>Frontend Developer</div>
+    <div style={{width:'100%',height:'100%',background:'#fff',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
+      <div style={{background:'#0a0a0a',padding:'12px 14px'}}>
+        <div style={{display:'flex',gap:4,alignItems:'flex-end',fontFamily:'"Archivo",sans-serif'}}>
+          <span style={{color:'#fff',fontWeight:900,fontSize:11,letterSpacing:-0.5,textTransform:'uppercase'}}>Əli</span>
+          <span style={{color:'#FFD60A',fontWeight:900,fontSize:11,letterSpacing:-0.5,textTransform:'uppercase'}}>Əliyev</span>
         </div>
+        <div style={{color:'rgba(255,255,255,0.65)',fontSize:6,fontWeight:700,marginTop:3,textTransform:'uppercase',letterSpacing:1.2,fontFamily:'"Archivo",sans-serif'}}>Frontend Developer</div>
       </div>
       <div style={{padding:'10px 14px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
         <div>
-          <div style={{color:'#FFD60A',fontSize:4.5,fontWeight:800,textTransform:'uppercase',letterSpacing:1.5,marginBottom:5}}>Experience</div>
-          <div style={{fontWeight:800,fontSize:6.5,color:'#fff'}}>Frontend Dev</div>
-          <div style={{color:'#FFD60A',fontSize:5,fontWeight:700}}>Kapital Bank · 2022</div>
-          <div style={{color:'rgba(255,255,255,0.6)',fontSize:5,lineHeight:1.6,marginTop:2}}>→ React apps<br/>→ TypeScript migration</div>
+          <div style={{display:'inline-block',fontSize:4.5,fontWeight:900,textTransform:'uppercase',letterSpacing:1,background:'#0a0a0a',color:'#fff',padding:'2px 6px',marginBottom:5}}>Experience</div>
+          <div style={{fontWeight:800,fontSize:6.5,color:'#0a0a0a'}}>Frontend Dev</div>
+          <div style={{color:'#6b7280',fontSize:5,fontWeight:600}}>Kapital Bank · 2022</div>
+          <div style={{color:'#4b5563',fontSize:5,lineHeight:1.6,marginTop:2}}>• React apps<br/>• TypeScript migration</div>
         </div>
         <div>
-          <div style={{color:'#FFD60A',fontSize:4.5,fontWeight:800,textTransform:'uppercase',letterSpacing:1.5,marginBottom:5}}>Skills</div>
+          <div style={{display:'inline-block',fontSize:4.5,fontWeight:900,textTransform:'uppercase',letterSpacing:1,background:'#0a0a0a',color:'#fff',padding:'2px 6px',marginBottom:5}}>Skills</div>
           {['React','TypeScript','Node.js','PostgreSQL'].map(s=>(
-            <div key={s} style={{display:'flex',alignItems:'flex-start',gap:4,marginBottom:4}}>
-              <div style={{width:3.5,height:3.5,background:'#FFD60A',borderRadius:1,flexShrink:0,marginTop:1}}/>
-              <span style={{color:'#fff',fontSize:5.5}}>{s}</span>
-            </div>
+            <div key={s} style={{fontSize:5,padding:'2px 6px',background:'#FFD60A',color:'#111',fontWeight:700,marginBottom:3,display:'block',width:'fit-content'}}>{s}</div>
           ))}
         </div>
       </div>
@@ -146,25 +142,22 @@ function BoldPreview() {
 
 function ElegantPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#faf7f4',fontSize:6,fontFamily:'Georgia,serif',overflow:'hidden'}}>
-      <div style={{background:'#3d2b1f',padding:'14px',textAlign:'center'}}>
-        <div style={{width:36,height:36,borderRadius:'50%',background:'#6b4c35',margin:'0 auto 6px',border:'1.5px solid rgba(200,169,126,0.5)',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={36} color="#c8a97e"/></div>
-        <div style={{color:'#c8a97e',fontWeight:700,fontSize:10,letterSpacing:1}}>Əli Əliyev</div>
-        <div style={{color:'rgba(200,169,126,0.7)',fontSize:5.5,marginTop:2,fontStyle:'italic'}}>Frontend Developer</div>
-        <div style={{color:'rgba(200,169,126,0.45)',fontSize:5,marginTop:3}}>ali@gmail.com · Bakı</div>
+    <div style={{width:'100%',height:'100%',background:'#fdfbf8',fontSize:6,fontFamily:'Lora,Georgia,serif',overflow:'hidden'}}>
+      <div style={{background:'#fff',padding:'14px',textAlign:'center'}}>
+        <div style={{width:32,height:32,borderRadius:'50%',background:'#f0e9de',margin:'0 auto 6px',border:'1.5px solid #9C6B3E',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={26} color="#9C6B3E"/></div>
+        <div style={{fontFamily:'"Playfair Display",serif',color:'#1a1614',fontWeight:600,fontSize:10,letterSpacing:0.5}}>Əli Əliyev</div>
+        <div style={{color:'#9C6B3E',fontSize:5.5,marginTop:3,letterSpacing:1.5,textTransform:'uppercase',fontWeight:600}}>Frontend Developer</div>
+        <div style={{height:0.75,width:24,background:'#9C6B3E',margin:'6px auto'}}/>
+        <div style={{color:'#9C6B3E',fontSize:5}}>ali@gmail.com · Bakı</div>
       </div>
       <div style={{padding:'10px 14px'}}>
-        <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:6}}>
-          <div style={{height:0.5,flex:1,background:'#c8a97e'}}/>
-          <div style={{color:'#8b6343',fontSize:4.5,textTransform:'uppercase',letterSpacing:2}}>Experience</div>
-          <div style={{height:0.5,flex:1,background:'#c8a97e'}}/>
-        </div>
-        <div style={{fontWeight:700,fontSize:6.5,color:'#3d2b1f'}}>Frontend Developer</div>
-        <div style={{color:'#8b6343',fontSize:5,fontStyle:'italic',marginBottom:3}}>Kapital Bank · 2022–Now</div>
-        <div style={{color:'#5c4033',fontSize:5,lineHeight:1.7}}>React, TypeScript, API integrations and performance optimization.</div>
-        <div style={{display:'flex',flexWrap:'wrap',gap:3,marginTop:8}}>
+        <div style={{fontFamily:'"Playfair Display",serif',fontStyle:'italic',color:'#9C6B3E',fontSize:6,letterSpacing:0.5,borderBottom:'0.5px solid #d9c3a3',paddingBottom:4,marginBottom:6}}>Career</div>
+        <div style={{fontFamily:'"Playfair Display",serif',fontWeight:600,fontSize:7,color:'#1a1614'}}>Frontend Developer</div>
+        <div style={{color:'#9C6B3E',fontSize:5,fontStyle:'italic',marginBottom:3}}>Kapital Bank · 2022–Now</div>
+        <div style={{color:'#4a4438',fontSize:5,lineHeight:1.7}}>React, TypeScript, API integrations and performance optimization.</div>
+        <div style={{display:'flex',flexWrap:'wrap',gap:4,marginTop:8}}>
           {['React','TypeScript','Node.js','CSS'].map(s=>(
-            <span key={s} style={{border:'0.5px solid #c8a97e',color:'#5c4033',fontSize:4.5,padding:'1.5px 5px',borderRadius:2}}>{s}</span>
+            <span key={s} style={{color:'#4a4438',fontSize:4.5,borderBottom:'0.5px solid #ede8dc',paddingBottom:1}}>{s}</span>
           ))}
         </div>
       </div>
@@ -174,34 +167,31 @@ function ElegantPreview() {
 
 function KlassikPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#fff',padding:'14px',fontSize:6,fontFamily:'"Times New Roman",serif',overflow:'hidden'}}>
-      <div style={{textAlign:'center',borderBottom:'2px solid #111',paddingBottom:8,marginBottom:8}}>
-        <div style={{fontSize:13,fontWeight:700,color:'#111',letterSpacing:0.5}}>ƏLİ ƏLİYEV</div>
-        <div style={{fontSize:5.5,color:'#374151',marginTop:2}}>Frontend Developer</div>
-        <div style={{fontSize:5,color:'#6b7280',marginTop:2}}>ali@gmail.com · +994 50 123 45 67 · Bakı</div>
+    <div style={{width:'100%',height:'100%',background:'#fff',padding:'14px',fontSize:6,fontFamily:'"Source Serif 4",Georgia,serif',overflow:'hidden'}}>
+      <div style={{textAlign:'center',borderTop:'2px double #111',borderBottom:'1px solid #111',padding:'7px 0 9px',marginBottom:8}}>
+        <div style={{fontSize:13,fontWeight:700,color:'#111',letterSpacing:0.5}}>Əli Əliyev</div>
+        <div style={{fontSize:5.5,color:'#6B1E23',marginTop:3,fontStyle:'italic'}}>Frontend Developer</div>
+        <div style={{fontSize:5,color:'#6b7280',marginTop:3}}>ali@gmail.com · +994 50 123 45 67 · Bakı</div>
       </div>
       <div style={{marginBottom:7}}>
-        <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1px solid #111',marginBottom:4,paddingBottom:1.5}}>Professional Experience</div>
+        <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1.5px solid #6B1E23',marginBottom:4,paddingBottom:1.5,color:'#1a1a1a'}}>Work Experience</div>
         <div style={{display:'flex',justifyContent:'space-between',marginBottom:1}}>
-          <span style={{fontWeight:700,fontSize:6.5}}>Frontend Developer, Kapital Bank</span>
+          <span style={{fontWeight:700,fontSize:6.5}}>Frontend Developer</span>
           <span style={{fontSize:5.5,color:'#6b7280'}}>2022–Now</span>
         </div>
+        <div style={{color:'#555',fontSize:5,fontStyle:'italic',marginBottom:2}}>Kapital Bank</div>
         <div style={{color:'#374151',fontSize:5,lineHeight:1.7,paddingLeft:6}}>
           • React and TypeScript for client-side development<br/>
           • RESTful API integrations, 30% speed improvement
         </div>
       </div>
-      <div style={{marginBottom:7}}>
-        <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1px solid #111',marginBottom:4,paddingBottom:1.5}}>Education</div>
+      <div>
+        <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1.5px solid #6B1E23',marginBottom:4,paddingBottom:1.5,color:'#1a1a1a'}}>Education</div>
         <div style={{display:'flex',justifyContent:'space-between'}}>
           <span style={{fontWeight:700,fontSize:6}}>Baku State University</span>
           <span style={{fontSize:5.5,color:'#6b7280'}}>2018–2022</span>
         </div>
-        <div style={{color:'#374151',fontSize:5}}>Computer Engineering, Bachelor</div>
-      </div>
-      <div>
-        <div style={{fontSize:6,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,borderBottom:'1px solid #111',marginBottom:4,paddingBottom:1.5}}>Skills</div>
-        <div style={{color:'#374151',fontSize:5}}>React · TypeScript · Node.js · SQL · Git</div>
+        <div style={{color:'#555',fontSize:5,fontStyle:'italic'}}>Computer Engineering, Bachelor</div>
       </div>
     </div>
   );
@@ -210,14 +200,14 @@ function KlassikPreview() {
 function DesignerPreview() {
   return (
     <div style={{width:'100%',height:'100%',background:'#f8fafc',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden',display:'flex'}}>
-      <div style={{width:'34%',background:'#f0fdfa',borderRight:'1px solid #e2e8f0',padding:'10px 8px',display:'flex',flexDirection:'column',gap:6}}>
-        <div style={{width:48,height:48,borderRadius:10,background:'#6366f1',flexShrink:0,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={48} color="#fff"/></div>
+      <div style={{width:'34%',background:'#f0fdfa',borderRight:'1px solid #f1f5f9',padding:'10px 8px',display:'flex',flexDirection:'column',gap:6}}>
+        <div style={{width:48,height:48,borderRadius:10,background:'linear-gradient(135deg,#7C3AED,#4f46e5)',flexShrink:0,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'center',border:'2px solid #fff'}}><AvatarIcon size={48} color="#fff"/></div>
         <div style={{textAlign:'center'}}>
-          <div style={{fontSize:7,fontWeight:800,color:'#111'}}>Əli Əliyev</div>
-          <div style={{fontSize:5,color:'#6366f1',fontWeight:600}}>Frontend Dev</div>
+          <div style={{fontFamily:'"Poppins",sans-serif',fontSize:7,fontWeight:700,color:'#111827'}}>Əli Əliyev</div>
+          <div style={{fontSize:4.5,fontWeight:600,color:'#7C3AED',background:'#f3eefc',display:'inline-block',padding:'1px 6px',borderRadius:10,marginTop:2}}>Frontend Dev</div>
         </div>
         {[{l:'Email',v:'ali@gmail.com'},{l:'Phone',v:'+994501234567'},{l:'City',v:'Bakı'}].map(({l,v})=>(
-          <div key={l} style={{background:'#fff',borderRadius:5,padding:'4px 6px',border:'1px solid #e2e8f0'}}>
+          <div key={l} style={{display:'flex',flexDirection:'column'}}>
             <div style={{fontSize:4,color:'#9ca3af',fontWeight:700,textTransform:'uppercase',letterSpacing:0.5}}>{l}</div>
             <div style={{fontSize:5,color:'#374151',fontWeight:500,marginTop:1,wordBreak:'break-all'}}>{v}</div>
           </div>
@@ -225,20 +215,18 @@ function DesignerPreview() {
       </div>
       <div style={{flex:1,padding:'10px 9px',display:'flex',flexDirection:'column',gap:7}}>
         <div>
-          <div style={{fontSize:9,fontWeight:800,color:'#1e1b4b',letterSpacing:-0.3}}>Experience</div>
-          <div style={{height:1.5,background:'#e0e7ff',marginTop:3,marginBottom:5}}/>
-          <div style={{background:'#f8f9ff',borderRadius:7,padding:'6px 8px',border:'1px solid #e0e7ff'}}>
+          <div style={{display:'flex',alignItems:'center',gap:4}}><span style={{fontFamily:'"Poppins",sans-serif',fontSize:9,fontWeight:700,color:'#1e1b4b',letterSpacing:-0.3}}>Experience</span><div style={{flex:1,height:1.5,background:'linear-gradient(90deg,#c7d2fe,transparent)'}}/></div>
+          <div style={{marginTop:5}}>
             <div style={{fontSize:5,color:'#9ca3af'}}>Frontend Developer</div>
             <div style={{fontSize:6.5,fontWeight:700,color:'#1e1b4b'}}>Kapital Bank</div>
-            <div style={{fontSize:4.5,color:'#6366f1',fontWeight:600}}>2022–Now · Bakı</div>
+            <div style={{fontSize:4.5,color:'#7C3AED',fontWeight:600}}>2022–Now · Bakı</div>
           </div>
         </div>
         <div>
-          <div style={{fontSize:9,fontWeight:800,color:'#1e1b4b'}}>Skills</div>
-          <div style={{height:1.5,background:'#e0e7ff',marginTop:3,marginBottom:5}}/>
-          <div style={{display:'flex',flexWrap:'wrap',gap:3}}>
+          <div style={{display:'flex',alignItems:'center',gap:4}}><span style={{fontFamily:'"Poppins",sans-serif',fontSize:9,fontWeight:700,color:'#1e1b4b'}}>Skills</span><div style={{flex:1,height:1.5,background:'linear-gradient(90deg,#c7d2fe,transparent)'}}/></div>
+          <div style={{display:'flex',flexWrap:'wrap',gap:3,marginTop:5}}>
             {['React','TypeScript','Node.js','CSS'].map(s=>(
-              <div key={s} style={{background:'#ede9fe',border:'1px solid #c4b5fd',borderRadius:4,padding:'2px 5px',fontSize:4.5,color:'#4338ca',fontWeight:600}}>{s}</div>
+              <div key={s} style={{background:'#f3eefc',borderRadius:4,padding:'2px 5px',fontSize:4.5,color:'#7C3AED',fontWeight:600}}>{s}</div>
             ))}
           </div>
         </div>
@@ -249,41 +237,43 @@ function DesignerPreview() {
 
 function ExecutivePreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
-      <div style={{width:'34%',background:'#1e2a3a',padding:'12px 8px',display:'flex',flexDirection:'column',gap:6}}>
-        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.15)',margin:'0 auto 4px',border:'2px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={34} color="rgba(255,255,255,0.7)"/></div>
-        <div style={{color:'rgba(255,255,255,0.9)',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:0.5,borderBottom:'0.5px solid rgba(255,255,255,0.15)',paddingBottom:3,marginBottom:2}}>Contact</div>
+    <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',fontSize:6,fontFamily:'"IBM Plex Sans",Inter,sans-serif',overflow:'hidden'}}>
+      <div style={{width:'34%',background:'#14213D',padding:'12px 8px',display:'flex',flexDirection:'column',gap:6}}>
+        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.1)',margin:'0 auto 4px',border:'2px solid #C9A24B',display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={34} color="rgba(255,255,255,0.7)"/></div>
+        <div style={{color:'#C9A24B',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1,marginBottom:1}}>Contact</div>
+        <div style={{height:0.5,background:'rgba(201,162,75,0.35)',marginBottom:2}}/>
         {['ali@gmail.com','+994501234567','Bakı, AZ'].map(c=>(
-          <div key={c} style={{color:'rgba(255,255,255,0.65)',fontSize:4.5}}>{c}</div>
+          <div key={c} style={{color:'rgba(255,255,255,0.8)',fontSize:4.5}}>{c}</div>
         ))}
-        <div style={{color:'rgba(255,255,255,0.9)',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:0.5,borderBottom:'0.5px solid rgba(255,255,255,0.15)',paddingBottom:3,marginTop:4,marginBottom:2}}>Skills</div>
+        <div style={{color:'#C9A24B',fontSize:4.5,fontWeight:700,textTransform:'uppercase',letterSpacing:1,marginTop:4,marginBottom:1}}>Skills</div>
+        <div style={{height:0.5,background:'rgba(201,162,75,0.35)',marginBottom:2}}/>
         {['React','TypeScript','Node.js'].map(s=>(
           <div key={s} style={{display:'flex',alignItems:'flex-start',gap:5}}>
-            <div style={{width:3,height:3,borderRadius:'50%',background:'rgba(255,255,255,0.4)',flexShrink:0,marginTop:1}}/>
-            <span style={{color:'rgba(255,255,255,0.75)',fontSize:4.5}}>{s}</span>
+            <div style={{width:3,height:3,borderRadius:'50%',background:'rgba(255,255,255,0.55)',flexShrink:0,marginTop:1}}/>
+            <span style={{color:'rgba(255,255,255,0.82)',fontSize:4.5}}>{s}</span>
           </div>
         ))}
       </div>
       <div style={{flex:1,display:'flex',flexDirection:'column'}}>
-        <div style={{background:'#1e2a3a',padding:'12px 10px'}}>
-          <div style={{fontSize:10,fontWeight:900,color:'#fff',textTransform:'uppercase',letterSpacing:0.3}}>Əli Əliyev</div>
-          <div style={{fontSize:5.5,color:'rgba(255,255,255,0.55)',marginTop:2,letterSpacing:0.8}}>FRONTEND DEVELOPER</div>
+        <div style={{background:'#14213D',padding:'12px 10px'}}>
+          <div style={{fontFamily:'"Fraunces",serif',fontSize:10,fontWeight:600,color:'#fff',letterSpacing:0.2}}>Əli Əliyev</div>
+          <div style={{fontSize:5.5,color:'#C9A24B',marginTop:3,letterSpacing:1,textTransform:'uppercase',fontWeight:600}}>Frontend Developer</div>
         </div>
         <div style={{flex:1,padding:'10px'}}>
-          <div style={{display:'flex',alignItems:'flex-start',gap:6,marginBottom:5}}>
-            <svg width={14} height={14} viewBox="0 0 20 20"><circle cx={10} cy={10} r={10} fill="#1e2a3a"/><circle cx={10} cy={10} r={3} fill="white"/></svg>
-            <div><div style={{fontSize:5,fontWeight:800,color:'#1e2a3a'}}>Work Experience</div><div style={{height:1,background:'#1e2a3a',marginTop:2}}/></div>
+          <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:5}}>
+            <div style={{fontFamily:'"Fraunces",serif',fontSize:7,fontWeight:600,color:'#14213D'}}>Experience</div>
+            <div style={{flex:1,height:1,background:'linear-gradient(90deg,#C9A24B,transparent)'}}/>
           </div>
-          <div style={{paddingLeft:6,borderLeft:'1.5px solid #ddd',marginBottom:7}}>
-            <div style={{fontWeight:700,fontSize:6,color:'#1e2a3a'}}>Frontend Developer</div>
+          <div style={{paddingLeft:6,borderLeft:'1.5px solid #e5dcc8',marginBottom:7}}>
+            <div style={{fontWeight:700,fontSize:6,color:'#14213D'}}>Frontend Developer</div>
             <div style={{fontSize:5,color:'#555'}}>Kapital Bank · 2022–Now</div>
           </div>
-          <div style={{display:'flex',alignItems:'flex-start',gap:6,marginBottom:5}}>
-            <svg width={14} height={14} viewBox="0 0 20 20"><circle cx={10} cy={10} r={10} fill="#1e2a3a"/><circle cx={10} cy={10} r={3} fill="white"/></svg>
-            <div><div style={{fontSize:5,fontWeight:800,color:'#1e2a3a'}}>Education</div><div style={{height:1,background:'#1e2a3a',marginTop:2}}/></div>
+          <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:5}}>
+            <div style={{fontFamily:'"Fraunces",serif',fontSize:7,fontWeight:600,color:'#14213D'}}>Education</div>
+            <div style={{flex:1,height:1,background:'linear-gradient(90deg,#C9A24B,transparent)'}}/>
           </div>
-          <div style={{paddingLeft:6,borderLeft:'1.5px solid #ddd'}}>
-            <div style={{fontWeight:700,fontSize:6,color:'#1e2a3a'}}>Baku State University</div>
+          <div style={{paddingLeft:6,borderLeft:'1.5px solid #e5dcc8'}}>
+            <div style={{fontWeight:700,fontSize:6,color:'#14213D'}}>Baku State University</div>
             <div style={{fontSize:5,color:'#555'}}>Computer Engineering · 2018–2022</div>
           </div>
         </div>
@@ -294,38 +284,37 @@ function ExecutivePreview() {
 
 function HeaderPreview() {
   return (
-    <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',flexDirection:'column',fontSize:6,fontFamily:'Inter,sans-serif',overflow:'hidden'}}>
-      <div style={{background:'#1a1a2e',padding:'10px 12px',display:'flex',alignItems:'flex-start',gap:8}}>
-        <div style={{width:34,height:34,borderRadius:'50%',background:'rgba(255,255,255,0.15)',border:'2px solid rgba(255,255,255,0.25)',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={34} color="rgba(255,255,255,0.7)"/></div>
+    <div style={{width:'100%',height:'100%',background:'#fff',display:'flex',flexDirection:'column',fontSize:6,fontFamily:'"Libre Franklin",Inter,sans-serif',overflow:'hidden'}}>
+      <div style={{background:'linear-gradient(110deg,#0F1E3D,#1B3A6B)',padding:'10px 12px',display:'flex',alignItems:'flex-start',gap:8}}>
+        <div style={{width:34,height:34,borderRadius:8,background:'rgba(255,255,255,0.12)',border:'2px solid rgba(255,255,255,0.25)',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center'}}><AvatarIcon size={34} color="rgba(255,255,255,0.7)"/></div>
         <div style={{paddingTop:2}}>
-          <div style={{fontSize:10,fontWeight:900,color:'#fff',textTransform:'uppercase'}}>Əli Əliyev</div>
-          <div style={{fontSize:5.5,color:'rgba(255,255,255,0.55)',marginTop:1.5}}>FRONTEND DEVELOPER</div>
+          <div style={{fontSize:10,fontWeight:900,color:'#fff',letterSpacing:-0.3}}>Əli Əliyev</div>
+          <div style={{fontSize:5.5,color:'#8FB1E8',marginTop:2,letterSpacing:1,textTransform:'uppercase',fontWeight:600}}>Frontend Developer</div>
         </div>
       </div>
-      <div style={{background:'#f7f7f7',borderBottom:'1px solid #e5e5e5',padding:'4px 12px',display:'flex',gap:10}}>
+      <div style={{background:'#f4f6fa',borderBottom:'1px solid #e5e8ef',padding:'4px 12px',display:'flex',gap:10}}>
         {['ali@gmail.com','+994501234567','Bakı'].map(c=>(
-          <span key={c} style={{fontSize:5,color:'#555'}}>{c}</span>
+          <span key={c} style={{fontSize:5,color:'#444'}}>{c}</span>
         ))}
       </div>
       <div style={{flex:1,display:'flex'}}>
         <div style={{width:'33%',padding:'8px 9px',borderRight:'1px solid #e5e5e5',display:'flex',flexDirection:'column',gap:5}}>
-          <div style={{fontSize:4.5,fontWeight:800,letterSpacing:1,textTransform:'uppercase',color:'#1a1a2e',borderBottom:'1.5px solid #1a1a2e',paddingBottom:2,marginBottom:3}}>Skills</div>
+          <div style={{fontSize:4.5,fontWeight:800,letterSpacing:1,textTransform:'uppercase',color:'#0F1E3D',marginBottom:3}}>Skills</div>
+          <div style={{height:1.5,background:'linear-gradient(90deg,#0F1E3D,rgba(15,30,61,0.1))',marginBottom:3,marginTop:-4}}/>
           {['React','TypeScript','Node.js','CSS'].map(s=>(
-            <div key={s} style={{display:'flex',alignItems:'flex-start',gap:4}}>
-              <div style={{width:3,height:3,borderRadius:'50%',background:'#1a1a2e',flexShrink:0,marginTop:1}}/>
-              <span style={{fontSize:5,color:'#333'}}>{s}</span>
-            </div>
+            <div key={s} style={{fontSize:5,color:'#0F1E3D',background:'#eef1f7',padding:'1.5px 5px',borderRadius:3,fontWeight:600,width:'fit-content'}}>{s}</div>
           ))}
         </div>
         <div style={{flex:1,padding:'8px 9px'}}>
-          <div style={{fontSize:4.5,fontWeight:800,letterSpacing:1,textTransform:'uppercase',color:'#1a1a2e',borderBottom:'1.5px solid #1a1a2e',paddingBottom:2,marginBottom:4}}>Experience</div>
+          <div style={{fontSize:4.5,fontWeight:800,letterSpacing:1,textTransform:'uppercase',color:'#0F1E3D',marginBottom:3}}>Experience</div>
+          <div style={{height:1.5,background:'linear-gradient(90deg,#0F1E3D,rgba(15,30,61,0.1))',marginBottom:4,marginTop:-4}}/>
           <div style={{display:'flex',gap:0}}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',width:12,flexShrink:0}}>
-              <div style={{width:6,height:6,borderRadius:'50%',border:'1.5px solid #1a1a2e',background:'#fff',marginTop:2}}/>
+              <div style={{width:6,height:6,borderRadius:'50%',border:'1.5px solid #2563EB',background:'#fff',marginTop:2}}/>
               <div style={{width:1,flex:1,background:'#ddd',marginTop:1}}/>
             </div>
             <div style={{paddingLeft:5}}>
-              <div style={{fontWeight:700,fontSize:6,color:'#1a1a2e'}}>Frontend Developer</div>
+              <div style={{fontWeight:700,fontSize:6,color:'#0F1E3D'}}>Frontend Developer</div>
               <div style={{fontSize:5,color:'#555'}}>Kapital Bank · 2022–Now</div>
             </div>
           </div>

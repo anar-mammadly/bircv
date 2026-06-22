@@ -86,20 +86,49 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
         )}
 
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:22 }}>
-          {education.length>0 && (
-            <div>
-              <SecLabel>{lang==='az'?'Təhsil':'Education'}</SecLabel>
-              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                {education.map(edu => (
-                  <div key={edu.id}>
-                    <div style={{ fontWeight:700, fontSize:11, lineHeight:1.35 }}>{edu.degree||edu.school}</div>
-                    {edu.school&&edu.degree && <div style={{ fontSize:10, color:'#6b7280' }}>{edu.school}</div>}
-                    <div style={{ fontSize:9.5, color:'#9ca3af', fontWeight:500 }}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div>
-                  </div>
-                ))}
+          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+            {education.length>0 && (
+              <div>
+                <SecLabel>{lang==='az'?'Təhsil':'Education'}</SecLabel>
+                <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                  {education.map(edu => (
+                    <div key={edu.id}>
+                      <div style={{ fontWeight:700, fontSize:11, lineHeight:1.35 }}>{edu.degree||edu.school}</div>
+                      {edu.school&&edu.degree && <div style={{ fontSize:10, color:'#6b7280' }}>{edu.school}</div>}
+                      <div style={{ fontSize:9.5, color:'#9ca3af', fontWeight:500 }}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+            {certs.length>0 && (
+              <div>
+                <SecLabel>{lang==='az'?'Sertifikatlar':'Certificates'}</SecLabel>
+                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+                  {certs.map((c:any,i:number) => (
+                    <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}>
+                      <div><span style={{ fontWeight:600 }}>{c.name}</span>{c.issuer&&<span style={{ color:'#9ca3af', marginLeft:5 }}>· {c.issuer}</span>}</div>
+                      {c.year&&<span style={{ color:'#9ca3af', flexShrink:0, marginLeft:8 }}>{c.year}</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {trains.length>0 && (
+              <div>
+                <SecLabel>{lang==='az'?'Təlimlər':'Training'}</SecLabel>
+                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+                  {trains.map((tr:any,i:number) => (
+                    <div key={i} style={{ fontSize:10.5 }}>
+                      <span style={{ fontWeight:600 }}>{tr.name}</span>
+                      {tr.provider&&<span style={{ color:'#9ca3af' }}> · {tr.provider}</span>}
+                      {tr.year&&<span style={{ color:'#9ca3af' }}> · {tr.year}</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
             {skills.length>0 && (
               <div>
@@ -126,35 +155,6 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
             )}
           </div>
         </div>
-
-        {certs.length>0 && (
-          <div>
-            <SecLabel>{lang==='az'?'Sertifikatlar':'Certificates'}</SecLabel>
-            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
-              {certs.map((c:any,i:number) => (
-                <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}>
-                  <div><span style={{ fontWeight:600 }}>{c.name}</span>{c.issuer&&<span style={{ color:'#9ca3af', marginLeft:5 }}>· {c.issuer}</span>}</div>
-                  {c.year&&<span style={{ color:'#9ca3af', flexShrink:0, marginLeft:8 }}>{c.year}</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {trains.length>0 && (
-          <div>
-            <SecLabel>{lang==='az'?'Təlimlər':'Training'}</SecLabel>
-            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
-              {trains.map((tr:any,i:number) => (
-                <div key={i} style={{ fontSize:10.5 }}>
-                  <span style={{ fontWeight:600 }}>{tr.name}</span>
-                  {tr.provider&&<span style={{ color:'#9ca3af' }}> · {tr.provider}</span>}
-                  {tr.year&&<span style={{ color:'#9ca3af' }}> · {tr.year}</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {additional && (
           <div>

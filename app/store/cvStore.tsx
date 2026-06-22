@@ -56,7 +56,15 @@ const CVContext = createContext<CVContextType | null>(null);
 export function CVProvider({ children }: { children: ReactNode }) {
   const [cvData, setCVData] = useState<CVData>(defaultCV);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>('kompakt');
-  const [lang, setLang] = useState<AppLanguage>('az');
+  const [lang, setLangState] = useState<AppLanguage>('az');
+  const setLang = (l: AppLanguage) => {
+    setLangState(l);
+    if (typeof window !== 'undefined') localStorage.setItem('bircv_lang', l);
+  };
+  useEffect(() => {
+    const saved = localStorage.getItem('bircv_lang') as AppLanguage | null;
+    if (saved === 'az' || saved === 'en') setLangState(saved);
+  }, []);
   const [user, setUserState] = useState<User | null>(null);
 
   useEffect(() => { setUserState(loadUser()); }, []);

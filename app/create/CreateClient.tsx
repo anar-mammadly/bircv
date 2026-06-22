@@ -390,15 +390,15 @@ function CreatePageInner() {
         {premiumModal}
         {pdfOverlay}
         <div style={{ padding: '16px 14px' }}>
-          <TopBar />
-          <MobileTabs />
+          {TopBar()}
+          {MobileTabs()}
           {mobileTab === 'form' ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <CVForm />
               <ServicesPanel />
             </div>
           ) : (
-            <PreviewPanel />
+            PreviewPanel()
           )}
         </div>
       </div>
@@ -421,12 +421,12 @@ function CreatePageInner() {
         gap: 24, alignItems: 'start',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <TopBar />
+          {TopBar()}
           <CVForm />
           <ServicesPanel />
         </div>
         <div style={{ position: 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <PreviewPanel />
+          {PreviewPanel()}
         </div>
       </div>
     </div>

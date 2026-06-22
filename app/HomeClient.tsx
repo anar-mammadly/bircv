@@ -24,7 +24,7 @@ function LandingInner() {
           borderRadius: 40, padding: '6px 18px', marginBottom: 32
         }}>
           <Sparkles size={14} style={{ color: '#7C6EF8' }} />
-          <span style={{ fontSize: 13.5, color: '#a89ef8', fontWeight: 600 }}>AI ilə gücləndirilib</span>
+          <span style={{ fontSize: 13.5, color: '#a89ef8', fontWeight: 600 }}>{lang === 'az' ? 'AI ilə gücləndirilib' : 'Powered by AI'}</span>
         </div>
 
         <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 900, lineHeight: 1.1, color: '#fff', marginBottom: 24, letterSpacing: -1.5 }}>
@@ -52,7 +52,7 @@ function LandingInner() {
 
       {/* Stats */}
       <section className="grid-resp-4" style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 80px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }}>
-        {[{ val: '2 dq', label: lang === 'az' ? 'ortalama vaxt' : 'average time' }, { val: '6+', label: lang === 'az' ? 'CV şablonu' : 'CV templates' }, { val: 'AI', label: lang === 'az' ? 'mətn yaradır' : 'generates text' }, { val: 'PDF', label: lang === 'az' ? 'anında yüklə' : 'instant download' }].map(s => (
+        {[{ val: lang === 'az' ? '2 dəq' : '2 min', label: lang === 'az' ? 'ortalama vaxt' : 'average time' }, { val: '6+', label: lang === 'az' ? 'CV şablonu' : 'CV templates' }, { val: 'AI', label: lang === 'az' ? 'mətn yaradır' : 'generates text' }, { val: 'PDF', label: lang === 'az' ? 'anında yüklə' : 'instant download' }].map(s => (
           <div key={s.val} style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
             <div style={{ fontSize: 24, fontWeight: 900, color: '#7C6EF8', marginBottom: 4 }}>{s.val}</div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{s.label}</div>

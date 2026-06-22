@@ -38,7 +38,7 @@ export default function KompaktTemplate({ data, lang }: { data: CVData; lang: 'a
     <div style={{ fontFamily:'"Manrope","Segoe UI",Arial,sans-serif', background:'#fff', width:'100%', display:'flex', color:'#16162c', fontSize:10.5, minHeight:'297mm' }}>
 
       {/* LEFT SIDEBAR */}
-      <div style={{ width:'30%', background:'#f7f7fb', display:'flex', flexDirection:'column', flexShrink:0, borderRight:`3px solid ${ACCENT}` }}>
+      <div style={{ width:'30%', background:'#f7f7fb', display:'flex', flexDirection:'column', flexShrink:0 }}>
         <div style={{ padding:'24px 16px 16px', display:'flex', flexDirection:'column', alignItems:'center', gap:10 }}>
           <div style={{ width:86, height:86, borderRadius:'50%', overflow:'hidden', flexShrink:0, padding:3, background:`linear-gradient(135deg,${ACCENT},#7C6EF8)` }}>
             <div style={{ width:'100%', height:'100%', borderRadius:'50%', overflow:'hidden', border:'2.5px solid #fff' }}>

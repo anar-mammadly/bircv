@@ -351,7 +351,7 @@ function TemplatesInner() {
       <AuthModal />
       <ChatWidget />
 
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'56px 24px 80px' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'clamp(32px,8vw,56px) 20px 60px' }}>
 
         {/* Hero */}
         <div style={{ textAlign:'center', marginBottom:56 }}>
@@ -361,10 +361,10 @@ function TemplatesInner() {
               {lang==='az' ? '9 Peşəkar Şablon' : '9 Professional Templates'}
             </span>
           </div>
-          <h1 style={{ fontSize:44, fontWeight:900, color:'#fff', margin:'0 0 14px', letterSpacing:-1, fontFamily:'Plus Jakarta Sans,Inter,sans-serif', lineHeight:1.1 }}>
+          <h1 style={{ fontSize:'clamp(30px,7vw,44px)', fontWeight:900, color:'#fff', margin:'0 0 14px', letterSpacing:-1, fontFamily:'Plus Jakarta Sans,Inter,sans-serif', lineHeight:1.1 }}>
             {lang==='az' ? 'CV Şablonları' : 'CV Templates'}
           </h1>
-          <p style={{ fontSize:16, color:'rgba(255,255,255,0.4)', fontFamily:'Plus Jakarta Sans,Inter,sans-serif', maxWidth:480, margin:'0 auto' }}>
+          <p style={{ fontSize:15, color:'rgba(255,255,255,0.4)', fontFamily:'Plus Jakarta Sans,Inter,sans-serif', maxWidth:480, margin:'0 auto', padding:'0 8px' }}>
             {lang==='az'
               ? 'İşəgötürən diqqətini çəkəcək peşəkar şablon seç'
               : 'Choose a professional template that captures recruiter attention'}
@@ -372,7 +372,7 @@ function TemplatesInner() {
         </div>
 
         {/* Grid */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
+        <div className="grid-resp-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
           {templates.map(tpl => {
             const Preview = PREVIEWS[tpl.id];
             return (

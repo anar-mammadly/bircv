@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# bircv
 
-## Getting Started
+CV/rezyume yaratma platforması — istifadəçilər hazır şablonlar əsasında CV qurur, istəyə görə Groq AI ilə məzmun generasiyası əldə edir və nəticəni PDF olaraq yükləyir.
 
-First, run the development server:
+## Xüsusiyyətlər
+
+- 4 hazır CV şablonu: Bold, Kompakt, Minimal, Modern (`app/components/templates`)
+- AI dəstəkli məzmun generasiyası (Groq SDK)
+- OTP (bir dəfəlik kod) ilə istifadəçi doğrulaması
+- Abunəlik/pricing axını və e-poçt bildirişləri (Resend / Nodemailer)
+- CV-ni PDF kimi endirmə (`jspdf`, `html2canvas`)
+- Admin panel
+
+## Texnologiya stack-i
+
+- Next.js 14 (App Router), React 18
+- Supabase (verilənlər bazası / auth)
+- Groq SDK (AI generasiya)
+- Resend + Nodemailer (e-poçt)
+- Cloudflare Workers üzərində deploy (`@opennextjs/cloudflare`, `wrangler`)
+- TailwindCSS
+
+## Quraşdırma
+
+```bash
+npm install
+```
+
+Layihənin kökündə `.env.local` faylı yaradın və aşağıdakı dəyişənləri təyin edin (dəqiq adlar üçün kod bazasındakı istifadəyə baxın — `app/api/generate`, `app/api/otp`, `app/api/subscribe`, `app/store`):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+GROQ_API_KEY=
+RESEND_API_KEY=
+```
+
+## İşə salma
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Brauzerdə [http://localhost:3000](http://localhost:3000) açın.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Cloudflare-ə deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run deploy
+```
 
-## Learn More
+## Struktur
 
-To learn more about Next.js, take a look at the following resources:
+- `app/create` — CV yaratma axını
+- `app/templates`, `app/components/templates` — şablonlar
+- `app/pricing` — abunəlik/qiymət səhifəsi
+- `app/admin` — admin panel
+- `app/api/*` — auth, OTP, AI generasiya, abunəlik, CV endirmə endpoint-ləri
+- `lib/` — köməkçi funksiyalar
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Əlaqə
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Sual və təkliflər üçün repo sahibi ilə əlaqə saxlayın.

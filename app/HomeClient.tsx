@@ -6,6 +6,7 @@ import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import Reveal from '@/app/components/ui/Reveal';
 import TemplatePreview from '@/app/components/TemplatePreview';
+import HeroVisual from '@/app/components/HeroVisual';
 import { TEMPLATE_LIST } from '@/lib/cv/templates';
 import { CV_FONT_OPTIONS } from '@/lib/cvFonts';
 
@@ -54,17 +55,7 @@ export default function HomeClient() {
             </ul>
           </div>
 
-          {/* two real template renders, same size, softly rounded — no captions or badges on the CVs */}
-          <div className="relative mx-auto w-full max-w-[600px] animate-rise [animation-delay:120ms]" aria-hidden="true">
-            <div className="relative w-full" style={{ aspectRatio: '600 / 500' }}>
-              <div className="absolute left-0 top-[12%] w-[49%] overflow-hidden rounded-[22px] bg-white shadow-[0_28px_50px_-30px_rgba(15,23,42,.35),0_2px_8px_rgba(15,23,42,.05)] ring-1 ring-ink/[.06] transition-transform duration-500 ease-out hover:-translate-y-1">
-                <TemplatePreview template="modern" lang={lang} />
-              </div>
-              <div className="absolute right-0 top-0 w-[49%] overflow-hidden rounded-[22px] bg-white shadow-[0_28px_50px_-30px_rgba(15,23,42,.35),0_2px_8px_rgba(15,23,42,.05)] ring-1 ring-ink/[.06] transition-transform duration-500 ease-out hover:-translate-y-1">
-                <TemplatePreview template="designer" lang={lang} />
-              </div>
-            </div>
-          </div>
+          <HeroVisual lang={lang} />
         </section>
 
         {/* ── proof strip ── */}

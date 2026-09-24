@@ -13,7 +13,7 @@ const S = {
     sendCode: 'Kodu göndər', wait: 'Gözləyin…', noAcc: 'Hesabınız yoxdur?', hasAcc: 'Hesabınız var?',
     codeSent: 'ünvanına göndərilən 6 rəqəmli kodu daxil edin', confirm: 'Təsdiqlə', checking: 'Yoxlanılır…', back: 'Geri', valid: 'Kodun etibarlılıq müddəti',
     eReq: 'E-poçt və şifrə tələb olunur', ePass: 'Şifrə minimum 4 simvol olmalıdır', eAgree: 'Davam etmək üçün şərtlərlə razılaşmalısınız',
-    eCode: 'Kodu daxil edin', eBad: 'Yanlış və ya vaxtı keçmiş kod', eNet: 'Şəbəkə xətası, yenidən cəhd edin', welcome: 'Xoş gəldiniz',
+    eCode: 'Kodu daxil edin', eBad: 'Yanlış və ya vaxtı keçmiş kod', eNet: 'Şəbəkə xətası, yenidən cəhd edin', eSend: 'Kod göndərilə bilmədi. Bir az sonra yenidən cəhd edin.', welcome: 'Xoş gəldiniz',
   },
   en: {
     login: 'Log in', register: 'Create account', verify: 'Verify your email', first: 'First name', last: 'Last name', email: 'Email', pass: 'Password',
@@ -21,7 +21,7 @@ const S = {
     sendCode: 'Send code', wait: 'Please wait…', noAcc: "Don't have an account?", hasAcc: 'Already have an account?',
     codeSent: 'Enter the 6-digit code we sent to', confirm: 'Verify', checking: 'Checking…', back: 'Back', valid: 'Code expires in',
     eReq: 'Email and password are required', ePass: 'Password must be at least 4 characters', eAgree: 'Please accept the terms to continue',
-    eCode: 'Enter the code', eBad: 'Wrong or expired code', eNet: 'Network error, please try again', welcome: 'Welcome',
+    eCode: 'Enter the code', eBad: 'Wrong or expired code', eNet: 'Network error, please try again', eSend: 'Could not send the code. Please try again shortly.', welcome: 'Welcome',
   },
 };
 
@@ -81,7 +81,7 @@ export default function AuthModal() {
     setLoading(true); setError('');
     try {
       const data = await post('/api/otp', { action: 'send', email });
-      if (!data.ok) { setError(data.error || s.eNet); return; }
+      if (!data.ok) { console.error('[otp]', data); setError(data.error === 'could not create code' ? s.eSend : data.error || s.eNet); return; }
       if (data.devCode) setDevCode(data.devCode);
       setStep('otp'); startTimer(data.ttl || 180);
     } catch { setError(s.eNet); } finally { setLoading(false); }

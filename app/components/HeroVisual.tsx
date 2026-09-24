@@ -1,114 +1,171 @@
 'use client';
-import { Sparkles, Check, Download, RefreshCw } from 'lucide-react';
 import { DEFAULT_PROFILE_PHOTO } from '@/lib/cv/defaultPhoto';
 
-// The sheet is designed at 440px wide; every size is expressed in cqw so it scales with its container.
-const u = (px: number) => `${((px * 100) / 440).toFixed(3)}cqw`;
+// Two original, hand-built CV cards for the hero (not renders of the real templates).
+// Each card is designed at 408px wide; every size is in cqw so it scales with its container.
+const W = 408;
+const u = (px: number) => `${((px * 100) / W).toFixed(3)}cqw`;
 
-/** Hero illustration: a clean CV sheet with a live AI suggestion and an export confirmation floating on it. */
-export default function HeroVisual({ lang }: { lang: 'az' | 'en' }) {
-  const az = lang === 'az';
-  const BLUE = '#1F4FFF', INK = '#0F1220', MUTED = '#5B6472', LINE = '#E6E8EE';
+const SHADOW = 'shadow-[0_34px_64px_-34px_rgba(15,23,42,.42),0_2px_6px_rgba(15,23,42,.06)]';
 
-  const Title = ({ children }: { children: string }) => (
-    <div style={{ marginBottom: u(7) }}>
-      <div style={{ fontSize: u(7), fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: INK }}>{children}</div>
-      <div style={{ width: u(16), height: u(2), background: BLUE, marginTop: u(3), borderRadius: 2 }} />
-    </div>
+/* ───────────────────────────── Card 1 — Modern Professional ───────────────────────────── */
+function ModernCard({ az }: { az: boolean }) {
+  const BLUE = '#1F4FFF', INK = '#0F1220', MUTED = '#59616F', FAINT = '#8B93A1', LINE = '#E7E9EF', SIDE = '#F3F5FA';
+
+  const Label = ({ children }: { children: string }) => (
+    <div style={{ fontSize: u(6.6), fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: INK, marginBottom: u(6) }}>{children}</div>
   );
   const Job = ({ role, org, when, lines }: { role: string; org: string; when: string; lines: string[] }) => (
-    <div style={{ marginBottom: u(11) }}>
+    <div style={{ marginBottom: u(12) }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: u(8), alignItems: 'baseline' }}>
-        <span style={{ fontSize: u(9.2), fontWeight: 700, color: INK }}>{role}</span>
-        <span style={{ fontSize: u(6.6), color: '#8A93A3', whiteSpace: 'nowrap' }}>{when}</span>
+        <span style={{ fontSize: u(9.6), fontWeight: 700, color: INK }}>{role}</span>
+        <span style={{ fontSize: u(6.8), color: FAINT, whiteSpace: 'nowrap' }}>{when}</span>
       </div>
-      <div style={{ fontSize: u(7.6), fontWeight: 600, color: BLUE, margin: `${u(1)} 0 ${u(3.5)}` }}>{org}</div>
+      <div style={{ fontSize: u(8), fontWeight: 600, color: BLUE, margin: `${u(1)} 0 ${u(4)}` }}>{org}</div>
       {lines.map(l => (
-        <div key={l} style={{ display: 'flex', gap: u(5), fontSize: u(7.3), lineHeight: 1.55, color: MUTED, marginBottom: u(1.5) }}>
-          <span style={{ width: u(2.6), height: u(2.6), borderRadius: '50%', background: '#B6BEEA', marginTop: u(4.2), flexShrink: 0 }} />{l}
+        <div key={l} style={{ display: 'flex', gap: u(5), fontSize: u(7.8), lineHeight: 1.55, color: MUTED, marginBottom: u(2) }}>
+          <span style={{ width: u(2.8), height: u(2.8), borderRadius: '50%', background: '#AEB8F0', marginTop: u(4.4), flexShrink: 0 }} />{l}
         </div>
       ))}
     </div>
   );
+  const Skill = ({ n, v }: { n: string; v: number }) => (
+    <div style={{ marginBottom: u(6.5) }}>
+      <div style={{ fontSize: u(7.2), fontWeight: 600, color: INK, marginBottom: u(2.5) }}>{n}</div>
+      <div style={{ height: u(2.4), background: '#E1E5F0', borderRadius: 4 }}><div style={{ width: `${v}%`, height: '100%', background: BLUE, borderRadius: 4 }} /></div>
+    </div>
+  );
 
   return (
-    <div className="relative mx-auto w-full max-w-[560px]" aria-hidden="true">
-      {/* soft stage */}
-      <div className="absolute inset-x-[2%] inset-y-[5%] rounded-[36px] bg-primary-soft/70" />
+    <div className={`overflow-hidden rounded-[14px] bg-[#FEFEFC] ring-1 ring-black/[.06] ${SHADOW}`} style={{ containerType: 'inline-size', aspectRatio: '210 / 297', display: 'flex', color: INK }}>
+      {/* slim sidebar */}
+      <div style={{ width: u(104), background: SIDE, padding: `${u(24)} ${u(14)}`, flexShrink: 0, borderRight: `1px solid ${LINE}` }}>
+        <img src={DEFAULT_PROFILE_PHOTO} alt="" style={{ width: u(60), height: u(60), borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', display: 'block', margin: `0 auto ${u(18)}`, boxShadow: `0 0 0 ${u(2.5)} #fff, 0 0 0 ${u(3.5)} ${LINE}` }} />
+        <Label>{az ? 'Əlaqə' : 'Contact'}</Label>
+        <div style={{ fontSize: u(6.8), lineHeight: 1.6, color: MUTED, marginBottom: u(18), overflowWrap: 'anywhere' }}>
+          anar.mammadov<br />@mail.az<br /><span style={{ display: 'block', marginTop: u(3) }}>+994 51 123 45 67</span><span style={{ display: 'block', marginTop: u(3) }}>{az ? 'Bakı, Azərbaycan' : 'Baku, Azerbaijan'}</span>
+        </div>
+        <Label>{az ? 'Bacarıqlar' : 'Skills'}</Label>
+        <Skill n="Playwright" v={95} /><Skill n="TypeScript" v={85} /><Skill n="API testing" v={90} /><Skill n="CI/CD" v={78} />
+      </div>
 
-      {/* CV sheet */}
-      <div className="relative ml-auto w-[80%] animate-rise [animation-delay:120ms]">
-        <div
-          className="overflow-hidden rounded-[22px] bg-white ring-1 ring-black/[.06] shadow-[0_30px_60px_-32px_rgba(15,23,42,.38),0_2px_8px_rgba(15,23,42,.05)]"
-          style={{ containerType: 'inline-size', aspectRatio: '210 / 297' }}
-        >
-          <div style={{ padding: `${u(26)} ${u(28)}`, color: INK }}>
-            <div style={{ display: 'flex', gap: u(14), alignItems: 'center' }}>
-              <img src={DEFAULT_PROFILE_PHOTO} alt="" style={{ width: u(54), height: u(54), borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', boxShadow: `0 0 0 ${u(2)} #fff, 0 0 0 ${u(3)} ${LINE}`, flexShrink: 0 }} />
-              <div style={{ minWidth: 0 }}>
-                <div className="font-display" style={{ fontSize: u(21), fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.08 }}>Anar {az ? 'Məmmədov' : 'Mammadov'}</div>
-                <div style={{ fontSize: u(9.4), fontWeight: 600, color: BLUE, marginTop: u(3) }}>{az ? 'QA Avtomasiya Mühəndisi' : 'QA Automation Engineer'}</div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: u(10), fontSize: u(6.8), color: '#7A8394', margin: `${u(11)} 0 ${u(13)}`, paddingBottom: u(13), borderBottom: `1px solid ${LINE}` }}>
-              <span>anar@mail.az</span><span>+994 51 123 45 67</span><span>{az ? 'Bakı' : 'Baku'}</span>
-            </div>
+      {/* main column */}
+      <div style={{ flex: 1, minWidth: 0, padding: `${u(26)} ${u(22)}` }}>
+        <div className="font-display" style={{ fontSize: u(23), fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.05 }}>Anar {az ? 'Məmmədov' : 'Mammadov'}</div>
+        <div style={{ fontSize: u(9.6), fontWeight: 600, color: BLUE, margin: `${u(5)} 0 ${u(12)}` }}>{az ? 'Baş QA Avtomasiya Mühəndisi' : 'Senior QA Automation Engineer'}</div>
+        <div style={{ height: 1, background: LINE, marginBottom: u(11) }} />
+        <div style={{ fontSize: u(7.8), lineHeight: 1.65, color: MUTED, marginBottom: u(15) }}>
+          {az ? 'Fintech məhsulları üçün etibarlı test sistemləri quran 5+ illik təcrübəli mühəndis. Reqressiya vaxtını 85% azaldıb.' : 'Engineer with 5+ years building reliable test systems for fintech products. Cut regression time by 85%.'}
+        </div>
+        <Label>{az ? 'İş təcrübəsi' : 'Experience'}</Label>
+        <Job role={az ? 'Baş QA Mühəndisi' : 'Senior QA Engineer'} org="Nova Fintech" when={az ? '2023 – indi' : '2023 – Now'}
+          lines={az ? ['400+ kritik ssenarini əhatə edən test çərçivəsi qurdu', 'Reqressiya vaxtını 6 saatdan 40 dəqiqəyə endirdi'] : ['Built a framework covering 400+ critical user flows', 'Cut regression time from 6 hours to 40 minutes']} />
+        <Job role={az ? 'QA Mühəndisi' : 'QA Engineer'} org="Caspian Pay" when="2021 – 2023"
+          lines={az ? ['API kontrakt testləri ilə 120+ qüsur aşkar etdi', 'Agile sprintlərdə qəbul meyarlarını müəyyən etdi'] : ['Caught 120+ defects with API contract tests', 'Defined acceptance criteria in Agile sprints']} />
+        <Label>{az ? 'Təhsil' : 'Education'}</Label>
+        <div style={{ fontSize: u(8), color: MUTED }}>
+          <b style={{ color: INK, fontWeight: 700 }}>{az ? 'Kompüter Elmləri, Magistr' : "Computer Science, Master's"}</b><br />ADA {az ? 'Universiteti' : 'University'} · 2022 – 2024
+        </div>
+        <div style={{ height: u(12) }} />
+        <Label>{az ? 'Sertifikatlar' : 'Certificates'}</Label>
+        <div style={{ fontSize: u(7.8), lineHeight: 1.7, color: MUTED }}>
+          <b style={{ color: INK, fontWeight: 600 }}>ISTQB Foundation Level</b> · 2022<br /><b style={{ color: INK, fontWeight: 600 }}>AWS Cloud Practitioner</b> · 2023
+        </div>
+      </div>
+    </div>
+  );
+}
 
-            <div style={{ fontSize: u(7.5), lineHeight: 1.65, color: MUTED, marginBottom: u(14) }}>
-              {az ? 'Fintech və e-ticarət məhsulları üçün etibarlı test sistemləri quran 5+ illik təcrübəli mühəndis.' : 'Engineer with 5+ years building reliable test systems for fintech and e-commerce products.'}
-            </div>
+/* ───────────────────────────── Card 2 — Creative Executive ───────────────────────────── */
+function ExecutiveCard({ az }: { az: boolean }) {
+  const INK = '#181613', ACCENT = '#E4502E', MUTED = '#6A645B', FAINT = '#9A9388', RULE = '#DDD7CC', PAPER = '#FBFAF6';
 
-            <Title>{az ? 'İş təcrübəsi' : 'Experience'}</Title>
-            <Job role={az ? 'Baş QA Avtomasiya Mühəndisi' : 'Senior QA Automation Engineer'} org="Google · Baku" when={az ? '2023 – indi' : '2023 – Present'}
-              lines={az ? ['400+ kritik ssenarini əhatə edən test çərçivəsi qurdu', 'Reqressiya vaxtını 6 saatdan 40 dəqiqəyə endirdi'] : ['Built a framework covering 400+ critical user flows', 'Cut regression time from 6 hours to 40 minutes']} />
-            <Job role={az ? 'QA Mühəndisi' : 'QA Engineer'} org="Microsoft · Baku" when="2021 – 2023"
-              lines={az ? ['API kontrakt testləri ilə 120+ qüsur aşkar etdi'] : ['Caught 120+ defects with API contract tests']} />
+  const Label = ({ children }: { children: string }) => (
+    <div style={{ fontSize: u(6.4), fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', color: ACCENT, marginBottom: u(6) }}>{children}</div>
+  );
+  const Stat = ({ n, l }: { n: string; l: string }) => (
+    <div style={{ flex: 1, paddingLeft: u(10), borderLeft: `1px solid ${RULE}` }}>
+      <div className="font-display" style={{ fontSize: u(19), fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1, color: INK }}>{n}</div>
+      <div style={{ fontSize: u(6.6), color: MUTED, marginTop: u(3) }}>{l}</div>
+    </div>
+  );
 
-            <Title>{az ? 'Bacarıqlar' : 'Skills'}</Title>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: u(4), marginBottom: u(12) }}>
-              {['Playwright', 'TypeScript', 'Postman', 'SQL', 'CI/CD'].map(s => (
-                <span key={s} style={{ fontSize: u(6.8), fontWeight: 600, color: '#3B43B5', background: '#EEF1FF', borderRadius: u(4), padding: `${u(2.2)} ${u(6)}` }}>{s}</span>
-              ))}
-            </div>
+  return (
+    <div className={`overflow-hidden rounded-[14px] ring-1 ring-black/[.06] ${SHADOW}`} style={{ background: PAPER, containerType: 'inline-size', aspectRatio: '210 / 297', color: INK }}>
+     {/* padding lives on a child: cqw units only resolve against an ANCESTOR container */}
+     <div style={{ padding: `${u(26)} ${u(24)}` }}>
+      {/* masthead */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingBottom: u(13), borderBottom: `${u(2)} solid ${INK}` }}>
+        <div>
+          <div style={{ fontSize: u(6.8), fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: ACCENT, marginBottom: u(7) }}>{az ? 'Marketinq Direktoru' : 'Chief Marketing Officer'}</div>
+          <div className="font-display" style={{ fontSize: u(29), fontWeight: 700, letterSpacing: '-0.035em', lineHeight: 0.98 }}>Nigar<br />{az ? 'Əliyeva' : 'Aliyeva'}</div>
+        </div>
+        <div style={{ fontSize: u(6.8), lineHeight: 1.7, color: MUTED, textAlign: 'right' }}>nigar.aliyeva@mail.az<br />+994 55 234 56 78<br />{az ? 'Bakı, Azərbaycan' : 'Baku, Azerbaijan'}</div>
+      </div>
 
-            <Title>{az ? 'Təhsil' : 'Education'}</Title>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: u(7.6), color: MUTED }}>
-              <span><b style={{ color: INK, fontWeight: 700 }}>{az ? 'Kompüter Elmləri, Magistr' : "Computer Science, Master's"}</b> · ADA</span><span>2022 – 2024</span>
-            </div>
+      {/* key figures */}
+      <div style={{ display: 'flex', margin: `${u(14)} 0 ${u(15)}` }}>
+        <Stat n="12+" l={az ? 'il təcrübə' : 'years of experience'} />
+        <Stat n="3" l={az ? 'ölkədə komanda' : 'country teams'} />
+        <Stat n="+38%" l={az ? 'gəlir artımı' : 'revenue growth'} />
+      </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: u(18), marginTop: u(14) }}>
-              <div />
-              <div>
-                <Title>{az ? 'Sertifikatlar' : 'Certificates'}</Title>
-                {['ISTQB Foundation Level', 'AWS Cloud Practitioner', 'Test Automation Engineer'].map(c => (
-                  <div key={c} style={{ fontSize: u(7.4), fontWeight: 600, color: INK, marginBottom: u(3) }}>{c}</div>
-                ))}
-              </div>
-            </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: u(20) }}>
+        <div>
+          <Label>{az ? 'Profil' : 'Profile'}</Label>
+          <div className="font-display" style={{ fontSize: u(9.6), lineHeight: 1.55, fontWeight: 500, marginBottom: u(15) }}>
+            {az ? 'Brend strategiyası və rəqəmsal böyümə üzrə rəhbər. 35 nəfərlik komandanı idarə edir.' : 'Leader in brand strategy and digital growth, running a team of 35.'}
           </div>
+          <Label>{az ? 'Təcrübə' : 'Experience'}</Label>
+          {[
+            { r: az ? 'Marketinq Direktoru' : 'Chief Marketing Officer', o: 'Nordlight Group', w: az ? '2020 – indi' : '2020 – Now', b: az ? 'Üç bazarda brend strategiyasını və 2M AZN büdcəni idarə edir.' : 'Owns brand strategy and a 2M AZN budget across three markets.' },
+            { r: az ? 'Baş Marketinq Meneceri' : 'Head of Marketing', o: 'Caspian Retail', w: '2016 – 2020', b: az ? 'Rəqəmsal kanalları qurdu, onlayn satışı 3 dəfə artırdı.' : 'Built the digital channels and tripled online sales.' },
+            { r: az ? 'Marketinq Meneceri' : 'Marketing Manager', o: az ? 'Bakı Media' : 'Baku Media', w: '2012 – 2016', b: az ? 'Kampaniyaların planlaşdırılması və media tərəfdaşlıqları.' : 'Campaign planning and media partnerships.' },
+          ].map(j => (
+            <div key={j.r} style={{ marginBottom: u(11) }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: u(6), alignItems: 'baseline' }}>
+                <span style={{ fontSize: u(8.8), fontWeight: 700 }}>{j.r}</span><span style={{ fontSize: u(6.6), color: FAINT, whiteSpace: 'nowrap' }}>{j.w}</span>
+              </div>
+              <div style={{ fontSize: u(7.6), fontWeight: 600, color: ACCENT, margin: `${u(1)} 0 ${u(3)}` }}>{j.o}</div>
+              <div style={{ fontSize: u(7.6), lineHeight: 1.55, color: MUTED }}>{j.b}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ borderLeft: `1px solid ${RULE}`, paddingLeft: u(14) }}>
+          <Label>{az ? 'Bacarıqlar' : 'Skills'}</Label>
+          <div style={{ marginBottom: u(15) }}>
+            {[az ? 'Brend strategiyası' : 'Brand strategy', az ? 'Rəqəmsal marketinq' : 'Digital marketing', az ? 'Analitika' : 'Analytics', az ? 'Liderlik' : 'Leadership'].map(s => (
+              <div key={s} style={{ display: 'flex', alignItems: 'center', gap: u(5), fontSize: u(7.6), fontWeight: 600, marginBottom: u(5) }}>
+                <span style={{ width: u(4), height: u(4), background: ACCENT, transform: 'rotate(45deg)', flexShrink: 0 }} />{s}
+              </div>
+            ))}
+          </div>
+          <Label>{az ? 'Təhsil' : 'Education'}</Label>
+          <div style={{ fontSize: u(7.6), lineHeight: 1.5, color: MUTED, marginBottom: u(15) }}>
+            <b style={{ color: INK, fontWeight: 700 }}>MBA</b><br />{az ? 'Bakı Biznes Universiteti' : 'Baku Business University'}<br />2014 – 2016
+          </div>
+          <Label>{az ? 'Dillər' : 'Languages'}</Label>
+          <div style={{ fontSize: u(7.6), lineHeight: 1.6, color: MUTED }}>{az ? 'Azərbaycan · İngilis · Türk' : 'Azerbaijani · English · Turkish'}</div>
         </div>
       </div>
+     </div>
+    </div>
+  );
+}
 
-      {/* AI suggestion */}
-      <div className="absolute bottom-[12%] left-0 w-[60%] animate-rise rounded-2xl border border-line bg-surface p-3 shadow-md [animation-delay:260ms] sm:w-[56%] sm:p-4">
-        <div className="flex items-center gap-2">
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft text-primary"><Sparkles size={13} /></span>
-          <span className="text-[0.75rem] font-semibold text-ink">{az ? 'AI təklifi' : 'AI suggestion'}</span>
-        </div>
-        <p className="mt-2 text-[0.6875rem] leading-relaxed text-ink-2 sm:mt-2.5 sm:text-[0.75rem]">
-          {az ? 'Playwright ilə 400+ ssenarini əhatə edən test çərçivəsi qurdu, reqressiya vaxtını 85% azaltdı.' : 'Built a Playwright framework covering 400+ flows and cut regression time by 85%.'}
-        </p>
-        <div className="mt-3 flex items-center gap-2">
-          <span className="inline-flex h-7 items-center rounded-lg bg-primary px-3 text-[0.75rem] font-semibold text-on-primary">{az ? 'Əlavə et' : 'Add'}</span>
-          <span className="inline-flex h-7 items-center gap-1.5 rounded-lg px-2 text-[0.75rem] font-medium text-ink-2"><RefreshCw size={12} />{az ? 'Yenilə' : 'Retry'}</span>
-        </div>
+/* ───────────────────────────── composition ───────────────────────────── */
+export default function HeroVisual({ lang }: { lang: 'az' | 'en' }) {
+  const az = lang === 'az';
+  return (
+    <div className="relative mx-auto w-full max-w-[600px]" style={{ aspectRatio: '1 / 1.04' }} aria-hidden="true">
+      {/* back card: Creative Executive, up and to the left, tilted a little */}
+      <div className="absolute left-0 top-0 z-10 w-[58%] -rotate-[2deg] animate-rise [animation-delay:200ms]">
+        <ExecutiveCard az={az} />
       </div>
-
-      {/* export confirmation */}
-      <div className="absolute -bottom-3 right-[7%] flex animate-rise items-center gap-2.5 rounded-full border border-line bg-surface py-2 pl-2 pr-4 shadow-md [animation-delay:380ms]">
-        <span className="grid h-7 w-7 place-items-center rounded-full bg-success-soft text-success"><Check size={15} strokeWidth={3} /></span>
-        <span className="text-[0.75rem] font-semibold text-ink">{az ? 'CV-niz hazırdır' : 'Your CV is ready'}</span>
-        <Download size={14} className="text-muted" />
+      {/* front card: Modern Professional, the focus */}
+      <div className="absolute bottom-0 right-0 z-20 w-[61%] rotate-[1deg] animate-rise transition-transform duration-500 ease-out hover:-translate-y-1 [animation-delay:80ms]">
+        <ModernCard az={az} />
       </div>
     </div>
   );

@@ -77,7 +77,8 @@ export async function POST(req: NextRequest) {
       .upsert({ email: mail, code: newCode, expires_at: expiresAt }, { onConflict: 'email' });
     if (upsertError) {
       console.error('[otp] upsert error:', upsertError);
-      return NextResponse.json({ error: 'could not create code' }, { status: 500 });
+      // `detail` is the database's own message (e.g. "Invalid API key", "relation ... does not exist") — no secrets in it.
+      return NextResponse.json({ error: 'could not create code', detail: upsertError.message, code: upsertError.code }, { status: 500 });
     }
 
     const delivered = await sendEmail(mail, newCode);

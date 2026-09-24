@@ -81,7 +81,7 @@ export default function AuthModal() {
     setLoading(true); setError('');
     try {
       const data = await post('/api/otp', { action: 'send', email });
-      if (!data.ok) { console.error('[otp]', data); setError(data.error === 'could not create code' ? s.eSend : data.error || s.eNet); return; }
+      if (!data.ok) { console.error('[otp]', data); setError((data.error === 'could not create code' || data.error === 'could not send email') ? s.eSend : data.error || s.eNet); return; }
       if (data.devCode) setDevCode(data.devCode);
       setStep('otp'); startTimer(data.ttl || 180);
     } catch { setError(s.eNet); } finally { setLoading(false); }

@@ -9,8 +9,10 @@ function genCode() {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
-async function sendEmail(to: string, code: string): Promise<boolean> {
-  const subject = 'BirCV – Təsdiq kodu';
+type SendResult = 'sent' | 'failed' | 'none';   // none = no mail provider configured (local dev only)
+
+async function sendEmail(to: string, code: string): Promise<SendResult> {
+  const subject = `BirCV təsdiq kodu: ${code}`;
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f9f9f9;border-radius:12px;">
       <h2 style="color:#1a1a2e;margin:0 0 8px">BirCV</h2>
@@ -27,12 +29,14 @@ async function sendEmail(to: string, code: string): Promise<boolean> {
     try {
       const { Resend } = await import('resend');
       const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
+      // Always send a plain-text part next to the HTML (HTML-only mail is a spam signal) and a reply-to address.
+      const { error } = await resend.emails.send({
         from: process.env.RESEND_FROM || 'BirCV <onboarding@resend.dev>',
-        to, subject, html,
+        to, subject, html, text, replyTo: process.env.ADMIN_EMAIL || 'support@bircv.az',
       });
-      return true;
-    } catch (e) { console.error('[otp] Resend error:', e); return false; }
+      if (error) { console.error('[otp] Resend rejected:', error); return 'failed'; }
+      return 'sent';
+    } catch (e) { console.error('[otp] Resend error:', e); return 'failed'; }
   }
 
   if (process.env.SMTP_HOST && process.env.SMTP_USER) {
@@ -45,12 +49,12 @@ async function sendEmail(to: string, code: string): Promise<boolean> {
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       });
       await transporter.sendMail({ from: process.env.SMTP_FROM || process.env.SMTP_USER, to, subject, html, text });
-      return true;
-    } catch (e) { console.error('[otp] SMTP error:', e); return false; }
+      return 'sent';
+    } catch (e) { console.error('[otp] SMTP error:', e); return 'failed'; }
   }
 
   console.log(`\n[OTP DEV] ${to} → KOD: ${code}\n`);
-  return false;
+  return 'none';
 }
 
 export async function POST(req: NextRequest) {
@@ -81,12 +85,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'could not create code', detail: upsertError.message, code: upsertError.code }, { status: 500 });
     }
 
-    const delivered = await sendEmail(mail, newCode);
+    const result = await sendEmail(mail, newCode);
+    // Never hand the code to the browser when a provider IS configured but rejected the mail:
+    // that would let anyone verify an address they do not own.
+    if (result === 'failed') return NextResponse.json({ error: 'could not send email' }, { status: 502 });
     return NextResponse.json({
       ok: true,
       ttl: OTP_TTL_MS / 1000,
-      delivered,
-      ...(delivered ? {} : { devCode: newCode }),
+      delivered: result === 'sent',
+      ...(result === 'none' ? { devCode: newCode } : {}),
     });
   }
 

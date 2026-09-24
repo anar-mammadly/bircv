@@ -18,6 +18,10 @@ const W = { sm: 'sm:max-w-[400px]', md: 'sm:max-w-[480px]', lg: 'sm:max-w-[720px
 export default function Modal({ open, onClose, title, children, size = 'sm', hideTitle }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  // Keep the latest onClose in a ref: callers pass a new inline function every render, and depending on it
+  // would re-run the focus effect on every keystroke and yank focus back to the first field.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
 
   useEffect(() => {
     if (!open) return;
@@ -27,7 +31,7 @@ export default function Modal({ open, onClose, title, children, size = 'sm', hid
     const focusables = () => Array.from(ref.current?.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])') || []);
     setTimeout(() => (ref.current?.querySelector<HTMLElement>('[data-autofocus]') || focusables()[1] || focusables()[0])?.focus(), 30);
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { e.stopPropagation(); onClose(); }
+      if (e.key === 'Escape') { e.stopPropagation(); closeRef.current(); }
       if (e.key === 'Tab') {
         const f = focusables(); if (!f.length) return;
         const first = f[0], last = f[f.length - 1];
@@ -37,7 +41,7 @@ export default function Modal({ open, onClose, title, children, size = 'sm', hid
     };
     document.addEventListener('keydown', onKey);
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prevOverflow; prev?.focus?.(); };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
   return (

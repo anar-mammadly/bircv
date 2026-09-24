@@ -72,7 +72,13 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + OTP_TTL_MS).toISOString();
 
     // Supabase upsert (köhnə kodu əvəz et)
-    await supabaseAdmin.from('otp_codes').upsert({ email: mail, code: newCode, expires_at: expiresAt });
+    const { error: upsertError } = await supabaseAdmin
+      .from('otp_codes')
+      .upsert({ email: mail, code: newCode, expires_at: expiresAt }, { onConflict: 'email' });
+    if (upsertError) {
+      console.error('[otp] upsert error:', upsertError);
+      return NextResponse.json({ error: 'could not create code' }, { status: 500 });
+    }
 
     const delivered = await sendEmail(mail, newCode);
     return NextResponse.json({
@@ -85,9 +91,10 @@ export async function POST(req: NextRequest) {
 
   // ── VERIFY ────────────────────────────────────────────────────────────────
   if (action === 'verify') {
-    const { data: entry } = await supabaseAdmin
+    const { data: entry, error: selectError } = await supabaseAdmin
       .from('otp_codes').select('*').eq('email', mail).maybeSingle();
 
+    if (selectError) console.error('[otp] select error:', selectError);
     if (!entry) return NextResponse.json({ ok: false, reason: 'no_code' }, { status: 400 });
     if (new Date(entry.expires_at).getTime() < Date.now()) {
       await supabaseAdmin.from('otp_codes').delete().eq('email', mail);

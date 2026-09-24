@@ -2,6 +2,8 @@
 import { CVData } from '@/app/types/cv';
 import { Lang, parts, dateRange, eduRange, bullets, L, contactItems, Icon, ExtraSections } from './shared';
 
+// Left panel: near-black petrol-teal (white text contrast ≈ 13:1). The main-column accents are unchanged.
+const SIDE = '#0A3540';
 const CORAL = '#FF5A36', DARK = '#1A1A1A', CREAM = '#FFF7F0', MUTED = '#7C6F66';
 const F = '"Bricolage Grotesque","Inter",Arial,sans-serif';
 
@@ -22,7 +24,7 @@ export default function CreativeTemplate({ data, lang }: { data: CVData; lang: L
 
   return (
     <div style={{ fontFamily: F, display: 'flex', width: '100%', fontSize: 10, color: DARK, background: CREAM }}>
-      <aside style={{ width: '33%', background: CORAL, color: '#fff', padding: '34px 22px 30px', boxSizing: 'border-box', flexShrink: 0 }}>
+      <aside style={{ width: '33%', background: SIDE, color: '#fff', padding: '34px 22px 30px', boxSizing: 'border-box', flexShrink: 0 }}>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 22 }}>
           {p.photo
             ? <img src={p.photo} alt="" style={{ width: 112, height: 112, borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', border: '4px solid #fff', display: 'block' }} />

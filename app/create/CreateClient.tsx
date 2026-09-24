@@ -39,6 +39,23 @@ export default function CreateClient() {
   const [tab, setTab] = useState<Tab>('content');
   const [pages, setPages] = useState(1);
   const [zoom, setZoom] = useState<'fit' | 'full'>('fit');
+  // Desktop preview: size one A4 page to the space that is actually available, so the CV reads as a whole
+  // without scrolling. Only the displayed scale changes — the layout/PDF source is untouched.
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  const [desk, setDesk] = useState(false);
+  useEffect(() => {
+    const el = previewRef.current; if (!el) return;
+    const ro = new ResizeObserver(() => setBox({ w: el.clientWidth, h: el.clientHeight }));
+    ro.observe(el);
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const on = () => setDesk(mq.matches);
+    on(); mq.addEventListener('change', on);
+    return () => { ro.disconnect(); mq.removeEventListener('change', on); };
+  }, []);
+  const MIN_PAGE_W = 430;     // never shrink below a readable size
+  const fitW = Math.floor(Math.min(box.w - 48, (box.h - 32) * (210 / 297)));
+  const pageW = zoom === 'full' ? 794 : desk && box.w > 0 ? Math.max(MIN_PAGE_W, Math.min(794, fitW)) : null;
   const [pdf, setPdf] = useState<'idle' | 'preparing' | 'done'>('idle');
   const [limitModal, setLimitModal] = useState(false);
   const [premiumModal, setPremiumModal] = useState(false);
@@ -196,13 +213,14 @@ export default function CreateClient() {
               <button aria-pressed={zoom === 'full'} onClick={() => setZoom('full')}><ZoomIn size={14} className="mr-1 inline" />100%</button>
             </div>
           </div>
-          <div className="min-h-0 flex-1 overflow-auto px-3 py-5 pb-32 sm:px-8 lg:pb-8">
-            {empty && (
-              <div className="mx-auto mb-4 flex max-w-[794px] items-center gap-2 rounded-xl border border-primary/25 bg-primary-soft px-3.5 py-2.5 text-small text-primary" role="status">
-                <Info size={15} className="shrink-0" />{az ? 'Bu, nümunə məzmundur. Yazmağa başlayanda CV-niz burada görünəcək.' : 'This is sample content. Your CV appears here as you type.'}
-              </div>
-            )}
-            <div className="mx-auto transition-[max-width] duration-300 ease-out" style={{ width: '100%', maxWidth: zoom === 'full' ? 794 : 860, minWidth: zoom === 'full' ? 794 : 0 }}>
+          {empty && (
+            <div className="mx-4 mt-3 flex shrink-0 items-center gap-2 self-center rounded-xl border border-primary/25 bg-primary-soft px-3.5 py-2 text-small text-primary" role="status">
+              <Info size={15} className="shrink-0" />{az ? 'Bu, nümunə məzmundur. Yazmağa başlayanda CV-niz burada görünəcək.' : 'This is sample content. Your CV appears here as you type.'}
+            </div>
+          )}
+          <div ref={previewRef} className="flex min-h-0 flex-1 flex-col overflow-auto px-3 py-5 pb-32 sm:px-8 lg:px-6 lg:py-4 lg:pb-4">
+            <div className="mx-auto my-auto shrink-0 transition-[width] duration-300 ease-out"
+              style={pageW ? { width: pageW } : { width: '100%', maxWidth: 860 }}>
               <CVDocument data={shown} template={selectedTemplate} lang={lang} font={cvSettings.font} textScale={cvSettings.textScale}
                 layoutRef={layoutRef} onLayout={l => setPages(l.pages)} />
             </div>

@@ -1,169 +1,109 @@
 'use client';
 import { CVData } from '@/app/types/cv';
-import { ExtraSections } from './shared';
+import { Lang, parts, fullName, dateRange, eduRange, bullets, L, contactItems, Icon, ExtraSections } from './shared';
 
-const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
-const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function fmtDate(month:string,year:string,lang:'az'|'en'){const arr=lang==='az'?MONTHS_AZ:MONTHS_EN;const m=parseInt(month);if(!year)return'';return`${m&&arr[m]?arr[m]+' ':''}${year}`;}
+// Modern — airy SaaS look: oversized name, soft accent, floating cards in the side column.
+const INK = '#0B1220', BLUE = '#2563EB', SOFT = '#EEF3FF', MUTED = '#59627A', LINE = '#E4E9F4';
+const F = '"Inter","Segoe UI",Arial,sans-serif';
+const LEVEL: Record<string, number> = { A1: 1, A2: 2, B1: 3, B2: 4, C1: 5, C2: 5, 'Ana dili': 5, Native: 5 };
 
-// SVG contact icon for the header — renders perfectly in html2canvas
-function ContactSVG({ type }: { type: 'email'|'phone'|'pin'|'link' }) {
-  const s = { width:10, height:10, display:'block' as const };
-  if (type==='email')  return <svg {...s} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>;
-  if (type==='phone')  return <svg {...s} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-8.19-8.19 19.79 19.79 0 01-3.07-8.63A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>;
-  if (type==='pin')    return <svg {...s} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>;
-  return <svg {...s} viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>;
-}
+export default function ModernTemplate({ data, lang }: { data: CVData; lang: Lang }) {
+  const { p, experience, education, skills, languages, certs, trains, additional } = parts(data);
+  const contacts = contactItems(p);
 
-export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az'|'en' }) {
-  const { personal:p, experience, education, skills, languages, additional } = data;
-  const certs  = (data as any).certificates || [];
-  const trains = (data as any).trainings    || [];
-  const present = lang==='az'?'İndiyə qədər':'Present';
-
-  const ACCENT = '#1E40AF';
-
-  const SecLabel = ({ children }: { children: string }) => (
-    <div style={{ fontSize:9.5, fontWeight:700, color:ACCENT, textTransform:'uppercase' as const, letterSpacing:1.8, marginBottom:12, fontFamily:'"Space Grotesk",sans-serif', display:'flex', alignItems:'center', gap:8 }}>
+  const H = ({ children }: { children: string }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+      <span style={{ fontSize: 10.3, fontWeight: 700, letterSpacing: 1.6, textTransform: 'uppercase', color: BLUE }}>{children}</span>
+      <span style={{ flex: 1, height: 1, background: LINE }} />
+    </div>
+  );
+  const Card = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div style={{ background: SOFT, borderRadius: 12, padding: '15px 16px', marginBottom: 12 }}>
+      <div style={{ fontSize: 9.7, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: INK, marginBottom: 10 }}>{title}</div>
       {children}
-      <div style={{ flex:1, height:1, background:'linear-gradient(90deg,rgba(30,64,175,0.35),transparent)' }}/>
     </div>
   );
 
   return (
-    <div style={{ fontFamily:'"Inter","Segoe UI",Arial,sans-serif', background:'#fff', color:'#1a1a2e', width:'100%', minHeight:'297mm', fontSize:10.5, display:'flex', flexDirection:'column' }}>
-
-      {/* Header */}
-      <div style={{ background:`linear-gradient(120deg,${ACCENT} 0%,#3B82F6 100%)`, padding:'28px 28px 22px', color:'#fff' }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:14 }}>
-          <div style={{ flex:1 }}>
-            <div style={{ fontFamily:'"Space Grotesk",sans-serif', fontSize:26, fontWeight:700, letterSpacing:-0.5, lineHeight:1.2 }}>{p.firstName} {p.lastName}</div>
-            {p.jobTitle && <div style={{ fontSize:12, marginTop:4, fontWeight:500, letterSpacing:0.8, color:'rgba(255,255,255,0.9)' }}>{p.jobTitle}</div>}
-            {/* SVG icons — no emoji */}
-            <div style={{ display:'flex', alignItems:'flex-start', gap:12, marginTop:12, flexWrap:'wrap' as const }}>
-              {p.email    && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="email"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.email}</span></div>}
-              {p.phone    && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="phone"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.phone}</span></div>}
-              {p.city     && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="pin"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.city}{p.country?', '+p.country:''}</span></div>}
-              {p.linkedin && <div style={{ display:'flex', alignItems:'flex-start', gap:4 }}><div style={{ marginTop:1 }}><ContactSVG type="link"/></div><span style={{ fontSize:10, color:'rgba(255,255,255,0.9)' }}>{p.linkedin}</span></div>}
-            </div>
+    <div style={{ fontFamily: F, background: '#fff', color: INK, width: '100%', display: 'flex', flexDirection: 'column', fontSize: 10.8, lineHeight: 1.55 }}>
+      <header style={{ padding: '38px 40px 22px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 24, alignItems: 'flex-start' }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ width: 44, height: 4, background: BLUE, borderRadius: 2, marginBottom: 16 }} />
+            <h1 style={{ margin: 0, fontSize: 42.6, fontWeight: 700, letterSpacing: -1.7, lineHeight: 1.02, overflowWrap: 'anywhere' }}>{fullName(data) || ' '}</h1>
+            {p.jobTitle && <div style={{ marginTop: 9, fontSize: 15.1, fontWeight: 500, color: MUTED, overflowWrap: 'anywhere' }}>{p.jobTitle}</div>}
           </div>
-          {p.photo && <img src={p.photo} alt="photo" style={{ width:72, height:72, borderRadius:'50%', objectFit:'cover', border:'3px solid rgba(255,255,255,0.4)', flexShrink:0 }} />}
+          {p.photo && <img src={p.photo} alt="" style={{ width: 86, height: 86, borderRadius: 18, objectFit: 'cover', objectPosition: 'top', display: 'block', flexShrink: 0 }} />}
         </div>
-      </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px', marginTop: 20, paddingTop: 15, borderTop: `1px solid ${LINE}` }}>
+          {contacts.map(c => (
+            <span key={c.text} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 10.4, color: '#2B3550' }}>
+              <span style={{ width: 20, height: 20, borderRadius: 10, background: SOFT, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={c.icon} size={10.5} color={BLUE} /></span>
+              <span style={{ overflowWrap: 'anywhere' }}>{c.text}</span>
+            </span>
+          ))}
+        </div>
+      </header>
 
-      <div style={{ padding:'20px 28px', display:'flex', flexDirection:'column', gap:20, paddingBottom:'20px' }}>
-        {p.summary && (
-          <div>
-            <SecLabel>{lang==='az'?'Özəl':'Summary'}</SecLabel>
-            <div style={{ fontSize:10.5, color:'#374151', lineHeight:1.75 }}>{p.summary}</div>
-          </div>
-        )}
-
-        {experience.length>0 && (
-          <div>
-            <SecLabel>{lang==='az'?'İş Təcrübəsi':'Work Experience'}</SecLabel>
-            <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-              {experience.map(exp => (
-                <div key={exp.id} style={{ paddingLeft:12, borderLeft:'2px solid #dbe6fb' }}>
-                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
-                    <span style={{ fontWeight:700, fontSize:11.5, color:'#1a1a2e', lineHeight:1.35 }}>{exp.jobTitle}</span>
-                    <span style={{ fontSize:9.5, color:'#9ca3af', flexShrink:0, fontWeight:500 }}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span>
-                  </div>
-                  <div style={{ fontSize:10.5, color:ACCENT, fontWeight:600, marginBottom:4 }}>{exp.company}{exp.city?' · '+exp.city:''}</div>
-                  {exp.description && (
-                    <div style={{ fontSize:10, color:'#4b5563', lineHeight:1.7 }}>
-                      {exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number) => (
-                        <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:5, marginBottom:3 }}>
-                          <span style={{ color:ACCENT, flexShrink:0, marginTop:1 }}>•</span>
-                          <span>{line.replace(/^[•\-]\s*/,'')}</span>
-                        </div>
-                      ))}
+      <div style={{ display: 'flex', gap: 30, padding: '6px 40px 36px', flex: 1, alignItems: 'flex-start' }}>
+        <main style={{ flex: 1, minWidth: 0 }}>
+          {p.summary && <div style={{ marginBottom: 22 }}><H>{L.summary(lang)}</H><div style={{ fontSize: 11.7, lineHeight: 1.75, color: '#27304A' }}>{p.summary}</div></div>}
+          {experience.length > 0 && (
+            <div style={{ marginBottom: 18 }}>
+              <H>{L.experience(lang)}</H>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {experience.map(e => (
+                  <div key={e.id} style={{ paddingLeft: 14, borderLeft: `2px solid ${LINE}` }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, alignItems: 'baseline' }}>
+                      <span style={{ fontSize: 13.5, fontWeight: 700, lineHeight: 1.3, overflowWrap: 'anywhere' }}>{e.jobTitle}</span>
+                      <span style={{ fontSize: 9.7, color: '#8089A3', flexShrink: 0, whiteSpace: 'nowrap', fontWeight: 500 }}>{dateRange(e, lang)}</span>
                     </div>
-                  )}
+                    <div style={{ margin: '4px 0 6px', display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 10.2, fontWeight: 600, color: BLUE, background: SOFT, borderRadius: 5, padding: '2px 8px' }}>{e.company}</span>
+                      {e.city && <span style={{ fontSize: 10.2, color: '#8089A3' }}>{e.city}</span>}
+                    </div>
+                    {bullets(e.description).map((b, i) => <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 3, color: '#3A4462' }}><span style={{ width: 5, height: 1.5, background: BLUE, marginTop: 8, flexShrink: 0 }} /><span style={{ minWidth: 0, overflowWrap: 'anywhere' }}>{b}</span></div>)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <ExtraSections data={data} lang={lang} Heading={H} color="#3A4462" muted="#8089A3" accent={INK} gap={18} fontSize={10} />
+          {additional && <div><H>{L.additional(lang)}</H><div style={{ whiteSpace: 'pre-line', overflowWrap: 'anywhere' }}>{additional}</div></div>}
+        </main>
+
+        <aside style={{ width: 226, flexShrink: 0 }}>
+          {skills.length > 0 && (
+            <Card title={L.skills(lang)}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>{skills.map(s => <span key={s} style={{ fontSize: 9.5, fontWeight: 600, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 6, padding: '3px 8px', overflowWrap: 'anywhere' }}>{s}</span>)}</div>
+            </Card>
+          )}
+          {education.length > 0 && (
+            <Card title={L.education(lang)}>
+              {education.map((e, i) => <div key={e.id} style={{ marginBottom: i < education.length - 1 ? 10 : 0 }}><div style={{ fontWeight: 700, lineHeight: 1.35, overflowWrap: 'anywhere' }}>{e.degree || e.school}</div>{e.degree && e.school && <div style={{ color: MUTED, fontSize: 10 }}>{e.school}</div>}<div style={{ color: BLUE, fontSize: 9.5, fontWeight: 600 }}>{eduRange(e.startYear, e.endYear)}</div></div>)}
+            </Card>
+          )}
+          {languages.length > 0 && (
+            <Card title={L.languages(lang)}>
+              {languages.map(l => (
+                <div key={l.id} style={{ marginBottom: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, fontSize: 10.2 }}><span>{l.name}</span><span style={{ color: '#8089A3', fontWeight: 500 }}>{l.level}</span></div>
+                  <div style={{ height: 3, background: '#D9E2FA', borderRadius: 2, marginTop: 4 }}><div style={{ height: 3, width: `${(LEVEL[l.level] ?? 3) * 20}%`, background: BLUE, borderRadius: 2 }} /></div>
                 </div>
               ))}
-            </div>
-          </div>
-        )}
-
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:22 }}>
-          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-            {education.length>0 && (
-              <div>
-                <SecLabel>{lang==='az'?'Təhsil':'Education'}</SecLabel>
-                <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-                  {education.map(edu => (
-                    <div key={edu.id}>
-                      <div style={{ fontWeight:700, fontSize:11, lineHeight:1.35 }}>{edu.degree||edu.school}</div>
-                      {edu.school&&edu.degree && <div style={{ fontSize:10, color:'#6b7280' }}>{edu.school}</div>}
-                      <div style={{ fontSize:9.5, color:'#9ca3af', fontWeight:500 }}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {certs.length>0 && (
-              <div>
-                <SecLabel>{lang==='az'?'Sertifikatlar':'Certificates'}</SecLabel>
-                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
-                  {certs.map((c:any,i:number) => (
-                    <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}>
-                      <div><span style={{ fontWeight:600 }}>{c.name}</span>{c.issuer&&<span style={{ color:'#9ca3af', marginLeft:5 }}>· {c.issuer}</span>}</div>
-                      {c.year&&<span style={{ color:'#9ca3af', flexShrink:0, marginLeft:8 }}>{c.year}</span>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {trains.length>0 && (
-              <div>
-                <SecLabel>{lang==='az'?'Təlimlər':'Training'}</SecLabel>
-                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
-                  {trains.map((tr:any,i:number) => (
-                    <div key={i} style={{ fontSize:10.5 }}>
-                      <span style={{ fontWeight:600 }}>{tr.name}</span>
-                      {tr.provider&&<span style={{ color:'#9ca3af' }}> · {tr.provider}</span>}
-                      {tr.year&&<span style={{ color:'#9ca3af' }}> · {tr.year}</span>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-            {skills.length>0 && (
-              <div>
-                <SecLabel>{lang==='az'?'Bacarıqlar':'Skills'}</SecLabel>
-                <div style={{ display:'flex', flexWrap:'wrap' as const, gap:5, marginTop:4 }}>
-                  {skills.map((s,i) => (
-                    <div key={i} style={{ fontSize:10, padding:'4px 9px', background:'#e9eff9', color:ACCENT, borderRadius:4, fontWeight:600, display:'block' }}>{s}</div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {languages.length>0 && (
-              <div>
-                <SecLabel>{lang==='az'?'Dillər':'Languages'}</SecLabel>
-                <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
-                  {languages.map((l,i) => (
-                    <div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}>
-                      <span style={{ fontWeight:500 }}>{l.name}</span>
-                      <span style={{ color:'#9ca3af' }}>{l.level}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <ExtraSections data={data} lang={lang} Heading={SecLabel} color="#4b5563" muted="#9ca3af" accent="#1a1a2e" gap={20} />
-        {additional && (
-          <div>
-            <SecLabel>{lang==='az'?'Əlavə':'Additional'}</SecLabel>
-            <div style={{ fontSize:10.5, color:'#4b5563', lineHeight:1.7, whiteSpace:'pre-line' }}>{additional}</div>
-          </div>
-        )}
+            </Card>
+          )}
+          {certs.length > 0 && (
+            <Card title={L.certificates(lang)}>
+              {certs.map(c => <div key={c.id} style={{ marginBottom: 7 }}><div style={{ fontWeight: 600, lineHeight: 1.35, overflowWrap: 'anywhere' }}>{c.name}</div><div style={{ color: '#8089A3', fontSize: 9.5 }}>{[c.issuer, c.year].filter(Boolean).join(' · ')}</div></div>)}
+            </Card>
+          )}
+          {trains.length > 0 && (
+            <Card title={L.trainings(lang)}>
+              {trains.map(t => <div key={t.id} style={{ marginBottom: 7 }}><div style={{ fontWeight: 600, lineHeight: 1.35, overflowWrap: 'anywhere' }}>{t.name}</div><div style={{ color: '#8089A3', fontSize: 9.5 }}>{[t.provider, t.year].filter(Boolean).join(' · ')}</div></div>)}
+            </Card>
+          )}
+        </aside>
       </div>
     </div>
   );

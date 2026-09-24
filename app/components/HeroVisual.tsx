@@ -46,7 +46,17 @@ function ModernCard({ az }: { az: boolean }) {
           anar.mammadov<br />@mail.az<br /><span style={{ display: 'block', marginTop: u(3) }}>+994 51 123 45 67</span><span style={{ display: 'block', marginTop: u(3) }}>{az ? 'Bakı, Azərbaycan' : 'Baku, Azerbaijan'}</span>
         </div>
         <Label>{az ? 'Bacarıqlar' : 'Skills'}</Label>
-        <Skill n="Playwright" v={95} /><Skill n="TypeScript" v={85} /><Skill n="API testing" v={90} /><Skill n="CI/CD" v={78} />
+        <Skill n="Playwright" v={95} /><Skill n="TypeScript" v={85} /><Skill n="API testing" v={90} /><Skill n="CI/CD" v={78} /><Skill n="SQL" v={80} />
+        <div style={{ height: u(10) }} />
+        <Label>{az ? 'Dillər' : 'Languages'}</Label>
+        <div style={{ fontSize: u(7.2), lineHeight: 1.75, color: MUTED }}>
+          <b style={{ color: INK, fontWeight: 600 }}>{az ? 'Azərbaycan' : 'Azerbaijani'}</b> · {az ? 'Ana dili' : 'Native'}<br />
+          <b style={{ color: INK, fontWeight: 600 }}>{az ? 'İngilis' : 'English'}</b> · C1<br />
+          <b style={{ color: INK, fontWeight: 600 }}>{az ? 'Rus' : 'Russian'}</b> · B1
+        </div>
+        <div style={{ height: u(14) }} />
+        <Label>{az ? 'Maraqlar' : 'Interests'}</Label>
+        <div style={{ fontSize: u(7.2), lineHeight: 1.7, color: MUTED }}>{az ? 'Açıq mənbə, mentorluq, şahmat' : 'Open source, mentoring, chess'}</div>
       </div>
 
       {/* main column */}
@@ -62,6 +72,12 @@ function ModernCard({ az }: { az: boolean }) {
           lines={az ? ['400+ kritik ssenarini əhatə edən test çərçivəsi qurdu', 'Reqressiya vaxtını 6 saatdan 40 dəqiqəyə endirdi'] : ['Built a framework covering 400+ critical user flows', 'Cut regression time from 6 hours to 40 minutes']} />
         <Job role={az ? 'QA Mühəndisi' : 'QA Engineer'} org="Caspian Pay" when="2021 – 2023"
           lines={az ? ['API kontrakt testləri ilə 120+ qüsur aşkar etdi', 'Agile sprintlərdə qəbul meyarlarını müəyyən etdi'] : ['Caught 120+ defects with API contract tests', 'Defined acceptance criteria in Agile sprints']} />
+        <Job role={az ? 'Kiçik QA Mühəndisi' : 'Junior QA Engineer'} org="Baku Digital" when="2018 – 2021"
+          lines={az ? ['Hər həftəlik relizdə smoke və reqressiya testləri apardı', 'JIRA-da qüsur hesabatlarını standartlaşdırdı'] : ['Ran smoke and regression tests for every weekly release', 'Standardised defect reports in JIRA']} />
+        <Label>{az ? 'Layihələr' : 'Projects'}</Label>
+        <div style={{ fontSize: u(7.8), lineHeight: 1.6, color: MUTED, marginBottom: u(12) }}>
+          <b style={{ color: INK, fontWeight: 700 }}>pw-report</b> · {az ? 'Playwright üçün açıq mənbəli hesabat aləti, 1.2k ulduz' : 'Open-source Playwright reporter, 1.2k stars'}
+        </div>
         <Label>{az ? 'Təhsil' : 'Education'}</Label>
         <div style={{ fontSize: u(8), color: MUTED }}>
           <b style={{ color: INK, fontWeight: 700 }}>{az ? 'Kompüter Elmləri, Magistr' : "Computer Science, Master's"}</b><br />ADA {az ? 'Universiteti' : 'University'} · 2022 – 2024
@@ -121,6 +137,7 @@ function ExecutiveCard({ az }: { az: boolean }) {
             { r: az ? 'Marketinq Direktoru' : 'Chief Marketing Officer', o: 'Nordlight Group', w: az ? '2020 – indi' : '2020 – Now', b: az ? 'Üç bazarda brend strategiyasını və 2M AZN büdcəni idarə edir.' : 'Owns brand strategy and a 2M AZN budget across three markets.' },
             { r: az ? 'Baş Marketinq Meneceri' : 'Head of Marketing', o: 'Caspian Retail', w: '2016 – 2020', b: az ? 'Rəqəmsal kanalları qurdu, onlayn satışı 3 dəfə artırdı.' : 'Built the digital channels and tripled online sales.' },
             { r: az ? 'Marketinq Meneceri' : 'Marketing Manager', o: az ? 'Bakı Media' : 'Baku Media', w: '2012 – 2016', b: az ? 'Kampaniyaların planlaşdırılması və media tərəfdaşlıqları.' : 'Campaign planning and media partnerships.' },
+            { r: az ? 'Brend Meneceri' : 'Brand Manager', o: 'Azeri Foods', w: '2009 – 2012', b: az ? 'Yeni məhsul xəttinin brendinq və buraxılış strategiyası.' : 'Branding and launch strategy for a new product line.' },
           ].map(j => (
             <div key={j.r} style={{ marginBottom: u(11) }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: u(6), alignItems: 'baseline' }}>
@@ -128,6 +145,12 @@ function ExecutiveCard({ az }: { az: boolean }) {
               </div>
               <div style={{ fontSize: u(7.6), fontWeight: 600, color: ACCENT, margin: `${u(1)} 0 ${u(3)}` }}>{j.o}</div>
               <div style={{ fontSize: u(7.6), lineHeight: 1.55, color: MUTED }}>{j.b}</div>
+            </div>
+          ))}
+          <Label>{az ? 'Nailiyyətlər' : 'Achievements'}</Label>
+          {[az ? '“İlin marketoloqu” mükafatı, 2022' : '“Marketer of the Year” award, 2022', az ? 'Beynəlxalq konfranslarda 8 çıxış' : '8 talks at international conferences'].map(a => (
+            <div key={a} style={{ display: 'flex', gap: u(5), fontSize: u(7.6), lineHeight: 1.55, color: MUTED, marginBottom: u(3) }}>
+              <span style={{ width: u(3), height: u(3), background: ACCENT, marginTop: u(4.4), flexShrink: 0, transform: 'rotate(45deg)' }} />{a}
             </div>
           ))}
         </div>
@@ -146,7 +169,13 @@ function ExecutiveCard({ az }: { az: boolean }) {
             <b style={{ color: INK, fontWeight: 700 }}>MBA</b><br />{az ? 'Bakı Biznes Universiteti' : 'Baku Business University'}<br />2014 – 2016
           </div>
           <Label>{az ? 'Dillər' : 'Languages'}</Label>
-          <div style={{ fontSize: u(7.6), lineHeight: 1.6, color: MUTED }}>{az ? 'Azərbaycan · İngilis · Türk' : 'Azerbaijani · English · Turkish'}</div>
+          <div style={{ fontSize: u(7.6), lineHeight: 1.6, color: MUTED, marginBottom: u(15) }}>{az ? 'Azərbaycan · İngilis · Türk' : 'Azerbaijani · English · Turkish'}</div>
+          <Label>{az ? 'Sertifikatlar' : 'Certificates'}</Label>
+          <div style={{ fontSize: u(7.6), lineHeight: 1.6, color: MUTED, marginBottom: u(15) }}>
+            <b style={{ color: INK, fontWeight: 600 }}>Google Analytics</b> · 2021<br /><b style={{ color: INK, fontWeight: 600 }}>CIM Chartered Marketer</b> · 2019
+          </div>
+          <Label>{az ? 'Üzvlük' : 'Memberships'}</Label>
+          <div style={{ fontSize: u(7.6), lineHeight: 1.6, color: MUTED }}>{az ? 'Azərbaycan Marketinq Assosiasiyası' : 'Azerbaijan Marketing Association'}</div>
         </div>
       </div>
      </div>

@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import "./cv-fonts.css";
+import "./cv-scope.css";
 import "./globals.css";
+import Providers from "./providers";
 
 const SITE_URL = "https://bircv.az";
 const TITLE = "BirCV – Azərbaycan dilində CV Yarat və Hazırla";
@@ -70,14 +73,18 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="az" data-theme="light">
+    <html lang="az" data-theme="light" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('bircv_theme');document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');var l=localStorage.getItem('bircv_lang');if(l==='az'||l==='en')document.documentElement.lang=l}catch(e){}" }} />
+        {['inter-400', 'inter-600', 'bricolage-grotesque-700'].map(f => (
+          <link key={f} rel="preload" as="font" type="font/ttf" crossOrigin="anonymous" href={`/fonts/cv/${f}.ttf`} />
+        ))}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body><Providers>{children}</Providers></body>
     </html>
   );
 }

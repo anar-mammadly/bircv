@@ -1,105 +1,139 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
-/* CV template fonts — each template gets a distinct family pairing for a unique visual identity */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&family=Archivo:wght@400;600;700;900&family=Poppins:wght@400;500;600;700;800&family=Libre+Franklin:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:wght@400;500;600;700&family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ───────────────────────────────────────────────────────────────────────────
+   BirCV design system
+   Colours are space-separated RGB triplets so Tailwind can apply alpha (bg-primary/10).
+   Light = warm paper + ink + cobalt. Dark = deep ink surfaces, same hues, lifted for contrast.
+   ─────────────────────────────────────────────────────────────────────────── */
 :root {
-  --bg: #0a0a0f;
-  --surface: #111118;
-  --border: rgba(255,255,255,0.08);
-  --accent: #7C6EF8;
-  --accent-light: #a89ef8;
-  --text: #ffffff;
-  --muted: rgba(255,255,255,0.45);
+  --bg: 247 246 242;           /* paper */
+  --surface: 255 255 255;
+  --surface-2: 241 239 233;
+  --surface-3: 233 230 222;
+  --line: 228 225 216;
+  --line-strong: 205 201 190;
+  --ink: 21 23 28;
+  --ink-2: 74 79 90;
+  --muted: 118 124 138;
+  --primary: 31 79 255;        /* cobalt */
+  --primary-hover: 22 62 214;
+  --primary-soft: 232 238 255;
+  --on-primary: 255 255 255;
+  --accent: 255 90 54;         /* vermilion — used sparingly */
+  --accent-soft: 255 233 226;
+  --success: 15 157 88;   --success-soft: 226 245 234;
+  --warning: 183 121 31;  --warning-soft: 255 243 214;
+  --danger: 217 45 32;    --danger-soft: 253 232 230;
+  --shadow: 21 23 28;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: 14 16 20;
+  --surface: 21 24 30;
+  --surface-2: 28 32 39;
+  --surface-3: 38 43 52;
+  --line: 38 43 52;
+  --line-strong: 58 65 78;
+  --ink: 242 243 245;
+  --ink-2: 180 185 196;
+  --muted: 126 133 147;
+  --primary: 98 132 255;
+  --primary-hover: 130 158 255;
+  --primary-soft: 27 38 80;
+  --on-primary: 10 14 28;
+  --accent: 255 122 92;   --accent-soft: 63 30 24;
+  --success: 52 200 122;  --success-soft: 18 52 36;
+  --warning: 232 168 70;  --warning-soft: 58 44 18;
+  --danger: 255 107 96;   --danger-soft: 66 26 24;
+  --shadow: 0 0 0;
+  color-scheme: dark;
 }
 
-* { box-sizing: border-box; }
-
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   margin: 0;
-}
-
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 0.9375rem; line-height: 1.6;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01";
 }
+* { box-sizing: border-box; }
+::selection { background: rgb(var(--primary) / .22); }
+:focus-visible { outline: 2px solid rgb(var(--primary)); outline-offset: 2px; border-radius: 6px; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; }
 
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* ── Responsive helpers (override inline grid styles on small screens) ── */
-@media (max-width: 768px) {
-  .grid-resp-4 { grid-template-columns: repeat(2, 1fr) !important; }
-  .grid-resp-3 { grid-template-columns: 1fr !important; }
-  .grid-resp-2 { grid-template-columns: 1fr !important; }
-  .nav-shell   { padding: 0 1rem !important; }
-  .nav-links   { display: none !important; }
-  .hero-pad    { padding: 56px 18px 40px !important; }
-  .nav-right       { gap: 6px !important; }
-  .nav-icon-btn    { padding: 5px 7px !important; }
-  .nav-lang-btn    { padding: 5px 8px !important; font-size: 11px !important; }
-  .nav-login-btn   { padding: 6px 10px !important; font-size: 12px !important; }
-  .nav-cta-btn     { padding: 6px 12px !important; font-size: 12px !important; }
-  .nav-auth-group  { gap: 6px !important; }
-  .nav-username    { display: none !important; }
-}
-@media (max-width: 480px) {
-  .grid-resp-4 { gap: 10px !important; }
-  .nav-cta-arrow { display: none !important; }
-  .nav-login-btn { padding: 6px 8px !important; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-in { animation: fadeIn 0.6s ease forwards; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-.spin { animation: spin 0.9s linear infinite; }
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-.shimmer {
-  background: linear-gradient(90deg, transparent 25%, rgba(124,110,248,0.15) 50%, transparent 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* ── Light mode ──────────────────────────────────────────────────────────── */
-/* Bütün səhifəni invert edirik (tünd → açıq). */
-html[data-theme="light"] {
-  filter: invert(1) hue-rotate(180deg);
-  background: #fff;
-}
-
-/* CV preview-u BÜTÖV blok kimi geri invert edirik — daxili elementlərə
-   ayrı-ayrı filtr tətbiq ETMİRİK ki, rənglər iki dəfə invert olub pozulmasın.
-   isolation:isolate + tək filter konteyneri = təmiz nəticə. */
-html[data-theme="light"] .cv-preview-wrap {
-  filter: invert(1) hue-rotate(180deg);
-  isolation: isolate;
-}
-
-/* Şəkillər (foto, real img) həmişə öz rəngində qalsın — onlar ayrıca geri invert olunur.
-   Amma yalnız CV-dən KƏNAR şəkillər (CV onsuz da yuxarıda geri invert olunub). */
-html[data-theme="light"] img:not(.cv-preview-wrap img) {
-  filter: invert(1) hue-rotate(180deg);
-}
-
-/* Print zamanı filtr tamamilə sıfırla — PDF həmişə əsl rəngdə çıxsın */
-@media print {
-  html[data-theme="light"],
-  html[data-theme="light"] .cv-preview-wrap,
-  html[data-theme="light"] img {
-    filter: none !important;
+@layer components {
+  /* buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-control px-4 h-10 text-[0.875rem] font-semibold select-none
+           transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out
+           active:scale-[.98] disabled:opacity-50 disabled:pointer-events-none;
   }
+  .btn-primary   { @apply btn bg-primary text-on-primary shadow-sm hover:bg-primary-hover; }
+  .btn-secondary { @apply btn bg-surface text-ink border border-line-strong hover:bg-surface-2; }
+  .btn-ghost     { @apply btn text-ink-2 hover:bg-surface-2 hover:text-ink; }
+  .btn-accent    { @apply btn bg-accent text-white shadow-sm hover:brightness-95; }
+  .btn-danger    { @apply btn bg-danger-soft text-danger hover:brightness-95; }
+  .btn-sm { @apply h-8 px-3 text-[0.8125rem] rounded-[8px]; }
+  .btn-lg { @apply h-12 px-6 text-[0.95rem] rounded-[12px]; }
+  .btn-icon { @apply h-9 w-9 px-0 rounded-[9px]; }
+
+  /* form controls */
+  .label { @apply mb-1.5 block text-[0.75rem] font-medium text-ink-2; }
+  .input {
+    @apply block w-full rounded-control border border-line-strong bg-surface px-3 h-10 text-[0.875rem] text-ink placeholder:text-muted
+           transition-[border-color,box-shadow] duration-150 focus:border-primary focus:outline-none focus:shadow-focus disabled:opacity-50;
+  }
+  textarea.input { @apply h-auto py-2.5 leading-relaxed; }
+  select.input { @apply appearance-none bg-no-repeat pr-8; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237b8090' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-position: right 10px center; }
+  .input[aria-invalid="true"] { @apply border-danger; }
+
+  /* surfaces */
+  .card { @apply rounded-card border border-line bg-surface shadow-sm; }
+  .card-flat { @apply rounded-card border border-line bg-surface; }
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-3 h-7 text-[0.75rem] font-medium text-ink-2; }
+  .badge { @apply inline-flex items-center gap-1 rounded-full px-2 h-5 text-[0.6875rem] font-semibold tracking-wide; }
+  .badge-primary { @apply badge bg-primary-soft text-primary; }
+  .badge-accent  { @apply badge bg-accent-soft text-accent; }
+  .badge-success { @apply badge bg-success-soft text-success; }
+  .badge-muted   { @apply badge bg-surface-3 text-ink-2; }
+
+  /* segmented control */
+  .seg { @apply inline-flex rounded-control bg-surface-2 p-1 gap-1; }
+  .seg > button { @apply h-8 rounded-[8px] px-3 text-[0.8125rem] font-medium text-ink-2 transition-colors duration-150 hover:text-ink; }
+  .seg > button[aria-pressed="true"], .seg > button[aria-selected="true"] { @apply bg-surface text-ink shadow-sm; }
+
+  .eyebrow { @apply text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-primary; }
+  .t-display { @apply font-display text-display text-ink; }
+  .t-h1 { @apply font-display text-h1 text-ink; }
+  .t-h2 { @apply font-display text-h2 text-ink; }
+  .t-h3 { @apply font-display text-h3 text-ink; }
+  .section { @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8; }
+
+  .skeleton { @apply rounded-md bg-surface-3; background-image: linear-gradient(90deg, transparent, rgb(var(--surface) / .55), transparent); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
 }
+
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin .8s linear infinite; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* scroll-in reveal (progressive: content is visible without JS) */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* The CV itself is always paper: the theme never touches it. */
+@media print { body { background: #fff; } }

@@ -1,135 +1,196 @@
 'use client';
 import Link from 'next/link';
-import { CVProvider } from '@/app/store/cvStore';
+import { ArrowRight, Sparkles, FileText, Type, ScanText, Check, Layers, ChevronDown } from 'lucide-react';
 import { useCVStore } from '@/app/store/cvStore';
 import Navbar from '@/app/components/Navbar';
-import AuthModal from '@/app/components/AuthModal';
-import ChatWidget from '@/app/components/ChatWidget';
-import { Sparkles } from 'lucide-react';
-
-function LandingInner() {
-  const { lang } = useCVStore();
-
-  return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f' }}>
-      <Navbar />
-      <AuthModal />
-      <ChatWidget />
-
-      {/* HERO */}
-      <section className="hero-pad" style={{ textAlign: 'center', padding: '80px 24px 60px', maxWidth: 800, margin: '0 auto' }}>
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: 'rgba(124,110,248,0.12)', border: '1px solid rgba(124,110,248,0.3)',
-          borderRadius: 40, padding: '6px 18px', marginBottom: 32
-        }}>
-          <Sparkles size={14} style={{ color: '#7C6EF8' }} />
-          <span style={{ fontSize: 13.5, color: '#a89ef8', fontWeight: 600 }}>{lang === 'az' ? 'AI ilə gücləndirilib' : 'Powered by AI'}</span>
-        </div>
-
-        <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 900, lineHeight: 1.1, color: '#fff', marginBottom: 24, letterSpacing: -1.5 }}>
-          {lang === 'az' ? (
-            <span>Peşəkar CV-ni <span style={{ background: 'linear-gradient(135deg, #7C6EF8, #a89ef8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>dəqiqələr içində</span> yarat</span>
-          ) : (
-            <span>Create a professional CV <span style={{ background: 'linear-gradient(135deg, #7C6EF8, #a89ef8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>in minutes</span></span>
-          )}
-        </h1>
-
-        <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.55)', maxWidth: 520, margin: '0 auto 40px', lineHeight: 1.7 }}>
-          {lang === 'az' ? 'AI dəstəyi ilə təcrübənizi və bacarıqlarınızı peşəkar CV formatında təqdim edin, hazır CV-nizi isə dərhal PDF olaraq yükləyin.' : 'Use AI to professionally write your work experience and download a PDF instantly.'}
-        </p>
-
-        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/create" style={{ background: '#7C6EF8', color: '#fff', textDecoration: 'none', borderRadius: 12, padding: '14px 28px', fontSize: 15, fontWeight: 700 }}>
-            <Sparkles size={16} style={{ display: 'inline', verticalAlign: '-3px', marginRight: 6 }} />{lang === 'az' ? 'CV Yaratmağa Başla' : 'Start Creating CV'}
-          </Link>
-          <Link href="/templates" style={{ background: 'transparent', color: '#fff', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 12, padding: '14px 28px', fontSize: 15, fontWeight: 600 }}>
-            {lang === 'az' ? 'Nümunələrə bax' : 'View Examples'}
-          </Link>
-        </div>
-      </section>
-
-
-      {/* Stats */}
-      <section className="grid-resp-4" style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px 80px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }}>
-        {[{ val: lang === 'az' ? '2 dəq' : '2 min', label: lang === 'az' ? 'ortalama vaxt' : 'average time' }, { val: '6+', label: lang === 'az' ? 'CV şablonu' : 'CV templates' }, { val: 'AI', label: lang === 'az' ? 'mətn yaradır' : 'generates text' }, { val: 'PDF', label: lang === 'az' ? 'anında yüklə' : 'instant download' }].map(s => (
-          <div key={s.val} style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '20px 16px', textAlign: 'center' }}>
-            <div style={{ fontSize: 24, fontWeight: 900, color: '#7C6EF8', marginBottom: 4 }}>{s.val}</div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{s.label}</div>
-          </div>
-        ))}
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section id="how" style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 100px' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 48 }}>{lang === 'az' ? 'Necə işləyir?' : 'How it works?'}</h2>
-        <div className="grid-resp-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-          {[
-            { num: '01', title: lang === 'az' ? 'Məlumatları daxil et' : 'Enter your info', desc: lang === 'az' ? 'Formu doldurun, şəkil yükləyin' : 'Fill the form and upload a photo' },
-            { num: '02', title: lang === 'az' ? 'AI ilə yaz' : 'Write with AI', desc: lang === 'az' ? 'Bir düyməylə peşəkar mətn' : 'Professional text with one click' },
-            { num: '03', title: lang === 'az' ? 'PDF yüklə' : 'Download PDF', desc: lang === 'az' ? 'Anında hazır, işə müraciət et' : 'Instantly ready to apply' },
-          ].map(step => (
-            <div key={step.num} style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16, padding: '28px 24px' }}>
-              <div style={{ fontSize: 36, fontWeight: 900, color: 'rgba(124,110,248,0.3)', marginBottom: 12 }}>{step.num}</div>
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{step.title}</h3>
-              <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, margin: 0 }}>{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section style={{ background: '#111118', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '60px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 30, fontWeight: 800, color: '#fff', marginBottom: 12 }}>{lang === 'az' ? 'Planlar & Xidmətlər' : 'Plans & Services'}</h2>
-          <p style={{ color: 'rgba(255,255,255,0.45)', marginBottom: 40, fontSize: 15 }}>{lang === 'az' ? 'Pulsuz başla, istədiyin zaman yüksəlt' : 'Start free, upgrade anytime'}</p>
-          <div className="grid-resp-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
-            {[
-              { name: lang === 'az' ? 'Pulsuz' : 'Free', price: '0', showPrice: true, features: ['1 CV', lang === 'az' ? '3 pulsuz şablon' : '3 free templates', 'PDF yüklə'], color: '#374151', highlight: false },
-              { name: 'Premium', price: '20', showPrice: true, features: [lang === 'az' ? 'Limitsiz CV' : 'Unlimited CVs', lang === 'az' ? 'Bütün şablonlar' : 'All templates', 'HR Dəstəyi'], color: '#7C6EF8', highlight: true },
-              { name: 'HR', price: lang === 'az' ? 'Təklif al' : 'Get a quote', showPrice: false, features: [lang === 'az' ? 'CV Yazılması' : 'CV writing', lang === 'az' ? 'Onlayn konsultasiya' : 'Online consultation', lang === 'az' ? 'Ekspert rəyi' : 'Expert review'], color: '#059669', highlight: false },
-            ].map(plan => (
-              <div key={plan.name} style={{ background: plan.highlight ? 'rgba(124,110,248,0.08)' : 'rgba(255,255,255,0.03)', border: `1px solid ${plan.highlight ? 'rgba(124,110,248,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 16, padding: '28px 20px', position: 'relative' }}>
-                {plan.highlight && <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#7C6EF8', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 12px', borderRadius: 20 }}>{lang === 'az' ? 'Tövsiyə edilir' : 'Recommended'}</div>}
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{plan.name}</div>
-                <div style={{ fontSize: 30, fontWeight: 900, color: plan.color, marginBottom: 16 }}>{plan.price}{plan.showPrice && <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.4)' }}> AZN</span>}</div>
-                {plan.features.map(f => <div key={f} style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ color: plan.color }}>✓</span>{f}</div>)}
-                <Link href="/create" style={{ display: 'block', textAlign: 'center', marginTop: 20, background: plan.highlight ? '#7C6EF8' : 'transparent', border: `1px solid ${plan.color}`, color: '#fff', textDecoration: 'none', borderRadius: 8, padding: '10px', fontSize: 13, fontWeight: 600 }}>{lang === 'az' ? 'Başla' : 'Get Started'}</Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '24px', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, marginBottom: 8 }}>
-          <span style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>bir</span>
-          <span style={{ fontSize: 18, fontWeight: 800, color: '#7C6EF8' }}>CV</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginBottom: 10 }}>
-          <Link href="/privacy" style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
-            {lang === 'az' ? 'Gizlilik Siyasəti' : 'Privacy Policy'}
-          </Link>
-          <Link href="/terms" style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
-            {lang === 'az' ? 'İstifadə Şərtləri' : 'Terms of Service'}
-          </Link>
-        </div>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: 0 }}>© 2026 BirCV · bircv.az · support@bircv.az</p>
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', margin: '6px 0 0' }}>
-          Developed by{' '}
-          <a href="https://narix.az" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'underline' }}>
-            Narix
-          </a>
-        </p>
-      </footer>
-    </div>
-  );
-}
+import Footer from '@/app/components/Footer';
+import Reveal from '@/app/components/ui/Reveal';
+import TemplatePreview from '@/app/components/TemplatePreview';
+import { TEMPLATE_LIST } from '@/lib/cv/templates';
+import { CV_FONT_OPTIONS } from '@/lib/cvFonts';
 
 export default function HomeClient() {
+  const { lang } = useCVStore();
+  const az = lang === 'az';
+
+  const steps = [
+    { n: '01', t: az ? 'Məlumatları daxil et' : 'Enter your details', d: az ? 'Sadə formu doldurun, foto əlavə edin. Hər dəyişiklik CV-də anında görünür.' : 'Fill in the simple form and add a photo. Every change shows up in the CV instantly.' },
+    { n: '02', t: az ? 'Dizaynı seç' : 'Pick the design', d: az ? 'Şablon və şrift seçin — CV real vaxtda yenidən düzülür.' : 'Choose a template and a font — the CV re-flows in real time.' },
+    { n: '03', t: az ? 'PDF yüklə' : 'Download the PDF', d: az ? 'Dəqiq A4, seçilə bilən mətn. İşə müraciətə hazırdır.' : 'Exact A4 with selectable text. Ready to apply.' },
+  ];
+
+  const faqs = [
+    { q: az ? 'BirCV pulsuzdur?' : 'Is BirCV free?', a: az ? 'Bəli. Pulsuz planda şablonların çoxu, 2 CV yükləmə və 5 AI sorğusu var. Premium limitləri qaldırır və bütün şablonları açır.' : 'Yes. The free plan includes most templates, 2 CV downloads and 5 AI requests. Premium lifts the limits and unlocks every template.' },
+    { q: az ? 'CV-lər ATS sistemlərinə uyğundur?' : 'Are the CVs ATS-friendly?', a: az ? 'PDF-də mətn şəkil deyil, real mətndir — ATS və HR proqramları onu oxuya bilir. Minimal və Klassik şablonlar tək sütunludur.' : 'The PDF contains real text, not an image, so ATS and HR tools can read it. Minimal and Klassik are single-column layouts.' },
+    { q: az ? 'Şrifti dəyişsəm CV pozulmur?' : 'Will changing the font break my CV?', a: az ? 'Xeyr. Şrift dəyişəndə mətn yenidən sətirlənir və səhifələr yenidən hesablanır; PDF də eyni şriftlə yaranır.' : 'No. When you change the font the text re-wraps and pages are recalculated; the PDF uses the same embedded font.' },
+    { q: az ? 'Məlumatlarım harada saxlanılır?' : 'Where is my data stored?', a: az ? 'CV məzmununuz yalnız sizin brauzerinizdə saxlanılır. Serverə yalnız hesab məlumatları və AI sorğuları göndərilir.' : 'Your CV content stays in your browser. Only account details and AI requests are sent to our servers.' },
+    { q: az ? 'AI necə işləyir?' : 'How does the AI writing work?', a: az ? 'Vəzifə adınızı yazırsınız, AI bir düymə ilə xülasə və iş təcrübəsi bəndləri təklif edir. İstədiyiniz kimi redaktə edə bilərsiniz.' : 'Enter your job title and the AI drafts a summary and experience bullets in one click. Edit them however you like.' },
+  ];
+
+  const showcase = TEMPLATE_LIST.filter(t => ['designer', 'header', 'modern', 'elegant'].includes(t.id));
+
   return (
-    <CVProvider>
-      <LandingInner />
-    </CVProvider>
+    <div className="min-h-dvh">
+      <Navbar />
+      <main>
+        {/* ── hero ── */}
+        <section className="section grid items-center gap-12 pb-16 pt-10 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-8 lg:pb-24 lg:pt-20">
+          <div className="animate-rise">
+            <span className="chip mb-6 border-primary/25 bg-primary-soft text-primary"><Sparkles size={13} />{az ? 'AI yazı köməkçisi ilə' : 'With an AI writing assistant'}</span>
+            <h1 className="t-display max-w-[14ch]">
+              {az ? <>Peşəkar CV. <span className="text-primary">Dəqiqələr</span> içində.</> : <>A professional CV, <span className="text-primary">in minutes</span>.</>}
+            </h1>
+            <p className="mt-6 max-w-[46ch] text-[1.0625rem] leading-relaxed text-ink-2">
+              {az ? 'Şablon və şrift seçin, AI ilə mətni yazın, dəqiq A4 formatda PDF yükləyin. Mətn seçilə bilir, ATS sistemləri oxuyur.' : 'Pick a template and a font, let AI write the text, and download a print-perfect A4 PDF. The text is selectable and ATS-readable.'}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/create" className="btn-primary btn-lg">{az ? 'CV yaratmağa başla' : 'Start your CV'}<ArrowRight size={17} /></Link>
+              <Link href="/templates" className="btn-secondary btn-lg">{az ? 'Şablonlara bax' : 'Browse templates'}</Link>
+            </div>
+            <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-small text-ink-2">
+              {[az ? 'Pulsuz başla' : 'Free to start', az ? 'Kart tələb olunmur' : 'No card needed', az ? 'A4 PDF' : 'A4 PDF'].map(x => (
+                <li key={x} className="flex items-center gap-1.5"><Check size={15} className="text-success" />{x}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* two real template renders, same size, softly rounded — no captions or badges on the CVs */}
+          <div className="relative mx-auto w-full max-w-[600px] animate-rise [animation-delay:120ms]" aria-hidden="true">
+            <div className="relative w-full" style={{ aspectRatio: '600 / 500' }}>
+              <div className="absolute left-0 top-[12%] w-[49%] overflow-hidden rounded-[22px] bg-white shadow-[0_28px_50px_-30px_rgba(15,23,42,.35),0_2px_8px_rgba(15,23,42,.05)] ring-1 ring-ink/[.06] transition-transform duration-500 ease-out hover:-translate-y-1">
+                <TemplatePreview template="modern" lang={lang} />
+              </div>
+              <div className="absolute right-0 top-0 w-[49%] overflow-hidden rounded-[22px] bg-white shadow-[0_28px_50px_-30px_rgba(15,23,42,.35),0_2px_8px_rgba(15,23,42,.05)] ring-1 ring-ink/[.06] transition-transform duration-500 ease-out hover:-translate-y-1">
+                <TemplatePreview template="designer" lang={lang} />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── proof strip ── */}
+        <section className="border-y border-line bg-surface">
+          <dl className="section grid grid-cols-2 gap-y-6 py-8 md:grid-cols-4">
+            {[
+              [az ? '2 dəq' : '2 min', az ? 'orta hazırlanma vaxtı' : 'average time to a CV'],
+              [`${TEMPLATE_LIST.length}+`, az ? 'real şablon' : 'real templates'],
+              [String(CV_FONT_OPTIONS.length), az ? 'şrift seçimi' : 'font choices'],
+              ['A4', az ? 'dəqiq səhifələmə' : 'exact pagination'],
+            ].map(([v, l]) => (
+              <div key={l} className="px-2 md:border-l md:border-line md:pl-6 first:md:border-l-0 first:md:pl-0">
+                <dt className="font-display text-3xl font-bold tracking-tight text-ink">{v}</dt>
+                <dd className="text-small text-ink-2">{l}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        {/* ── how it works ── */}
+        <section id="how" className="section scroll-mt-24 py-20 lg:py-28">
+          <Reveal><p className="eyebrow">{az ? 'Necə işləyir' : 'How it works'}</p><h2 className="t-h1 mt-3 max-w-[22ch]">{az ? 'Üç addım, bir hazır CV' : 'Three steps to a finished CV'}</h2></Reveal>
+          <ol className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
+            {steps.map((s, i) => (
+              <Reveal key={s.n} delay={i * 90}>
+                <li className="relative border-t-2 border-ink pt-5">
+                  <span className="font-display text-sm font-semibold tabular-nums text-primary">{s.n}</span>
+                  <h3 className="t-h3 mt-2">{s.t}</h3>
+                  <p className="mt-2 max-w-[38ch] text-ink-2">{s.d}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </section>
+
+        {/* ── features ── */}
+        <section className="border-y border-line bg-surface-2/60 py-20 lg:py-28">
+          <div className="section">
+            <Reveal><p className="eyebrow">{az ? 'Fərqi yaradan' : 'What sets it apart'}</p><h2 className="t-h1 mt-3 max-w-[24ch]">{az ? 'Dizayner səviyyəsində nəticə, sıfır əziyyət' : 'Designer-grade results, zero fiddling'}</h2></Reveal>
+            <div className="mt-12 grid gap-4 md:grid-cols-6">
+              <Reveal className="md:col-span-3">
+                <div className="card h-full p-6">
+                  <Type size={20} className="text-primary" />
+                  <h3 className="t-h3 mt-4">{az ? 'Canlı şrift seçimi' : 'Live font selection'}</h3>
+                  <p className="mt-1.5 text-ink-2">{az ? 'Şrifti dəyişin — CV dərhal yenidən düzülür. PDF eyni şriftlə yaranır.' : 'Change the font and the CV re-flows instantly. The PDF embeds the very same font.'}</p>
+                  <div className="mt-5 grid gap-1.5">
+                    {CV_FONT_OPTIONS.map(f => (
+                      <div key={f.id} className="flex items-baseline justify-between gap-3 rounded-lg bg-bg px-3 py-2 text-ink" style={{ fontFamily: `"${f.css}"` }}>
+                        <span className="font-semibold">{f.name}</span><span className="hidden truncate text-small text-muted sm:block">Əə Ğğ İı Şş — 1234</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+              <Reveal className="md:col-span-3" delay={80}>
+                <div className="card h-full p-6">
+                  <Layers size={20} className="text-primary" />
+                  <h3 className="t-h3 mt-4">{az ? 'Mətni kəsməyən səhifələmə' : 'Pagination that never cuts text'}</h3>
+                  <p className="mt-1.5 text-ink-2">{az ? 'Başlıq səhifənin sonunda tək qalmır, iş bloku yarıya bölünmür. Səhifə yalnız dolanda keçir.' : 'No orphaned headings, no job entry split in half. A new page starts only when the page is genuinely full.'}</p>
+                  <div className="mt-5 flex gap-3" aria-hidden>
+                    {[0.78, 0.5].map((h, i) => (
+                      <div key={i} className="flex h-40 flex-1 flex-col gap-1.5 rounded-md border border-line bg-white p-3 shadow-sm">
+                        <div className="h-2 w-1/3 rounded bg-primary/70" />
+                        {Array.from({ length: i === 0 ? 9 : 5 }).map((_, k) => <div key={k} className="h-1.5 rounded bg-line-strong/70" style={{ width: `${96 - (k % 3) * 14}%` }} />)}
+                        <div className="mt-auto text-right text-[9px] text-muted">{i + 1} / 2</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+              <Reveal className="md:col-span-2">
+                <div className="card h-full p-6"><ScanText size={20} className="text-primary" /><h3 className="t-h3 mt-4">{az ? 'ATS oxuyur' : 'ATS-readable'}</h3><p className="mt-1.5 text-ink-2">{az ? 'PDF-də real mətn: seçmək, kopyalamaq və axtarmaq mümkündür.' : 'Real text in the PDF: select, copy and search it.'}</p></div>
+              </Reveal>
+              <Reveal className="md:col-span-2" delay={70}>
+                <div className="card h-full p-6"><Sparkles size={20} className="text-primary" /><h3 className="t-h3 mt-4">{az ? 'AI ilə yazı' : 'AI writing'}</h3><p className="mt-1.5 text-ink-2">{az ? 'Xülasə və iş təcrübəsi bəndləri bir kliklə.' : 'Summary and experience bullets in a single click.'}</p></div>
+              </Reveal>
+              <Reveal className="md:col-span-2" delay={140}>
+                <div className="card h-full p-6"><FileText size={20} className="text-primary" /><h3 className="t-h3 mt-4">{az ? 'Pixel-dəqiq PDF' : 'Pixel-accurate PDF'}</h3><p className="mt-1.5 text-ink-2">{az ? 'Önizləmə ilə PDF arasında fərq yoxdur.' : 'What you see in the preview is what the PDF contains.'}</p></div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* ── templates ── */}
+        <section className="section py-20 lg:py-28">
+          <Reveal className="flex flex-wrap items-end justify-between gap-4">
+            <div><p className="eyebrow">{az ? 'Şablonlar' : 'Templates'}</p><h2 className="t-h1 mt-3">{az ? 'Real önizləmələr, saxta ekran görüntüsü yox' : 'Real previews, not mock screenshots'}</h2></div>
+            <Link href="/templates" className="btn-secondary">{az ? 'Hamısına bax' : 'See all'}<ArrowRight size={15} /></Link>
+          </Reveal>
+          <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {showcase.map((t, i) => (
+              <Reveal key={t.id} delay={i * 70}>
+                <Link href="/templates" className="group block">
+                  <div className="overflow-hidden rounded-lg border border-line shadow-sm transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-lg"><TemplatePreview template={t.id} lang={lang} /></div>
+                  <div className="mt-2.5 flex items-center justify-between"><span className="font-semibold text-ink">{t.name}</span>{t.premium && <span className="badge-accent">PRO</span>}</div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ── FAQ ── */}
+        <section className="section max-w-[860px] pb-20 lg:pb-28">
+          <Reveal><p className="eyebrow">FAQ</p><h2 className="t-h1 mt-3">{az ? 'Tez-tez verilən suallar' : 'Frequently asked questions'}</h2></Reveal>
+          <div className="mt-8 divide-y divide-line border-y border-line">
+            {faqs.map(f => (
+              <details key={f.q} className="group py-4">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[1.0625rem] font-semibold text-ink [&::-webkit-details-marker]:hidden">
+                  {f.q}<ChevronDown size={18} className="shrink-0 text-muted transition-transform duration-200 group-open:rotate-180" aria-hidden />
+                </summary>
+                <p className="mt-2 max-w-[62ch] text-ink-2">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        {/* ── final CTA ── */}
+        <section className="section pb-20">
+          <div className="relative overflow-hidden rounded-sheet bg-ink px-6 py-14 text-center text-bg sm:px-12">
+            <h2 className="t-h1 mx-auto max-w-[20ch] !text-bg">{az ? 'İşə müraciət etməyə hazırsınız?' : 'Ready to apply?'}</h2>
+            <p className="mx-auto mt-3 max-w-[44ch] text-bg/70">{az ? 'İlk CV-nizi bu gün, pulsuz yaradın.' : 'Create your first CV today, for free.'}</p>
+            <Link href="/create" className="btn-lg mt-7 inline-flex items-center gap-2 rounded-[12px] bg-bg px-6 font-semibold text-ink transition-transform duration-150 hover:scale-[1.02] active:scale-[.98]">{az ? 'CV yaratmağa başla' : 'Start your CV'}<ArrowRight size={17} /></Link>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

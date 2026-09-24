@@ -1,196 +1,81 @@
 'use client';
 import { CVData } from '@/app/types/cv';
+import { Lang, parts, dateRange, eduRange, bullets, L, contactItems, Icon, ExtraSections } from './shared';
 
-const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
-const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const INK = '#1a1a1a', TEXT = '#404040', MUTED = '#6b7280', FAINT = '#a3a3a3', RULE = '#dcdcdc';
+const F = '"Work Sans","Segoe UI",Arial,sans-serif';
 
-function fmtDate(month: string, year: string, lang: 'az' | 'en') {
-  const arr = lang === 'az' ? MONTHS_AZ : MONTHS_EN;
-  const m = parseInt(month);
-  if (!year) return '';
-  return `${m && arr[m] ? arr[m] + ' ' : ''}${year}`;
-}
+export default function MinimalTemplate({ data, lang }: { data: CVData; lang: Lang }) {
+  const { p, experience, education, skills, languages, certs, trains, additional } = parts(data);
+  const contacts = contactItems(p);
 
-export default function MinimalTemplate({ data, lang }: { data: CVData; lang: 'az' | 'en' }) {
-  const { personal: p, experience, education, skills, languages, additional } = data;
-  const certs  = (data as any).certificates || [];
-  const trains = (data as any).trainings    || [];
-  const present = lang === 'az' ? 'İndiyə qədər' : 'Present';
-
-  const SecHead = ({ children }: { children: string }) => (
-    <div style={{ marginBottom: 10 }}>
-      <div style={{ fontSize: 9.5, fontWeight: 500, textTransform: 'uppercase' as const, letterSpacing: 3, color: '#a8a8a8', marginBottom: 6, fontFamily: '"Work Sans",sans-serif' }}>
-        {children}
-      </div>
-      <div style={{ height: 0.5, background: '#e8e8e8' }} />
+  const H = ({ children }: { children: string }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 11 }}>
+      <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: 2.6, textTransform: 'uppercase', color: INK, whiteSpace: 'nowrap' }}>{children}</span>
+      <span style={{ flex: 1, height: 1, background: RULE }} />
     </div>
   );
+  const Sec = ({ title, children, mb = 22 }: { title: string; children: React.ReactNode; mb?: number }) => <section style={{ marginBottom: mb }}><H>{title}</H>{children}</section>;
 
   return (
-    <div style={{
-      fontFamily: '"Work Sans","Segoe UI",Arial,sans-serif',
-      background: '#fff', color: '#1c1c1c',
-      width: '100%', minHeight: '297mm',
-      padding: '38px 40px', fontSize: 10.5,
-      display: 'flex', flexDirection: 'column'
-    }}>
-
-      {/* Header */}
-      <div style={{ marginBottom: 26, paddingBottom: 18, borderBottom: '1px solid #ececec' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 14 }}>
-          <div style={{ flex: 1 }}>
-            <h1 style={{
-              fontSize: 28, fontWeight: 300, margin: '0 0 5px',
-              letterSpacing: 0.5, lineHeight: 1.2, color: '#0a0a0a'
-            }}>
-              {p.firstName} <span style={{ fontWeight: 600 }}>{p.lastName}</span>
+    <div style={{ fontFamily: F, background: '#fff', color: TEXT, width: '100%', padding: '44px 46px 40px', boxSizing: 'border-box', fontSize: 10.4, lineHeight: 1.55 }}>
+      <header style={{ marginBottom: 24, paddingBottom: 20, borderBottom: `1px solid ${INK}` }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20 }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <h1 style={{ margin: 0, fontSize: 31, lineHeight: 1.12, letterSpacing: -0.6, color: INK, overflowWrap: 'anywhere' }}>
+              <span style={{ fontWeight: 300 }}>{p.firstName}</span>{p.firstName && p.lastName ? ' ' : ''}<span style={{ fontWeight: 600 }}>{p.lastName}</span>
             </h1>
-            {p.jobTitle && (
-              <p style={{ fontSize: 11, color: '#a8a8a8', margin: '0 0 12px', fontWeight: 500, letterSpacing: 2.5, textTransform: 'uppercase' as const }}>
-                {p.jobTitle}
-              </p>
-            )}
-            <div style={{ display: 'flex', gap: 16, fontSize: 9.5, color: '#888', flexWrap: 'wrap' as const }}>
-              {p.email && <span>{p.email}</span>}
-              {p.phone && <span>{p.phone}</span>}
-              {p.city && <span>{p.city}{p.country ? ', ' + p.country : ''}</span>}
-              {p.linkedin && <span>{p.linkedin}</span>}
+            {p.jobTitle && <div style={{ marginTop: 7, fontSize: 10.5, fontWeight: 500, letterSpacing: 2.4, textTransform: 'uppercase', color: MUTED, overflowWrap: 'anywhere' }}>{p.jobTitle}</div>}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px 18px', marginTop: 14, fontSize: 9.6, color: TEXT }}>
+              {contacts.map(c => <span key={c.text} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name={c.icon} size={10.5} color={FAINT} /><span style={{ overflowWrap: 'anywhere' }}>{c.text}</span></span>)}
             </div>
           </div>
-          {p.photo && (
-            <img src={p.photo} alt="photo" style={{
-              width: 58, height: 58, borderRadius: '50%',
-              objectFit: 'cover', flexShrink: 0
-            }} />
-          )}
+          {p.photo && <img src={p.photo} alt="" style={{ width: 66, height: 66, borderRadius: '50%', objectFit: 'cover', objectPosition: 'top', display: 'block', flexShrink: 0 }} />}
         </div>
-      </div>
+      </header>
 
-      {/* Summary */}
-      {p.summary && (
-        <p style={{ fontSize: 10.5, color: '#374151', lineHeight: 1.8, marginBottom: 20 }}>
-          {p.summary}
-        </p>
-      )}
+      {p.summary && <div style={{ marginBottom: 22, fontSize: 11, lineHeight: 1.78, color: TEXT }}>{p.summary}</div>}
 
-      {/* Experience */}
       {experience.length > 0 && (
-        <div style={{ marginBottom: 20 }}>
-          <SecHead>{lang === 'az' ? 'İş Təcrübəsi' : 'Experience'}</SecHead>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 10 }}>
-            {experience.map(exp => (
-              <div key={exp.id} style={{ display: 'flex', gap: 14 }}>
-                {/* Date */}
-                <div style={{ width: 88, fontSize: 9.5, color: '#9ca3af', lineHeight: 1.55, flexShrink: 0, paddingTop: 2 }}>
-                  <div>{fmtDate(exp.startMonth, exp.startYear, lang)}</div>
-                  <div>{exp.current ? present : fmtDate(exp.endMonth, exp.endYear, lang)}</div>
-                </div>
-                {/* Content */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 11.5, color: '#111', lineHeight: 1.35 }}>{exp.jobTitle}</div>
-                  <div style={{ fontSize: 10.5, color: '#6b7280', marginBottom: 5 }}>
-                    {exp.company}{exp.city ? ', ' + exp.city : ''}
+        <Sec title={L.experience(lang)}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {experience.map(e => {
+              const [a, b] = dateRange(e, lang).split(' – ');
+              return (
+                <div key={e.id} style={{ display: 'flex', gap: 16 }}>
+                  <div style={{ width: 84, flexShrink: 0, fontSize: 9.4, color: MUTED, lineHeight: 1.55, paddingTop: 1.5 }}><div>{a}</div><div>{b}</div></div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 11.6, fontWeight: 700, color: INK, lineHeight: 1.35, overflowWrap: 'anywhere' }}>{e.jobTitle}</div>
+                    <div style={{ fontSize: 10.4, color: MUTED, fontWeight: 500, marginBottom: 5 }}>{[e.company, e.city].filter(Boolean).join(', ')}</div>
+                    {bullets(e.description).map((bl, i) => <div key={i} style={{ display: 'flex', gap: 7, marginBottom: 3, lineHeight: 1.6 }}><span style={{ color: FAINT, flexShrink: 0 }}>–</span><span style={{ minWidth: 0, overflowWrap: 'anywhere' }}>{bl}</span></div>)}
                   </div>
-                  {exp.description && (
-                    <div style={{ fontSize: 10, color: '#4b5563', lineHeight: 1.7 }}>
-                      {exp.description.split('\n').filter((l: string) => l.trim()).map((line: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', gap: 5, marginBottom: 3 }}>
-                          <span style={{ flexShrink: 0, color: '#c4c4c4' }}>–</span>
-                          <span>{line.replace(/^[•\-]\s*/, '')}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
+        </Sec>
       )}
 
-      {/* 2-col bottom */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 30 }}>
+        <div style={{ minWidth: 0 }}>
           {education.length > 0 && (
-            <div>
-              <SecHead>{lang === 'az' ? 'Təhsil' : 'Education'}</SecHead>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
-                {education.map(edu => (
-                  <div key={edu.id}>
-                    <div style={{ fontWeight: 700, fontSize: 11, color: '#111', lineHeight: 1.35 }}>
-                      {edu.degree || edu.school}
-                    </div>
-                    {edu.school && edu.degree && <div style={{ fontSize: 10.5, color: '#6b7280' }}>{edu.school}</div>}
-                    <div style={{ fontSize: 9.5, color: '#9ca3af', marginTop: 2 }}>
-                      {edu.startYear}{edu.endYear ? ' – ' + edu.endYear : ''}
-                    </div>
-                  </div>
-                ))}
+            <Sec title={L.education(lang)}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {education.map(e => <div key={e.id}><div style={{ fontWeight: 700, fontSize: 10.8, color: INK, lineHeight: 1.35, overflowWrap: 'anywhere' }}>{e.degree || e.school}</div>{e.degree && e.school && <div style={{ color: MUTED }}>{e.school}</div>}<div style={{ fontSize: 9.4, color: FAINT, marginTop: 1 }}>{eduRange(e.startYear, e.endYear)}</div></div>)}
               </div>
-            </div>
+            </Sec>
           )}
-          {certs.length > 0 && (
-            <div>
-              <SecHead>{lang === 'az' ? 'Sertifikatlar' : 'Certificates'}</SecHead>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
-                {certs.map((c: any, i: number) => (
-                  <div key={i} style={{ fontSize: 10 }}>
-                    <span style={{ fontWeight: 600 }}>{c.name}</span>
-                    {c.issuer && <span style={{ color: '#9ca3af' }}> · {c.issuer}</span>}
-                    {c.year && <span style={{ color: '#9ca3af' }}> · {c.year}</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {certs.length > 0 && <Sec title={L.certificates(lang)}>{certs.map(c => <div key={c.id} style={{ marginBottom: 5, overflowWrap: 'anywhere' }}><b style={{ fontWeight: 600, color: INK }}>{c.name}</b><span style={{ color: MUTED }}>{[c.issuer, c.year].filter(Boolean).length ? ' · ' + [c.issuer, c.year].filter(Boolean).join(' · ') : ''}</span></div>)}</Sec>}
         </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          {skills.length > 0 && (
-            <div>
-              <SecHead>{lang === 'az' ? 'Bacarıqlar' : 'Skills'}</SecHead>
-              <div style={{ fontSize: 10.5, color: '#374151', lineHeight: 2.1, marginTop: 8 }}>
-                {skills.join(' · ')}
-              </div>
-            </div>
-          )}
-          {languages.length > 0 && (
-            <div>
-              <SecHead>{lang === 'az' ? 'Dillər' : 'Languages'}</SecHead>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 8 }}>
-                {languages.map((l, i) => (
-                  <div key={i} style={{ fontSize: 10.5, display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#374151' }}>{l.name}</span>
-                    <span style={{ color: '#9ca3af' }}>{l.level}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {trains.length > 0 && (
-            <div>
-              <SecHead>{lang === 'az' ? 'Təlimlər' : 'Training'}</SecHead>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
-                {trains.map((tr: any, i: number) => (
-                  <div key={i} style={{ fontSize: 10 }}>
-                    <span style={{ fontWeight: 600 }}>{tr.name}</span>
-                    {tr.provider && <span style={{ color: '#9ca3af' }}> · {tr.provider}</span>}
-                    {tr.year && <span style={{ color: '#9ca3af' }}> · {tr.year}</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {additional && (
-            <div>
-              <SecHead>{lang === 'az' ? 'Əlavə' : 'Additional'}</SecHead>
-              <p style={{ fontSize: 10.5, color: '#374151', lineHeight: 1.7, margin: '8px 0 0', whiteSpace: 'pre-line' }}>
-                {additional}
-              </p>
-            </div>
-          )}
+        <div style={{ minWidth: 0 }}>
+          {skills.length > 0 && <Sec title={L.skills(lang)}><div style={{ lineHeight: 2, color: TEXT, fontWeight: 500 }}>{skills.join('  ·  ')}</div></Sec>}
+          {languages.length > 0 && <Sec title={L.languages(lang)}>{languages.map(l => <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}><span style={{ color: INK, fontWeight: 500 }}>{l.name}</span><span style={{ color: MUTED }}>{l.level}</span></div>)}</Sec>}
+          {trains.length > 0 && <Sec title={L.trainings(lang)}>{trains.map(t => <div key={t.id} style={{ marginBottom: 5, overflowWrap: 'anywhere' }}><b style={{ fontWeight: 600, color: INK }}>{t.name}</b><span style={{ color: MUTED }}>{[t.provider, t.year].filter(Boolean).length ? ' · ' + [t.provider, t.year].filter(Boolean).join(' · ') : ''}</span></div>)}</Sec>}
         </div>
       </div>
+
+      <ExtraSections data={data} lang={lang} Heading={H} color={TEXT} muted={MUTED} accent={INK} gap={22} fontSize={10.4} />
+      {additional && <Sec title={L.additional(lang)} mb={0}><div style={{ whiteSpace: 'pre-line', overflowWrap: 'anywhere' }}>{additional}</div></Sec>}
     </div>
   );
 }

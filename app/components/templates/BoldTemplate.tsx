@@ -1,5 +1,6 @@
 'use client';
 import { CVData } from '@/app/types/cv';
+import { ExtraSections } from './shared';
 
 const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
 const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -143,6 +144,7 @@ export default function BoldTemplate({ data, lang }: { data: CVData; lang: 'az'|
           </div>
         </div>
 
+        <ExtraSections data={data} lang={lang} Heading={SecHead} color="#374151" muted="#6b7280" accent="#111" gap={18} fontSize={10.5} />
         {additional && (
           <div>
             <SecHead>{lang==='az'?'Əlavə':'Additional'}</SecHead>

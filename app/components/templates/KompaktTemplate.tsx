@@ -1,5 +1,6 @@
 'use client';
 import { CVData } from '@/app/types/cv';
+import { ExtraSections } from './shared';
 
 const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
 const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -77,6 +78,7 @@ export default function KompaktTemplate({ data, lang }: { data: CVData; lang: 'a
         <div style={{ padding:'20px 26px', display:'flex', flexDirection:'column', gap:22 }}>
           {experience.length>0&&<div><SecHead>{lang==='az'?'Peşəkar Təcrübə':'Professional Experience'}</SecHead><div style={{ display:'flex', flexDirection:'column', gap:15, marginTop:8 }}>{experience.map(exp=><div key={exp.id} style={{ display:'flex', gap:12 }}><div style={{ width:60, flexShrink:0, textAlign:'right' as const }}><div style={{ fontSize:9.5, color:'#9290ad', lineHeight:1.55, fontWeight:600 }}>{exp.startYear}<br/>{exp.current?(lang==='az'?'İndi':'Now'):(exp.endYear||'')}</div></div><div style={{ width:2, background:'#eceaf9', flexShrink:0, borderRadius:1 }}/><div style={{ flex:1 }}><div style={{ fontSize:11.5, fontWeight:700, lineHeight:1.35, color:'#16162c' }}>{exp.jobTitle}</div><div style={{ fontSize:10.5, color:'#5b5a73', fontWeight:500, marginBottom:4 }}>{exp.company}{exp.city?' · '+exp.city:''}{exp.current&&<span style={{ color:ACCENT, fontWeight:700, fontSize:9.5, marginLeft:5 }}>({present})</span>}</div>{exp.description&&<div style={{ fontSize:10, color:'#444', lineHeight:1.7 }}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{ display:'flex', alignItems:'flex-start', gap:5, marginBottom:3 }}><span style={{ flexShrink:0, color:ACCENT, marginTop:1 }}>•</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div></div>)}</div></div>}
           {certs.length>0&&<div><SecHead>{lang==='az'?'Sertifikatlar':'Certificates'}</SecHead><div style={{ display:'flex', flexDirection:'column', gap:6, marginTop:6 }}>{certs.map((c:any,i:number)=><div key={i} style={{ display:'flex', justifyContent:'space-between', fontSize:10.5 }}><div><span style={{ fontWeight:600, color:'#16162c' }}>{c.name}</span>{c.issuer&&<span style={{ color:'#9290ad' }}> · {c.issuer}</span>}</div>{c.year&&<span style={{ color:'#9290ad', flexShrink:0, marginLeft:8, fontWeight:600 }}>{c.year}</span>}</div>)}</div></div>}
+          <ExtraSections data={data} lang={lang} Heading={SecHead} color="#444" muted="#6b7280" accent="#16162c" gap={16} fontSize={10.5} />
           {additional&&<div><SecHead>{lang==='az'?'Əlavə Məlumat':'Additional'}</SecHead><div style={{ fontSize:10.5, color:'#444', lineHeight:1.7, marginTop:6, whiteSpace:'pre-line' }}>{additional}</div></div>}
         </div>
       </div>

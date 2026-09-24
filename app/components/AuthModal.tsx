@@ -1,24 +1,51 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { Loader2, Mail, Lock, User as UserIcon, ArrowLeft } from 'lucide-react';
 import { useCVStore } from '@/app/store/cvStore';
 import { User as UserType } from '@/app/types/cv';
+import Modal from '@/app/components/ui/Modal';
+import { useToast } from '@/app/components/ui/Toaster';
 
-const inputStyle: React.CSSProperties = {
-  width: '100%', background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
-  padding: '12px 14px', color: '#fff', fontSize: 14, outline: 'none',
+const S = {
+  az: {
+    login: 'Daxil ol', register: 'Qeydiyyat', verify: 'E-poçtu təsdiqlə', first: 'Ad', last: 'Soyad', email: 'E-poçt', pass: 'Şifrə',
+    agree1: 'İstifadə Şərtləri', and: 'və', agree2: 'Gizlilik Siyasəti', agree3: 'ilə razıyam',
+    sendCode: 'Kodu göndər', wait: 'Gözləyin…', noAcc: 'Hesabınız yoxdur?', hasAcc: 'Hesabınız var?',
+    codeSent: 'ünvanına göndərilən 6 rəqəmli kodu daxil edin', confirm: 'Təsdiqlə', checking: 'Yoxlanılır…', back: 'Geri', valid: 'Kodun etibarlılıq müddəti',
+    eReq: 'E-poçt və şifrə tələb olunur', ePass: 'Şifrə minimum 4 simvol olmalıdır', eAgree: 'Davam etmək üçün şərtlərlə razılaşmalısınız',
+    eCode: 'Kodu daxil edin', eBad: 'Yanlış və ya vaxtı keçmiş kod', eNet: 'Şəbəkə xətası, yenidən cəhd edin', welcome: 'Xoş gəldiniz',
+  },
+  en: {
+    login: 'Log in', register: 'Create account', verify: 'Verify your email', first: 'First name', last: 'Last name', email: 'Email', pass: 'Password',
+    agree1: 'Terms of Service', and: 'and', agree2: 'Privacy Policy', agree3: '— I agree',
+    sendCode: 'Send code', wait: 'Please wait…', noAcc: "Don't have an account?", hasAcc: 'Already have an account?',
+    codeSent: 'Enter the 6-digit code we sent to', confirm: 'Verify', checking: 'Checking…', back: 'Back', valid: 'Code expires in',
+    eReq: 'Email and password are required', ePass: 'Password must be at least 4 characters', eAgree: 'Please accept the terms to continue',
+    eCode: 'Enter the code', eBad: 'Wrong or expired code', eNet: 'Network error, please try again', welcome: 'Welcome',
+  },
 };
 
+function Field({ icon: Icon, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { icon: typeof Mail }) {
+  return (
+    <div className="relative">
+      <Icon size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden />
+      <input {...props} className="input pl-9" />
+    </div>
+  );
+}
+
 export default function AuthModal() {
-  const { showAuthModal, setShowAuthModal, authMode, setAuthMode, setUser } = useCVStore();
+  const { showAuthModal, setShowAuthModal, authMode, setAuthMode, setUser, lang } = useCVStore();
+  const s = S[lang];
+  const { toast } = useToast();
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName]   = useState('');
-  const [email, setEmail]     = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
-  const [step, setStep]       = useState<'form' | 'otp'>('form');
-  const [otp, setOtp]         = useState('');
+  const [error, setError] = useState('');
+  const [step, setStep] = useState<'form' | 'otp'>('form');
+  const [otp, setOtp] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [devCode, setDevCode] = useState('');
   const [agreed, setAgreed] = useState(false);
@@ -34,163 +61,121 @@ export default function AuthModal() {
     if (secondsLeft <= 0 && timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
   }, [secondsLeft]);
 
-  if (!showAuthModal) return null;
-
   const startTimer = (ttl: number) => {
     setSecondsLeft(ttl);
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setSecondsLeft(s => s <= 1 ? 0 : s - 1), 1000);
+    timerRef.current = setInterval(() => setSecondsLeft(x => (x <= 1 ? 0 : x - 1)), 1000);
   };
 
-  const finishLogin = (userData: UserType) => {
-    setUser(userData);
-    setShowAuthModal(false);
+  const finishLogin = (u: UserType) => { setUser(u); setShowAuthModal(false); toast({ kind: 'success', title: `${s.welcome}, ${u.name || u.email}` }); };
+
+  const post = async (url: string, body: object) => {
+    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    return res.json();
   };
 
-  // ── Register: OTP göndər ──────────────────────────────────────────────────
   const handleSendOtp = async () => {
-    if (!email || !password) { setError('Email və şifrə tələb olunur'); return; }
-    if (password.length < 4) { setError('Şifrə minimum 4 simvol olmalıdır'); return; }
-    if (!agreed) { setError('Davam etmək üçün İstifadə Şərtləri ilə razılaşmalısınız'); return; }
+    if (!email || !password) { setError(s.eReq); return; }
+    if (password.length < 4) { setError(s.ePass); return; }
+    if (!agreed) { setError(s.eAgree); return; }
     setLoading(true); setError('');
     try {
-      const res = await fetch('/api/otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'send', email }),
-      });
-      const data = await res.json();
-      if (!data.ok) { setError(data.error || 'Xəta baş verdi'); return; }
+      const data = await post('/api/otp', { action: 'send', email });
+      if (!data.ok) { setError(data.error || s.eNet); return; }
       if (data.devCode) setDevCode(data.devCode);
-      setStep('otp');
-      startTimer(data.ttl || 180);
-    } catch { setError('Şəbəkə xətası'); }
-    finally { setLoading(false); }
+      setStep('otp'); startTimer(data.ttl || 180);
+    } catch { setError(s.eNet); } finally { setLoading(false); }
   };
 
-  // ── Register: OTP yoxla + istifadəçi yarat ───────────────────────────────
   const handleVerifyOtp = async () => {
-    if (!otp) { setError('Kodu daxil edin'); return; }
+    if (!otp) { setError(s.eCode); return; }
     setLoading(true); setError('');
     try {
-      const verRes = await fetch('/api/otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'verify', email, code: otp }),
-      });
-      const verData = await verRes.json();
-      if (!verData.ok) { setError('Yanlış və ya vaxtı keçmiş kod'); setLoading(false); return; }
-
-      // OTP doğru — Supabase-də qeydiyyat et
-      const regRes = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'register', email, password, name: `${firstName} ${lastName}`.trim() }),
-      });
-      const regData = await regRes.json();
-      if (!regData.ok) { setError(regData.error || 'Qeydiyyat uğursuz'); setLoading(false); return; }
-      finishLogin(regData.user);
-    } catch { setError('Şəbəkə xətası'); }
-    finally { setLoading(false); }
+      const ver = await post('/api/otp', { action: 'verify', email, code: otp });
+      if (!ver.ok) { setError(s.eBad); return; }
+      const reg = await post('/api/auth', { action: 'register', email, password, name: `${firstName} ${lastName}`.trim() });
+      if (!reg.ok) { setError(reg.error || s.eNet); return; }
+      finishLogin(reg.user);
+    } catch { setError(s.eNet); } finally { setLoading(false); }
   };
 
-  // ── Login ────────────────────────────────────────────────────────────────
   const handleLogin = async () => {
-    if (!email || !password) { setError('Email və şifrə tələb olunur'); return; }
+    if (!email || !password) { setError(s.eReq); return; }
     setLoading(true); setError('');
     try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', email, password }),
-      });
-      const data = await res.json();
-      if (!data.ok) { setError(data.error || 'Giriş uğursuz'); return; }
+      const data = await post('/api/auth', { action: 'login', email, password });
+      if (!data.ok) { setError(data.error || s.eNet); return; }
       finishLogin(data.user);
-    } catch { setError('Şəbəkə xətası'); }
-    finally { setLoading(false); }
+    } catch { setError(s.eNet); } finally { setLoading(false); }
   };
 
-  const btn: React.CSSProperties = {
-    width: '100%', padding: '13px', background: '#7C6EF8', color: '#fff',
-    border: 'none', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: 'pointer',
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (step === 'otp') handleVerifyOtp(); else if (authMode === 'login') handleLogin(); else handleSendOtp();
   };
+
+  const title = step === 'otp' ? s.verify : authMode === 'login' ? s.login : s.register;
+  const disabled = loading || (step === 'form' && authMode === 'register' && !agreed);
 
   return (
-    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000 }}>
-      <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, padding:32, width:'100%', maxWidth:400, margin:'0 16px' }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:24 }}>
-          <h2 style={{ color:'#fff', fontSize:20, fontWeight:800, margin:0 }}>
-            {step==='otp' ? 'E-poçtu təsdiqlə' : authMode==='login' ? 'Daxil ol' : 'Qeydiyyat'}
-          </h2>
-          <button onClick={()=>setShowAuthModal(false)} style={{ background:'none', border:'none', color:'rgba(255,255,255,0.4)', fontSize:22, cursor:'pointer' }}>✕</button>
-        </div>
-
+    <Modal open={showAuthModal} onClose={() => setShowAuthModal(false)} title={title}>
+      <form onSubmit={submit} className="flex flex-col gap-3" noValidate>
         {step === 'otp' ? (
           <>
-            <p style={{ color:'rgba(255,255,255,0.55)', fontSize:13, marginBottom:20 }}>
-              {email} ünvanına göndərilən 6 rəqəmli kodu daxil edin
-            </p>
+            <p className="text-small text-ink-2"><span className="font-medium text-ink">{email}</span> — {s.codeSent}</p>
             {devCode && (
-              <div style={{ background:'rgba(255,214,10,0.1)', border:'1px solid rgba(255,214,10,0.3)', borderRadius:8, padding:'10px 14px', marginBottom:16, color:'#FFD60A', fontSize:12 }}>
+              <div className="rounded-control bg-warning-soft px-3 py-2 text-small text-warning">
                 Demo: e-poçt provayderi qoşulmayıb, test kodu: <strong>{devCode}</strong>
               </div>
             )}
-            <input value={otp} onChange={e=>setOtp(e.target.value)} placeholder="123456"
-              style={{ ...inputStyle, fontSize:22, letterSpacing:8, textAlign:'center', marginBottom:16 }} />
-            {secondsLeft > 0 && <p style={{ color:'rgba(255,255,255,0.4)', fontSize:12, marginBottom:16, textAlign:'center' }}>Kodun etibarlılıq müddəti: {Math.floor(secondsLeft/60).toString().padStart(2,'0')}:{(secondsLeft%60).toString().padStart(2,'0')}</p>}
-            {error && <p style={{ color:'#f87171', fontSize:13, marginBottom:12 }}>{error}</p>}
-            <button onClick={handleVerifyOtp} disabled={loading} style={btn}>{loading ? 'Yoxlanılır...' : 'Təsdiqlə'}</button>
-            <button onClick={()=>setStep('form')} style={{ ...btn, background:'transparent', border:'1px solid rgba(255,255,255,0.15)', marginTop:10, color:'rgba(255,255,255,0.6)' }}>Geri</button>
+            <input data-autofocus value={otp} onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" inputMode="numeric" autoComplete="one-time-code"
+              aria-label="Code" className="input h-14 text-center font-display text-2xl tracking-[0.5em]" />
+            {secondsLeft > 0 && (
+              <p className="text-center text-caption text-muted">
+                {s.valid} {String(Math.floor(secondsLeft / 60)).padStart(2, '0')}:{String(secondsLeft % 60).padStart(2, '0')}
+              </p>
+            )}
           </>
         ) : (
           <>
             {authMode === 'register' && (
-              <>
-                <input value={firstName} onChange={e=>setFirstName(e.target.value)} placeholder="Ad"
-                  style={{ ...inputStyle, marginBottom:12 }} />
-                <input value={lastName} onChange={e=>setLastName(e.target.value)} placeholder="Soyad"
-                  style={{ ...inputStyle, marginBottom:12 }} />
-              </>
+              <div className="grid grid-cols-2 gap-3">
+                <Field icon={UserIcon} value={firstName} onChange={e => setFirstName(e.target.value)} placeholder={s.first} aria-label={s.first} autoComplete="given-name" />
+                <Field icon={UserIcon} value={lastName} onChange={e => setLastName(e.target.value)} placeholder={s.last} aria-label={s.last} autoComplete="family-name" />
+              </div>
             )}
-            <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="E-poçt"
-              type="email" style={{ ...inputStyle, marginBottom:12 }} />
-            <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Şifrə"
-              type="password" style={{ ...inputStyle, marginBottom:16 }} />
+            <Field icon={Mail} value={email} onChange={e => setEmail(e.target.value)} placeholder={s.email} aria-label={s.email} type="email" autoComplete="email" />
+            <Field icon={Lock} value={password} onChange={e => setPassword(e.target.value)} placeholder={s.pass} aria-label={s.pass} type="password" autoComplete={authMode === 'login' ? 'current-password' : 'new-password'} />
             {authMode === 'register' && (
-              <label style={{ display:'flex', alignItems:'flex-start', gap:8, marginBottom:16, cursor:'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={e => setAgreed(e.target.checked)}
-                  style={{ marginTop:2, width:16, height:16, flexShrink:0, accentColor:'#7C6EF8', cursor:'pointer' }}
-                />
-                <span style={{ fontSize:12.5, color:'rgba(255,255,255,0.55)', lineHeight:1.5 }}>
-                  <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color:'#a89ef8', textDecoration:'underline' }}>İstifadə Şərtləri</a>
-                  {' '}və{' '}
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color:'#a89ef8', textDecoration:'underline' }}>Gizlilik Siyasəti</a>
-                  {' '}ilə razıyam
+              <label className="flex cursor-pointer items-start gap-2.5 text-small text-ink-2">
+                <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[rgb(var(--primary))]" />
+                <span>
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline-offset-2 hover:underline">{s.agree1}</a> {s.and}{' '}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline-offset-2 hover:underline">{s.agree2}</a> {s.agree3}
                 </span>
               </label>
             )}
-            {error && <p style={{ color:'#f87171', fontSize:13, marginBottom:12 }}>{error}</p>}
-            <button
-              onClick={authMode==='login' ? handleLogin : handleSendOtp}
-              disabled={loading || (authMode==='register' && !agreed)}
-              style={{ ...btn, opacity: (authMode==='register' && !agreed) ? 0.5 : 1, cursor: (authMode==='register' && !agreed) ? 'not-allowed' : 'pointer' }}
-            >
-              {loading ? 'Gözləyin...' : authMode==='login' ? 'Daxil ol' : 'Kodu göndər'}
-            </button>
-            <p style={{ textAlign:'center', color:'rgba(255,255,255,0.4)', fontSize:13, marginTop:16 }}>
-              {authMode==='login' ? 'Hesabınız yoxdur? ' : 'Hesabınız var? '}
-              <span onClick={()=>setAuthMode(authMode==='login'?'register':'login')}
-                style={{ color:'#7C6EF8', cursor:'pointer', fontWeight:600 }}>
-                {authMode==='login' ? 'Qeydiyyat' : 'Daxil ol'}
-              </span>
-            </p>
           </>
         )}
-      </div>
-    </div>
+
+        {error && <p role="alert" className="rounded-control bg-danger-soft px-3 py-2 text-small text-danger">{error}</p>}
+
+        <button type="submit" disabled={disabled} className="btn-primary btn-lg mt-1 w-full">
+          {loading && <Loader2 size={16} className="spin" />}
+          {loading ? (step === 'otp' ? s.checking : s.wait) : step === 'otp' ? s.confirm : authMode === 'login' ? s.login : s.sendCode}
+        </button>
+
+        {step === 'otp' ? (
+          <button type="button" className="btn-ghost w-full" onClick={() => setStep('form')}><ArrowLeft size={15} />{s.back}</button>
+        ) : (
+          <p className="pt-1 text-center text-small text-ink-2">
+            {authMode === 'login' ? s.noAcc : s.hasAcc}{' '}
+            <button type="button" onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')} className="font-semibold text-primary hover:underline">
+              {authMode === 'login' ? s.register : s.login}
+            </button>
+          </p>
+        )}
+      </form>
+    </Modal>
   );
 }

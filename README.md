@@ -4,11 +4,13 @@ CV/rezyume yaratma platforması — istifadəçilər hazır şablonlar əsasınd
 
 ## Xüsusiyyətlər
 
-- 4 hazır CV şablonu: Bold, Kompakt, Minimal, Modern (`app/components/templates`)
-- AI dəstəkli məzmun generasiyası (Groq SDK)
+- 15 CV şablonu (`app/components/templates`, `app/components/CVPreview.tsx`); meta-məlumat: `lib/cv/templates.ts`
+- Canlı şrift seçimi (Poppins, Bricolage Grotesque, Inter, Manrope, Plus Jakarta Sans) — CV-yə və PDF-ə dərhal tətbiq olunur
+- Dəqiq A4 səhifələmə mühərriki (`lib/cv/paginate.ts`): başlıq tək qalmır, bloklar yarıya bölünmür
+- AI dəstəkli məzmun generasiyası (Groq SDK, `openai/gpt-oss-20b`); pulsuz plan üçün 5 sorğu limiti
 - OTP (bir dəfəlik kod) ilə istifadəçi doğrulaması
 - Abunəlik/pricing axını və e-poçt bildirişləri (Resend / Nodemailer)
-- CV-ni PDF kimi endirmə (`jspdf`, `html2canvas`)
+- Vektor PDF: real, seçilə bilən mətn və embed edilmiş şriftlər (`lib/pdf/domToPdf.ts`, `jspdf`)
 - Admin panel
 
 ## Texnologiya stack-i
@@ -50,9 +52,19 @@ Brauzerdə [http://localhost:3000](http://localhost:3000) açın.
 npm run deploy
 ```
 
+## CV mühərriki (necə işləyir)
+
+1. Şablon **bir dəfə**, tək hündür sənəd kimi kanonik A4 enində render olunur (`app/components/CVDocument.tsx`).
+2. `lib/cv/paginate.ts` bölünməməli "atom"ları (sətir, bənd, kart) tapır və səhifə sərhədinə düşənləri növbəti səhifəyə itələyir. Bu real layout-dur.
+3. Önizləmə səhifələri həmin DOM-un snapshot-ıdır; PDF isə eyni DOM-dan oxunur (`lib/pdf/domToPdf.ts`) — mətn, düzbucaqlılar, gradientlər, şəkillər vektor/raster primitivlərinə çevrilir. Önizləmə ilə PDF eyni layout-dan gəldiyi üçün fərqlənə bilməz.
+4. Şriftlər `public/fonts/cv/*.ttf` — brauzer (`app/cv-fonts.css`) və PDF eyni faylı istifadə edir. Faylları `scripts/build-cv-fonts.py` yaradır (Latin + Azərbaycan hərfləri; ə/Ə olmayan şriftlərə əlavə olunur).
+
+Yeni şablon əlavə etmək: komponenti yaz → `CVPreview.tsx`-də `renderTemplate`-ə əlavə et → `TemplateId` (`app/types/cv.ts`) və `lib/cv/templates.ts`-ə yaz. Test üçün: `npm run dev`, sonra `/dev/lab?tpl=<id>&fx=long&font=inter` (yalnız development).
+
 ## Struktur
 
-- `app/create` — CV yaratma axını
+- `app/create` — CV redaktoru (Məzmun / Dizayn / Önizləmə)
+- `supabase/` — `schema.sql` (sıfırdan qurulum, cədvəlləri silir!) və nömrəli dəyişiklik faylları (`002_*.sql` …)
 - `app/templates`, `app/components/templates` — şablonlar
 - `app/pricing` — abunəlik/qiymət səhifəsi
 - `app/admin` — admin panel

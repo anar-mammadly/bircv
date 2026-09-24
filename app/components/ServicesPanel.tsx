@@ -1,168 +1,78 @@
 'use client';
-import { useState } from 'react';
+import { useState, useId } from 'react';
+import Link from 'next/link';
+import { Crown, Target, PenLine, FileText, Sparkles, MessageCircle, ChevronDown } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useCVStore } from '@/app/store/cvStore';
 import { waLink, SUPPORT_EMAIL } from '@/lib/config';
-import { Crown, Target, PenLine, FileText, Sparkles, MessageCircle, X, ChevronDown } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import Modal from '@/app/components/ui/Modal';
 
-const services: {
-  id: string; Icon: LucideIcon; title: string; titleEn: string;
-  desc: string; descEn: string; price: number; badge: string; badgeEn: string; color: string;
-}[] = [
-  {
-    id: 'premium_sub', Icon: Crown,
-    title: 'Premium Abunəlik', titleEn: 'Premium Subscription',
-    desc: 'Bütün premium şablonlar + limitsiz CV + prioritet dəstək',
-    descEn: 'All premium templates + unlimited CVs + priority support',
-    price: 20, badge: 'Aylıq', badgeEn: 'Monthly', color: '#7C6EF8',
-  },
-  {
-    id: 'hr_consult', Icon: Target,
-    title: 'HR Onlayn Konsultasiya', titleEn: 'HR Online Consultation',
-    desc: 'Professional HR mütəxəssisi ilə 30 dəqiqəlik video görüş',
-    descEn: '30-minute video call with a professional HR specialist',
-    price: 20, badge: 'Bir dəfəlik', badgeEn: 'One-time', color: '#059669',
-  },
-  {
-    id: 'hr_build', Icon: PenLine,
-    title: 'HR CV Yazımı', titleEn: 'HR CV Writing',
-    desc: 'Professional HR tərəfindən CV-nizi hazır şəkildə yığılması',
-    descEn: 'Your CV written professionally by an HR specialist',
-    price: 15, badge: 'Bir dəfəlik', badgeEn: 'One-time', color: '#0284c7',
-  },
-  {
-    id: 'extra_cv', Icon: FileText,
-    title: 'Əlavə CV', titleEn: 'Extra CV',
-    desc: 'CV hazırlamaq (pulsuz plan üçün)',
-    descEn: 'Create an extra CV (for free plan)',
-    price: 5, badge: 'Bir dəfəlik', badgeEn: 'One-time', color: '#d97706',
-  },
+interface Service { id: string; Icon: LucideIcon; title: string; titleEn: string; desc: string; descEn: string; price: number; badge: string; badgeEn: string }
+
+const services: Service[] = [
+  { id: 'premium_sub', Icon: Crown, title: 'Premium abunəlik', titleEn: 'Premium subscription', desc: 'Bütün şablonlar + limitsiz CV + limitsiz AI', descEn: 'All templates + unlimited CVs + unlimited AI', price: 20, badge: 'Aylıq', badgeEn: 'Monthly' },
+  { id: 'hr_consult', Icon: Target, title: 'HR onlayn konsultasiya', titleEn: 'HR online consultation', desc: 'HR mütəxəssisi ilə 30 dəqiqəlik video görüş', descEn: '30-minute video call with an HR specialist', price: 20, badge: 'Bir dəfəlik', badgeEn: 'One-time' },
+  { id: 'hr_build', Icon: PenLine, title: 'HR CV yazımı', titleEn: 'HR CV writing', desc: 'CV-niz HR tərəfindən peşəkar şəkildə hazırlanır', descEn: 'Your CV written professionally by an HR specialist', price: 15, badge: 'Bir dəfəlik', badgeEn: 'One-time' },
+  { id: 'extra_cv', Icon: FileText, title: 'Əlavə CV', titleEn: 'Extra CV', desc: 'Pulsuz plan üçün əlavə CV hüququ', descEn: 'An additional CV for the free plan', price: 5, badge: 'Bir dəfəlik', badgeEn: 'One-time' },
 ];
 
 export default function ServicesPanel() {
-  const { lang, user } = useCVStore();
-  const [modal, setModal] = useState<typeof services[0] | null>(null);
+  const { lang } = useCVStore();
+  const az = lang === 'az';
+  const [modal, setModal] = useState<Service | null>(null);
   const [open, setOpen] = useState(false);
-
-  const handleBuy = (svc: typeof services[0]) => {
-    if (svc.id === 'premium_sub') {
-      // Premium → pricing səhifəsinə yönləndir
-      window.location.href = '/pricing';
-      return;
-    }
-    // Digərləri → modal aç
-    setModal(svc);
-    if (svc.id === 'premium_sub') {
-      fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user?.email || 'guest', plan: 'premium' }),
-      }).catch(() => {});
-    }
-  };
+  const id = useId();
 
   return (
     <>
-      {/* ── Xidmət modal ─────────────────────────────────────────────────── */}
-      {modal && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'0 16px' }}>
-          <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, padding:32, maxWidth:400, width:'100%' }}>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
-              <div style={{ width:44, height:44, borderRadius:12, background:`${modal.color}20`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <modal.Icon size={22} style={{ color: modal.color }} />
-              </div>
-              <button onClick={()=>setModal(null)} style={{ background:'none', border:'none', color:'rgba(255,255,255,0.4)', cursor:'pointer', padding:4 }}>
-                <X size={20} />
-              </button>
-            </div>
-            <h2 style={{ color:'#fff', fontSize:18, fontWeight:800, margin:'0 0 8px' }}>
-              {lang==='az' ? modal.title : modal.titleEn}
-            </h2>
-            <p style={{ color:'rgba(255,255,255,0.5)', fontSize:13, lineHeight:1.6, margin:'0 0 24px' }}>
-              {lang==='az' ? modal.desc : modal.descEn}
-            </p>
+      <Modal open={!!modal} onClose={() => setModal(null)} title={modal ? (az ? modal.title : modal.titleEn) : ''}>
+        {modal && (
+          <>
+            <span className="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-primary-soft text-primary"><modal.Icon size={22} /></span>
+            <p className="mb-5 text-body text-ink-2">{az ? modal.desc : modal.descEn}</p>
             {modal.id !== 'hr_consult' && (
-              <div style={{ background:'rgba(255,255,255,0.04)', borderRadius:12, padding:'14px 16px', marginBottom:24, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                <span style={{ color:'rgba(255,255,255,0.5)', fontSize:13 }}>
-                  {lang==='az' ? modal.badge : modal.badgeEn}
-                </span>
-                <span style={{ color:'#fff', fontSize:22, fontWeight:900 }}>{modal.price} AZN</span>
+              <div className="mb-5 flex items-center justify-between rounded-xl bg-surface-2 px-4 py-3">
+                <span className="text-small text-ink-2">{az ? modal.badge : modal.badgeEn}</span>
+                <span className="font-display text-2xl font-bold text-ink">{modal.price} AZN</span>
               </div>
             )}
-            <a
-              href={waLink(modal.id === 'hr_consult'
-                ? `${modal.title} xidməti haqqında sorğum var`
-                : `${modal.title} xidmətini almaq istəyirəm`)}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display:'block', background:modal.color, color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', textAlign:'center', marginBottom:10 }}
-            >
-              {lang==='az' ? 'Sifariş ver' : 'Order now'}
-            </a>
-            <button onClick={()=>setModal(null)} style={{ width:'100%', background:'transparent', border:'1px solid rgba(255,255,255,0.1)', color:'rgba(255,255,255,0.45)', borderRadius:12, padding:'11px 0', fontSize:13, cursor:'pointer' }}>
-              {lang==='az' ? 'Bağla' : 'Close'}
-            </button>
-          </div>
-        </div>
-      )}
+            <a href={waLink(modal.id === 'hr_consult' ? `${modal.title} xidməti haqqında sorğum var` : `${modal.title} xidmətini almaq istəyirəm`)}
+              target="_blank" rel="noopener noreferrer" className="btn-primary btn-lg w-full">{az ? 'WhatsApp ilə sifariş ver' : 'Order via WhatsApp'}</a>
+          </>
+        )}
+      </Modal>
 
-      {/* ── Panel (accordion) ───────────────────────────────────────────── */}
-      <div style={{ border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden' }}>
-        <button onClick={() => setOpen(!open)} style={{
-          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px 18px', background: 'rgba(255,255,255,0.03)', border: 'none', cursor: 'pointer', color: '#fff'
-        }}>
-          <span style={{ fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 9 }}>
-            <span style={{ display: 'inline-flex', color: '#a89ef8' }}><Sparkles size={16} /></span>
-            {lang==='az' ? 'Əlavə Xidmətlər' : 'Extra Services'}
-          </span>
-          <ChevronDown size={18} style={{ opacity: 0.45, transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
-        </button>
-
-        {open && (
-          <div style={{ padding: '16px 18px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            <p style={{ fontSize:12, color:'rgba(255,255,255,0.4)', marginBottom:16, marginTop:0 }}>
-              {lang==='az' ? 'Karyera inkişafınızı sürətləndirin' : 'Accelerate your career growth'}
-            </p>
-
-            <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+      <section className="card-flat overflow-hidden">
+        <h3>
+          <button type="button" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls={id} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface-2">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent"><Sparkles size={16} /></span>
+            <span className="flex-1 text-[0.9375rem] font-semibold text-ink">{az ? 'Əlavə xidmətlər' : 'Extra services'}</span>
+            <ChevronDown size={18} className={`text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden />
+          </button>
+        </h3>
+        <div id={id} className={`grid transition-[grid-template-rows] duration-300 ease-out ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+          <div className="overflow-hidden">
+            <div className={`flex flex-col gap-2 border-t border-line p-4 ${open ? '' : 'invisible'}`}>
               {services.map(svc => (
-                <div key={svc.id} style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.06)', borderRadius:12, padding:'14px', display:'flex', alignItems:'center', gap:12 }}>
-                  <span style={{ flexShrink:0, color:svc.color, display:'inline-flex' }}><svc.Icon size={24} /></span>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:2 }}>
-                      <span style={{ fontSize:13, fontWeight:700, color:'#fff' }}>
-                        {lang==='az' ? svc.title : svc.titleEn}
-                      </span>
-                      <span style={{ fontSize:10, background:`${svc.color}25`, color:svc.color, padding:'2px 6px', borderRadius:4, fontWeight:600, flexShrink:0 }}>
-                        {lang==='az' ? svc.badge : svc.badgeEn}
-                      </span>
+                <div key={svc.id} className="flex items-center gap-3 rounded-xl border border-line bg-bg/60 p-3">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-ink-2"><svc.Icon size={18} /></span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <span className="text-[0.8125rem] font-semibold text-ink">{az ? svc.title : svc.titleEn}</span>
+                      <span className="badge-muted">{az ? svc.badge : svc.badgeEn}</span>
                     </div>
-                    <p style={{ fontSize:11, color:'rgba(255,255,255,0.4)', margin:0, lineHeight:1.4 }}>
-                      {lang==='az' ? svc.desc : svc.descEn}
-                    </p>
+                    <p className="text-caption text-muted">{az ? svc.desc : svc.descEn}</p>
                   </div>
-                  <button
-                    onClick={() => handleBuy(svc)}
-                    style={{ background:svc.color, color:'#fff', border:'none', borderRadius:8, padding:'8px 12px', cursor:'pointer', fontSize:12, fontWeight:700, flexShrink:0, whiteSpace:'nowrap' as const }}
-                  >
-                    {svc.id === 'hr_consult'
-                      ? (lang==='az' ? 'Sorğu göndər' : 'Send inquiry')
-                      : `${svc.price} AZN`}
-                  </button>
+                  {svc.id === 'premium_sub'
+                    ? <Link href="/pricing" className="btn-primary btn-sm shrink-0">{svc.price} AZN</Link>
+                    : <button onClick={() => setModal(svc)} className="btn-secondary btn-sm shrink-0">{svc.id === 'hr_consult' ? (az ? 'Sorğu' : 'Inquire') : `${svc.price} AZN`}</button>}
                 </div>
               ))}
-            </div>
-
-            <div style={{ marginTop:14, padding:'12px', background:'rgba(124,110,248,0.07)', borderRadius:10, border:'1px dashed rgba(124,110,248,0.25)' }}>
-              <p style={{ fontSize:12, color:'rgba(255,255,255,0.55)', margin:0, textAlign:'center' }}>
-                <MessageCircle size={13} style={{ display:'inline', verticalAlign:'-2px', marginRight:4 }} />
-                {lang==='az' ? `Suallarınız üçün: ${SUPPORT_EMAIL}` : `Questions? ${SUPPORT_EMAIL}`}
-              </p>
+              <p className="flex items-center justify-center gap-1.5 pt-1 text-caption text-muted"><MessageCircle size={13} />{az ? `Suallar üçün: ${SUPPORT_EMAIL}` : `Questions? ${SUPPORT_EMAIL}`}</p>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
     </>
   );
 }

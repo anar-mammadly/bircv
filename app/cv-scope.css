@@ -1,0 +1,13 @@
+/* Scope for everything rendered as a CV (live document, page previews, thumbnails).
+   font-synthesis:none keeps browser and PDF identical: we never fake bold/italic. */
+.cv-scope { font-synthesis: none; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; color-scheme: light; }
+.cv-scope, .cv-scope * { box-sizing: border-box; }
+.cv-doc > * { flex: 1 0 auto; min-height: 0 !important; }
+.cv-page { border-radius: 3px; box-shadow: 0 1px 2px rgba(15,23,42,.06), 0 8px 28px rgba(15,23,42,.10); }
+.cv-page-no { position: absolute; right: 8px; bottom: 6px; font: 500 10px/1 Inter, system-ui, sans-serif; color: #94a3b8; background: rgba(255,255,255,.9); padding: 2px 6px; border-radius: 4px; }
+.cv-scope[data-cvfont="poppins"], .cv-scope[data-cvfont="poppins"] * { font-family: "Poppins", "Segoe UI", Arial, sans-serif !important; }
+.cv-scope[data-cvfont="bricolage-grotesque"], .cv-scope[data-cvfont="bricolage-grotesque"] * { font-family: "Bricolage Grotesque", "Segoe UI", Arial, sans-serif !important; }
+.cv-scope[data-cvfont="inter"], .cv-scope[data-cvfont="inter"] * { font-family: "Inter", "Segoe UI", Arial, sans-serif !important; }
+.cv-scope[data-cvfont="manrope"], .cv-scope[data-cvfont="manrope"] * { font-family: "Manrope", "Segoe UI", Arial, sans-serif !important; }
+.cv-scope[data-cvfont="plus-jakarta-sans"], .cv-scope[data-cvfont="plus-jakarta-sans"] * { font-family: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif !important; }
+.cv-page-flat { box-shadow: none; border-radius: 0; }

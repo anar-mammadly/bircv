@@ -1,15 +1,32 @@
 import Groq from 'groq-sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase';
+
+const FREE_AI_LIMIT = 5;
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { jobTitle, wantedTitle, employer, city, startDate, endDate, language, type, skills, yearsOfExperience } = body;
+  const { userId, jobTitle, wantedTitle, employer, city, startDate, endDate, language, type, skills, yearsOfExperience } = body;
 
   if (!jobTitle?.trim()) {
     return NextResponse.json({ error: 'jobTitle is required' }, { status: 400 });
+  }
+
+  // Free users get FREE_AI_LIMIT AI generations; premium/admin are unlimited.
+  if (!userId) {
+    return NextResponse.json({ error: 'login_required' }, { status: 401 });
+  }
+  const { data: account } = await supabaseAdmin
+    .from('users').select('plan, ai_count').eq('id', userId).maybeSingle();
+  if (!account) {
+    return NextResponse.json({ error: 'login_required' }, { status: 401 });
+  }
+  const isFree = account.plan === 'free';
+  if (isFree && account.ai_count >= FREE_AI_LIMIT) {
+    return NextResponse.json({ error: 'limit_reached', limit: FREE_AI_LIMIT }, { status: 429 });
   }
 
   // Graceful fallback when the AI key is not configured.
@@ -62,9 +79,12 @@ Rules: exactly 3 bullets starting with "•", each on new line, strong past-tens
   }
 
   try {
+    if (isFree) {
+      await supabaseAdmin.from('users').update({ ai_count: account.ai_count + 1 }).eq('id', userId);
+    }
     const groq = new Groq({ apiKey });
     const stream = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       messages: [
         {
           role: 'system',
@@ -75,7 +95,8 @@ Rules: exactly 3 bullets starting with "•", each on new line, strong past-tens
         { role: 'user', content: prompt }
       ],
       stream: true,
-      max_tokens: 200,
+      max_tokens: 800,
+      reasoning_effort: 'low',
       temperature: 0.7,
     });
 

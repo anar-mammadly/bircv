@@ -1,5 +1,6 @@
 'use client';
 import { CVData } from '@/app/types/cv';
+import { ExtraSections } from './shared';
 
 const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
 const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -156,6 +157,7 @@ export default function ModernTemplate({ data, lang }: { data: CVData; lang: 'az
           </div>
         </div>
 
+        <ExtraSections data={data} lang={lang} Heading={SecLabel} color="#4b5563" muted="#9ca3af" accent="#1a1a2e" gap={20} />
         {additional && (
           <div>
             <SecLabel>{lang==='az'?'Əlavə':'Additional'}</SecLabel>

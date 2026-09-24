@@ -59,6 +59,19 @@ export interface Language {
   level: string;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  link: string;
+  description: string;
+}
+
+export interface CustomSection {
+  id: string;
+  title: string;
+  content: string;
+}
+
 export interface CVData {
   personal: PersonalInfo;
   experience: WorkExperience[];
@@ -67,10 +80,12 @@ export interface CVData {
   languages: Language[];
   certificates: Certificate[];
   trainings: Training[];
+  projects?: Project[];
+  customSections?: CustomSection[];
   additional: string;
 }
 
-export type TemplateId = 'kompakt' | 'modern' | 'minimal' | 'bold' | 'elegant' | 'klassik' | 'designer' | 'executive' | 'header';
+export type TemplateId = 'kompakt' | 'modern' | 'minimal' | 'bold' | 'elegant' | 'klassik' | 'designer' | 'executive' | 'header' | 'editorial' | 'corporate' | 'swiss' | 'creative' | 'tech' | 'sidebar';
 
 export interface Template {
   id: TemplateId;

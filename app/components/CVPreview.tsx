@@ -1,15 +1,17 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
 import { CVData, TemplateId } from '@/app/types/cv';
+import { ExtraSections } from '@/app/components/templates/shared';
 import KompaktTemplate from '@/app/components/templates/KompaktTemplate';
 import ModernTemplate  from '@/app/components/templates/ModernTemplate';
 import MinimalTemplate from '@/app/components/templates/MinimalTemplate';
 import BoldTemplate    from '@/app/components/templates/BoldTemplate';
+import EditorialTemplate from '@/app/components/templates/EditorialTemplate';
+import CorporateTemplate from '@/app/components/templates/CorporateTemplate';
+import SwissTemplate    from '@/app/components/templates/SwissTemplate';
+import CreativeTemplate from '@/app/components/templates/CreativeTemplate';
+import TechTemplate     from '@/app/components/templates/TechTemplate';
+import SidebarTemplate  from '@/app/components/templates/SidebarTemplate';
 
-interface CVPreviewProps {
-  data: CVData; template: TemplateId; lang: 'az'|'en';
-  previewRef?: React.RefObject<HTMLDivElement>; forPDF?: boolean;
-}
 
 const MONTHS_AZ = ['','Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
 const MONTHS_EN = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -117,7 +119,7 @@ function ElegantTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:
   return(
     <div style={{fontFamily:'"Lora",serif',background:'#fdfbf8',color:'#2d2823',width:'100%',minHeight:'297mm',fontSize:10.5,display:'flex',flexDirection:'column'}}>
       <div style={{padding:'32px 32px 22px',textAlign:'center',background:'#fff',position:'relative'}}>
-        {p.photo&&<img src={p.photo} alt="photo" style={{width:64,height:64,borderRadius:'50%',objectFit:'cover',border:`2px solid ${BRONZE}`,marginBottom:14}}/>}
+        {p.photo&&<img src={p.photo} alt="photo" style={{width:64,height:64,borderRadius:'50%',objectFit:'cover',objectPosition:'top',border:`2px solid ${BRONZE}`,margin:'0 auto 14px',display:'block'}}/>}
         <div style={{fontFamily:'"Playfair Display",serif',fontSize:28,fontWeight:600,letterSpacing:1,color:'#1a1614',marginBottom:6}}>{p.firstName} {p.lastName}</div>
         {p.jobTitle&&<div style={{fontSize:10.5,color:BRONZE,letterSpacing:3,textTransform:'uppercase' as const,marginBottom:12,fontWeight:600}}>{p.jobTitle}</div>}
         <div style={{height:1,width:46,background:BRONZE,margin:'0 auto 12px'}}/>
@@ -137,6 +139,7 @@ function ElegantTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:
           {p.summary&&(<div><ST c={lang==='az'?'Haqqımda':'About'}/><div style={{fontSize:10,color:'#4a4438',lineHeight:1.8,fontStyle:'italic'}}>{p.summary}</div></div>)}
           {experience.length>0&&(<div><ST c={lang==='az'?'Karyera':'Career'}/>{experience.map(exp=><div key={exp.id} style={{marginBottom:13}}><div style={{fontFamily:'"Playfair Display",serif',fontWeight:600,fontSize:12.5,lineHeight:1.3,color:'#1a1614'}}>{exp.jobTitle}</div><div style={{fontSize:10,color:BRONZE,display:'flex',justifyContent:'space-between',marginBottom:4,gap:8}}><span style={{fontStyle:'italic'}}>{exp.company}</span><span style={{fontSize:9,flexShrink:0}}>{fmtDate(exp.startMonth,exp.startYear,lang)} – {exp.current?present:fmtDate(exp.endMonth,exp.endYear,lang)}</span></div>{exp.description&&<div style={{fontSize:9.5,color:'#4a4438',lineHeight:1.75}}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:2}}><span style={{color:BRONZE,flexShrink:0,marginTop:1}}>·</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div>)}</div>)}
           {certs.length>0&&(<div><ST c={lang==='az'?'Sertifikatlar':'Certificates'}/>{certs.map((c:any,i:number)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10,marginBottom:3}}><div><span style={{fontWeight:600}}>{c.name}</span>{c.issuer&&<span style={{color:'#9C6B3E'}}> · {c.issuer}</span>}</div>{c.year&&<span style={{color:'#9C6B3E',flexShrink:0,marginLeft:8}}>{c.year}</span>}</div>)}</div>)}
+          <ExtraSections data={data} lang={lang} Heading={({children}:{children:string})=><ST c={children}/>} color="#4a4438" muted="#9C6B3E" accent="#1a1614" gap={14} fontSize={10}/>
           {additional&&(<div><ST c={lang==='az'?'Əlavə':'Additional'}/><div style={{fontSize:10,color:'#4a4438',lineHeight:1.65,whiteSpace:'pre-line'}}>{additional}</div></div>)}
         </div>
       </div>
@@ -175,6 +178,7 @@ function KlassikTemplate({data,lang}:{data:CVData;lang:'az'|'en'}){
           {skills.length>0&&(<div><SH c={lang==='az'?'Bacarıqlar':'Skills'}/><div style={{fontSize:10.5,color:'#333',lineHeight:2.1}}>{skills.join(', ')}</div></div>)}
           {languages.length>0&&(<div><SH c={lang==='az'?'Dillər':'Languages'}/>{languages.map((l,i)=><div key={i} style={{fontSize:10.5,display:'flex',justifyContent:'space-between',marginBottom:4}}><span>{l.name}</span><span style={{color:'#777'}}>{l.level}</span></div>)}</div>)}
           {certs.length>0&&(<div><SH c={lang==='az'?'Sertifikatlar':'Certificates'}/>{certs.map((c:any,i:number)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10.5,marginBottom:4}}><div><span style={{fontWeight:600}}>{c.name}</span>{c.issuer&&<span style={{color:'#777'}}> · {c.issuer}</span>}</div>{c.year&&<span style={{color:'#777',flexShrink:0,marginLeft:8}}>{c.year}</span>}</div>)}</div>)}
+          <ExtraSections data={data} lang={lang} Heading={({children}:{children:string})=><SH c={children}/>} color="#333" muted="#666" accent="#111" gap={16} fontSize={10.5}/>
           {additional&&(<div><SH c={lang==='az'?'Əlavə':'Additional'}/><div style={{fontSize:10.5,color:'#333',lineHeight:1.7,whiteSpace:'pre-line'}}>{additional}</div></div>)}
         </div>
       </div>
@@ -235,6 +239,7 @@ function ExecutiveTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF
           {experience.length>0&&<div><RightSec title={lang==='az'?'İş Təcrübəsi':'Work Experience'}/><div style={{display:'flex',flexDirection:'column',gap:9}}>{experience.map(exp=><div key={exp.id} style={{display:'flex',gap:0}}><div style={{display:'flex',flexDirection:'column',alignItems:'center',width:18,flexShrink:0}}><div style={{width:7,height:7,borderRadius:'50%',border:`2px solid ${GOLD}`,background:'#fff',flexShrink:0,marginTop:3}}/><div style={{width:1,flex:1,background:'#e5dcc8',marginTop:2}}/></div><div style={{flex:1,paddingBottom:7,paddingLeft:8}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:6}}><div style={{fontSize:11,fontWeight:700,color:NAVY,lineHeight:1.3}}>{exp.jobTitle}</div><div style={{fontSize:9,color:'#777',flexShrink:0,fontStyle:'italic'}}>{exp.startYear}{exp.endYear||exp.current?' – '+(exp.current?present:exp.endYear):''}</div></div><div style={{fontSize:10,color:'#555',marginBottom:3}}>{exp.company}{exp.city?' · '+exp.city:''}</div>{exp.description&&<div style={{fontSize:9.5,color:'#444',lineHeight:1.65}}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:2}}><span style={{flexShrink:0,marginTop:1,color:GOLD}}>•</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div></div>)}</div></div>}
           {education.length>0&&<div><RightSec title={lang==='az'?'Təhsil':'Education'}/><div style={{display:'flex',flexDirection:'column',gap:7}}>{education.map(edu=><div key={edu.id} style={{display:'flex',gap:0}}><div style={{display:'flex',flexDirection:'column',alignItems:'center',width:18,flexShrink:0}}><div style={{width:7,height:7,borderRadius:'50%',border:`2px solid ${GOLD}`,background:'#fff',flexShrink:0,marginTop:3}}/></div><div style={{flex:1,paddingLeft:8}}><div style={{display:'flex',justifyContent:'space-between',gap:6}}><div style={{fontSize:11,fontWeight:700,color:NAVY,lineHeight:1.3}}>{edu.degree||edu.school}</div><span style={{fontSize:9,color:'#777',fontStyle:'italic',flexShrink:0}}>{edu.startYear}{edu.endYear?' – '+edu.endYear:''}</span></div>{edu.school&&edu.degree&&<div style={{fontSize:10,color:'#555'}}>{edu.school}</div>}</div></div>)}</div></div>}
           {certs.length>0&&(<div><RightSec title={lang==='az'?'Sertifikatlar':'Certificates'}/><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:6}}>{certs.map((c:any,i:number)=>(<div key={i} style={{background:'rgba(201,162,75,0.06)',border:'1px solid rgba(201,162,75,0.3)',borderRadius:7,padding:'7px 10px'}}><div style={{fontSize:10,fontWeight:700,color:NAVY,lineHeight:1.35}}>{c.name}</div>{c.issuer&&<div style={{fontSize:8.5,color:'#555',marginTop:2}}>{c.issuer}</div>}{c.year&&<div style={{fontSize:8.5,color:'#999',marginTop:1}}>{c.year}</div>}</div>))}</div></div>)}
+          <ExtraSections data={data} lang={lang} Heading={({children}:{children:string})=><RightSec title={children}/>} color="#444" muted="#777" accent="#1e2a3a" gap={14} fontSize={10}/>
           {additional&&<div><RightSec title={lang==='az'?'Əlavə':'Additional'}/><div style={{fontSize:10,color:'#444',lineHeight:1.65,whiteSpace:'pre-line'}}>{additional}</div></div>}
         </div>
       </div>
@@ -280,6 +285,7 @@ function HeaderTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?:b
         <div style={{flex:1,padding:'16px 18px',display:'flex',flexDirection:'column',gap:17}}>
           {experience.length>0&&<div><Sec title={lang==='az'?'İş Təcrübəsi':'Experience'}/><div style={{display:'flex',flexDirection:'column',gap:9,marginTop:7}}>{experience.map(exp=><div key={exp.id} style={{display:'flex',gap:0}}><div style={{display:'flex',flexDirection:'column',alignItems:'center',width:16,flexShrink:0}}><div style={{width:7,height:7,borderRadius:'50%',border:`2px solid ${exp.current?SKY:NAVY}`,background:'#fff',flexShrink:0,marginTop:3}}/><div style={{width:1,flex:1,background:'#ddd',marginTop:2}}/></div><div style={{flex:1,paddingLeft:7,paddingBottom:7}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:6}}><div style={{fontSize:11,fontWeight:700,color:NAVY,lineHeight:1.3}}>{exp.jobTitle}</div><div style={{fontSize:9,color:exp.current?SKY:'#777',fontWeight:exp.current?700:400,fontStyle:exp.current?'normal':'italic',flexShrink:0}}>{exp.current?(lang==='az'?'İndi':'Now'):exp.startYear}{!exp.current&&(exp.endYear?' – '+exp.endYear:'')}</div></div><div style={{fontSize:10,color:'#555',marginBottom:3}}>{exp.company}{exp.city?' · '+exp.city:''}</div>{exp.description&&<div style={{fontSize:9.5,color:'#444',lineHeight:1.65}}>{exp.description.split('\n').filter((l:string)=>l.trim()).map((line:string,i:number)=><div key={i} style={{display:'flex',alignItems:'flex-start',gap:5,marginBottom:2}}><span style={{flexShrink:0,marginTop:1,color:SKY}}>•</span><span>{line.replace(/^[•\-]\s*/,'')}</span></div>)}</div>}</div></div>)}</div></div>}
           {certs.length>0&&<div><Sec title={lang==='az'?'Sertifikatlar':'Certificates'}/><div style={{display:'flex',flexDirection:'column',gap:4,marginTop:7}}>{certs.map((c:any,i:number)=><div key={i} style={{display:'flex',justifyContent:'space-between',fontSize:10}}><div><span style={{fontWeight:600}}>{c.name}</span>{c.issuer&&<span style={{color:'#777'}}> · {c.issuer}</span>}</div>{c.year&&<span style={{color:'#777',flexShrink:0,marginLeft:8}}>{c.year}</span>}</div>)}</div></div>}
+          <ExtraSections data={data} lang={lang} Heading={({children}:{children:string})=><Sec title={children}/>} color="#444" muted="#777" accent="#0f2a5e" gap={14} fontSize={10}/>
           {additional&&<div><Sec title={lang==='az'?'Əlavə':'Additional'}/><div style={{fontSize:10,color:'#444',lineHeight:1.65,marginTop:7,whiteSpace:'pre-line'}}>{additional}</div></div>}
         </div>
       </div>
@@ -443,6 +449,7 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
               </div>
             </section>
           )}
+          <ExtraSections data={data} lang={lang} Heading={({children}:{children:string})=><SecT>{children}</SecT>} color="#6b7280" muted="#9ca3af" accent="#1e1b4b" gap={0} fontSize={10}/>
           {additional&&(
             <section>
               <SecT>{lang==='az'?'Əlavə':'Additional'}</SecT>
@@ -455,116 +462,26 @@ function DesignerTemplate({data,lang,forPDF}:{data:CVData;lang:'az'|'en';forPDF?
   );
 }
 
-// ── Main export ───────────────────────────────────────────────────────────────
-// A4 @ 96dpi (CSS reference px — sabit, brauzerdən asılı olmayan dəyər).
-const A4_PX_W = 793.7;
-const A4_PX_H = 1122.52;
-
-export default function CVPreview({ data, template, lang, previewRef, forPDF }: CVPreviewProps) {
-  const renderTemplate = () => {
-    switch (template) {
-      case 'kompakt':   return <KompaktTemplate  data={data} lang={lang} />;
-      case 'modern':    return <ModernTemplate   data={data} lang={lang} />;
-      case 'minimal':   return <MinimalTemplate  data={data} lang={lang} />;
-      case 'bold':      return <BoldTemplate     data={data} lang={lang} />;
-      case 'elegant':   return <ElegantTemplate  data={data} lang={lang} />;
-      case 'klassik':   return <KlassikTemplate  data={data} lang={lang} />;
-      case 'designer':  return <DesignerTemplate data={data} lang={lang} />;
-      case 'executive': return <ExecutiveTemplate data={data} lang={lang} />;
-      case 'header':    return <HeaderTemplate   data={data} lang={lang} />;
-      default:          return <KompaktTemplate  data={data} lang={lang} />;
-    }
-  };
-
-  // Səhifə sayı HƏMİŞƏ "həqiqi" A4 enində (793.7px = 210mm) ölçülür — şablonların
-  // mm-based minHeight kimi mütləq dəyərləri yalnız bu enə uyğun mənalıdır.
-  // Ekranda göstərilən kart nə qədər dar olsa da, məzmun bu kanonik ölçüdə
-  // render olunur və sonra CSS transform: scale() ilə kartın enine uyğunlaşdırılır —
-  // beləliklə mətn/sidebar nisbətləri də həmişə düzgün qalır.
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-  const [pageCount, setPageCount] = useState(1);
-
-  useEffect(() => {
-    const measure = () => {
-      const w = wrapRef.current?.clientWidth || A4_PX_W;
-      setScale(w / A4_PX_W);
-      const contentH = contentRef.current?.scrollHeight || A4_PX_H;
-      // Bəzi şablonlar minHeight:'297mm' istifadə edir — brauzer bunu 1px-ə qədər
-      // yuvarlaqlaşdırdığı üçün məzmun tam 1 səhifəlik olanda belə hesablanan
-      // hündürlük A4_PX_H-i cüzi keçə bilər. Kiçik tolerans bunu aradan qaldırır,
-      // həqiqi məzmun artıqlığını (ən az bir sətir ≈ 12-15px) təsirsiz qoyur.
-      const PAGE_TOLERANCE = 6;
-      setPageCount(Math.max(1, Math.ceil((contentH - PAGE_TOLERANCE) / A4_PX_H)));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (wrapRef.current) ro.observe(wrapRef.current);
-    if (contentRef.current) ro.observe(contentRef.current);
-    return () => ro.disconnect();
-  }, [data, template, lang]);
-
-  return (
-    <div ref={wrapRef} style={{ width: '100%' }}>
-      {/* Gizli, kanonik (210mm) enində tam render — yalnız ölçmə üçün (pageCount). */}
-      <div
-        style={{ position: 'absolute', top: 0, left: -99999, width: A4_PX_W, visibility: 'hidden', pointerEvents: 'none' }}
-        aria-hidden="true"
-      >
-        <div ref={contentRef}>{renderTemplate()}</div>
-      </div>
-
-      {/* Çap/PDF mənbəyi — ekranda göstərilənlə EYNİ pageCount qədər, hər biri
-          dəqiq 210mm×297mm ölçüdə, overflow:hidden ilə kəsilmiş səhifə qutusu.
-          Brauzerin öz native pagination-undan asılı qalmırıq — neçə səhifə
-          ekranda görünürsə, çapda da məhz o qədər səhifə çıxır, artıq boş
-          səhifə yarana bilmir. */}
-      <div ref={previewRef} style={{ position: 'absolute', top: 0, left: -99999, visibility: 'hidden', pointerEvents: 'none' }} aria-hidden="true">
-        {Array.from({ length: pageCount }).map((_, i) => (
-          <div
-            key={i}
-            className="__print_page"
-            style={{
-              width: '210mm', height: '297mm', overflow: 'hidden', position: 'relative',
-              breakAfter: i < pageCount - 1 ? 'page' : 'auto',
-            }}
-          >
-            <div style={{ position: 'absolute', top: -i * A4_PX_H, left: 0, width: A4_PX_W }}>
-              {renderTemplate()}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Ekranda görünən, "vərəq-vərəq" önizləmə */}
-      {Array.from({ length: pageCount }).map((_, i) => (
-        <div
-          key={i}
-          className="cv-preview-wrap"
-          style={{
-            width: '100%', aspectRatio: '210/297', background: '#fff', borderRadius: 4,
-            overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.15)', position: 'relative',
-            marginBottom: i < pageCount - 1 ? 18 : 0,
-          }}
-        >
-          <div style={{
-            position: 'absolute', top: 0, left: 0, width: A4_PX_W,
-            transform: `scale(${scale}) translateY(${-i * A4_PX_H}px)`,
-            transformOrigin: 'top left',
-          }}>
-            {renderTemplate()}
-          </div>
-          {pageCount > 1 && (
-            <div style={{
-              position: 'absolute', bottom: 6, right: 8, fontSize: 9, color: '#9ca3af',
-              fontFamily: 'Inter,sans-serif', background: 'rgba(255,255,255,0.85)', padding: '1px 6px', borderRadius: 4,
-            }}>
-              {i + 1}/{pageCount}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
+// ── Template registry ─────────────────────────────────────────────────────────
+// The page/pagination/PDF machinery lives in CVDocument.tsx; this file only knows how to
+// render one template as a single, tall, edge-to-edge document.
+export function renderTemplate(template: TemplateId, data: CVData, lang: 'az'|'en') {
+  switch (template) {
+    case 'kompakt':   return <KompaktTemplate  data={data} lang={lang} />;
+    case 'modern':    return <ModernTemplate   data={data} lang={lang} />;
+    case 'minimal':   return <MinimalTemplate  data={data} lang={lang} />;
+    case 'bold':      return <BoldTemplate     data={data} lang={lang} />;
+    case 'elegant':   return <ElegantTemplate  data={data} lang={lang} />;
+    case 'klassik':   return <KlassikTemplate  data={data} lang={lang} />;
+    case 'designer':  return <DesignerTemplate data={data} lang={lang} />;
+    case 'executive': return <ExecutiveTemplate data={data} lang={lang} />;
+    case 'header':    return <HeaderTemplate   data={data} lang={lang} />;
+    case 'editorial': return <EditorialTemplate data={data} lang={lang} />;
+    case 'corporate': return <CorporateTemplate data={data} lang={lang} />;
+    case 'swiss':     return <SwissTemplate    data={data} lang={lang} />;
+    case 'creative':  return <CreativeTemplate data={data} lang={lang} />;
+    case 'tech':      return <TechTemplate     data={data} lang={lang} />;
+    case 'sidebar':   return <SidebarTemplate  data={data} lang={lang} />;
+    default:          return <KompaktTemplate  data={data} lang={lang} />;
+  }
 }

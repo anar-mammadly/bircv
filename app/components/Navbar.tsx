@@ -1,103 +1,106 @@
 'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Menu, X, Moon, Sun, LogOut, ArrowRight } from 'lucide-react';
 import { useCVStore } from '@/app/store/cvStore';
+import Logo from '@/app/components/ui/Logo';
 
 export default function Navbar() {
   const { lang, setLang, user, setUser, setShowAuthModal, setAuthMode, theme, setTheme } = useCVStore();
+  const path = usePathname();
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => { setOpen(false); }, [path]);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 4);
+    on(); window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, []);
+  useEffect(() => {
+    if (!open) return;
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('keydown', k);
+    return () => document.removeEventListener('keydown', k);
+  }, [open]);
+
+  const links = [
+    { href: '/#how', label: lang === 'az' ? 'Necə işləyir' : 'How it works' },
+    { href: '/templates', label: lang === 'az' ? 'Şablonlar' : 'Templates' },
+    { href: '/pricing', label: lang === 'az' ? 'Qiymət' : 'Pricing' },
+  ];
+  const login = () => { setAuthMode('login'); setShowAuthModal(true); setOpen(false); };
+
+  const Controls = (
+    <>
+      <div className="seg" role="group" aria-label="Language">
+        {(['az', 'en'] as const).map(l => (
+          <button key={l} aria-pressed={lang === l} onClick={() => setLang(l)}>{l.toUpperCase()}</button>
+        ))}
+      </div>
+      <button className="btn-secondary btn-icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        aria-label={theme === 'dark' ? (lang === 'az' ? 'Açıq rejim' : 'Light mode') : (lang === 'az' ? 'Tünd rejim' : 'Dark mode')}>
+        {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+      </button>
+    </>
+  );
 
   return (
-    <nav className="nav-shell" style={{
-      background: 'rgba(10,10,15,0.85)',
-      backdropFilter: 'blur(20px)',
-      borderBottom: '1px solid rgba(255,255,255,0.07)',
-      position: 'sticky', top: 0, zIndex: 100,
-      padding: '0 2rem'
-    }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', height: 64, gap: 40 }}>
-        {/* Logo */}
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 2, marginRight: 'auto' }}>
-          <span style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: -0.5 }}>bir</span>
-          <span style={{ fontSize: 22, fontWeight: 800, color: '#7C6EF8', letterSpacing: -0.5 }}>CV</span>
-        </Link>
-
-        {/* Nav links */}
-        <div className="nav-links" style={{ display: 'flex', gap: 32, flex: 1 }}>
-          {[
-            { href: '/#how', label: lang === 'az' ? 'Necə işləyir' : 'How it works' },
-            { href: '/templates', label: lang === 'az' ? 'Şablonlar' : 'Templates' },
-            { href: '/pricing', label: lang === 'az' ? 'Qiymət' : 'Pricing' },
-          ].map(link => (
-            <Link key={link.href} href={link.href} style={{
-              color: 'rgba(255,255,255,0.55)', textDecoration: 'none',
-              fontSize: 14, fontWeight: 500, transition: 'color 0.2s'
-            }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
-            >{link.label}</Link>
+    <header className={`sticky top-0 z-[100] border-b transition-colors duration-200 ${scrolled || open ? 'border-line bg-bg/85 backdrop-blur-xl' : 'border-transparent bg-bg/0'}`}>
+      <div className="section flex h-16 items-center gap-8">
+        <Logo />
+        <nav className="hidden flex-1 items-center gap-1 md:flex" aria-label="Main">
+          {links.map(l => (
+            <Link key={l.href} href={l.href}
+              className={`rounded-lg px-3 py-2 text-[0.875rem] font-medium transition-colors hover:bg-surface-2 hover:text-ink ${path === l.href ? 'text-ink' : 'text-ink-2'}`}>
+              {l.label}
+            </Link>
           ))}
-        </div>
+        </nav>
 
-        {/* Right side */}
-        <div className="nav-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          {/* Lang toggle */}
-          <button
-            className="nav-icon-btn"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-            style={{ background: 'none', border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)', borderRadius: 8, padding: '5px 10px', cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}
-          >
-            {theme === 'dark'
-              ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-              : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            }
-          </button>
-          <button
-            className="nav-lang-btn"
-            onClick={() => setLang(lang === 'az' ? 'en' : 'az')}
-            style={{
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 8, padding: '5px 12px', color: 'rgba(255,255,255,0.7)',
-              fontSize: 13, fontWeight: 600, cursor: 'pointer', letterSpacing: 0.5, flexShrink: 0
-            }}
-          >
-            {lang === 'az' ? 'AZ' : 'EN'} <span style={{ opacity: 0.4 }}>|</span> {lang === 'az' ? 'EN' : 'AZ'}
-          </button>
-
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          {Controls}
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span className="nav-username" style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>
-                {user.name}
-                {user.plan === 'premium' && (
-                  <span style={{ marginLeft: 6, background: '#7C6EF8', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>PRO</span>
-                )}
-                {user.plan === 'admin' && (
-                  <span style={{ marginLeft: 6, background: '#059669', color: '#fff', fontSize: 10, padding: '2px 6px', borderRadius: 4, fontWeight: 700 }}>ADMIN</span>
-                )}
-              </span>
-              <button onClick={() => setUser(null)} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontSize: 12, flexShrink: 0 }}>
-                {lang === 'az' ? 'Çıxış' : 'Logout'}
-              </button>
-            </div>
+            <>
+              <div className="flex items-center gap-2 pl-2 text-[0.875rem] font-medium text-ink-2">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-[0.8rem] font-bold text-primary" aria-hidden>{(user.name || user.email)[0]?.toUpperCase()}</span>
+                <span className="max-w-[120px] truncate">{user.name}</span>
+                {user.plan === 'premium' && <span className="badge-primary">PRO</span>}
+                {user.plan === 'admin' && <span className="badge-success">ADMIN</span>}
+              </div>
+              <button className="btn-ghost btn-icon" onClick={() => setUser(null)} aria-label={lang === 'az' ? 'Çıxış' : 'Log out'}><LogOut size={16} /></button>
+            </>
           ) : (
-            <div className="nav-auth-group" style={{ display: 'flex', gap: 10 }}>
-              <button className="nav-login-btn" onClick={() => { setAuthMode('login'); setShowAuthModal(true); }} style={{
-                background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
-                color: 'rgba(255,255,255,0.8)', borderRadius: 8, padding: '7px 16px',
-                fontSize: 13, fontWeight: 500, cursor: 'pointer', flexShrink: 0
-              }}>
-                {lang === 'az' ? 'Daxil Ol' : 'Login'}
-              </button>
-              <Link className="nav-cta-btn" href="/create" style={{
-                background: '#7C6EF8', color: '#fff', border: 'none',
-                borderRadius: 8, padding: '7px 18px', fontSize: 13, fontWeight: 600,
-                cursor: 'pointer', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, whiteSpace: 'nowrap'
-              }}>
-                {lang === 'az' ? 'CV Yarat' : 'Create CV'}<span className="nav-cta-arrow">→</span>
-              </Link>
-            </div>
+            <button className="btn-ghost" onClick={login}>{lang === 'az' ? 'Daxil ol' : 'Log in'}</button>
           )}
+          <Link href="/create" className="btn-primary">{lang === 'az' ? 'CV yarat' : 'Create CV'}<ArrowRight size={15} /></Link>
         </div>
+
+        <button className="btn-secondary btn-icon ml-auto md:hidden" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'}>
+          {open ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </div>
-    </nav>
+
+      {open && (
+        <div id="mobile-menu" className="animate-fade border-t border-line bg-bg md:hidden">
+          <div className="section flex flex-col gap-1 py-4">
+            {links.map(l => (
+              <Link key={l.href} href={l.href} className="rounded-lg px-3 py-3 text-[1rem] font-medium text-ink hover:bg-surface-2">{l.label}</Link>
+            ))}
+            <div className="my-2 h-px bg-line" />
+            <div className="flex items-center justify-between gap-2 px-1">{Controls}</div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {user ? (
+                <button className="btn-secondary col-span-2 h-11" onClick={() => { setUser(null); setOpen(false); }}><LogOut size={16} />{lang === 'az' ? 'Çıxış' : 'Log out'} · {user.name}</button>
+              ) : (
+                <button className="btn-secondary h-11" onClick={login}>{lang === 'az' ? 'Daxil ol' : 'Log in'}</button>
+              )}
+              <Link href="/create" className={`btn-primary h-11 ${user ? 'col-span-2' : ''}`}>{lang === 'az' ? 'CV yarat' : 'Create CV'}</Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

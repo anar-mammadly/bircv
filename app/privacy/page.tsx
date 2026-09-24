@@ -1,16 +1,15 @@
 'use client';
-import { CVProvider, useCVStore } from '@/app/store/cvStore';
+import { useCVStore } from '@/app/store/cvStore';
 import Navbar from '@/app/components/Navbar';
-import AuthModal from '@/app/components/AuthModal';
-import ChatWidget from '@/app/components/ChatWidget';
+import Footer from '@/app/components/Footer';
 import { SUPPORT_EMAIL } from '@/lib/config';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 10 }}>{title}</h2>
-      <div style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.65)', lineHeight: 1.75 }}>{children}</div>
-    </div>
+    <section className="mb-9">
+      <h2 className="t-h3 mb-2.5">{title}</h2>
+      <div className="text-[0.9375rem] leading-[1.75] text-ink-2">{children}</div>
+    </section>
   );
 }
 
@@ -19,16 +18,13 @@ function PrivacyInner() {
   const az = lang === 'az';
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f' }}>
+    <div className="min-h-dvh">
       <Navbar />
-      <AuthModal />
-      <ChatWidget />
-
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '56px 24px 80px' }}>
-        <h1 style={{ fontSize: 32, fontWeight: 900, color: '#fff', marginBottom: 8 }}>
+      <div className="section max-w-[760px] pb-20 pt-12 lg:pt-16">
+        <h1 className="t-h1 mb-2">
           {az ? 'Gizlilik Siyasəti' : 'Privacy Policy'}
         </h1>
-        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', marginBottom: 40 }}>
+        <p className="mb-10 text-small text-muted">
           {az ? 'Son yenilənmə: 2026' : 'Last updated: 2026'}
         </p>
 
@@ -55,14 +51,14 @@ function PrivacyInner() {
         </Section>
 
         <Section title={az ? '3. Məlumatların 3-cü tərəflərlə paylaşılması' : '3. Sharing data with third parties'}>
-          <div style={{ background: 'rgba(124,110,248,0.08)', border: '1px solid rgba(124,110,248,0.25)', borderRadius: 10, padding: '14px 16px' }}>
-            <strong style={{ color: '#a89ef8' }}>
+          <div className="rounded-xl border border-primary/25 bg-primary-soft px-4 py-3.5">
+            <strong className="text-primary">
               {az
                 ? 'Sizin açıq icazəniz olmadan məlumatlarınız heç bir 3-cü tərəflə paylaşılmır və satılmır.'
                 : 'Your data is never shared with or sold to any third party without your explicit consent.'}
             </strong>
           </div>
-          <p style={{ marginTop: 12 }}>
+          <p className="mt-3">
             {az
               ? 'Şəxsi məlumatlarınız tam konfidensial saxlanılır və kənar şəxslərə ötürülmür.'
               : 'Your personal data is kept fully confidential and is not disclosed to outside parties.'}
@@ -89,13 +85,14 @@ function PrivacyInner() {
 
         <Section title={az ? '7. Bizimlə əlaqə' : '7. Contact us'}>
           {az ? 'Gizlilik siyasəti ilə bağlı suallarınız üçün: ' : 'For any privacy-related questions: '}
-          <a href={`mailto:${SUPPORT_EMAIL}`} style={{ color: '#7C6EF8', textDecoration: 'none', fontWeight: 600 }}>{SUPPORT_EMAIL}</a>
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-primary hover:underline">{SUPPORT_EMAIL}</a>
         </Section>
       </div>
+      <Footer />
     </div>
   );
 }
 
 export default function PrivacyPage() {
-  return <CVProvider><PrivacyInner /></CVProvider>;
+  return <PrivacyInner />;
 }

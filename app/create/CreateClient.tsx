@@ -1,438 +1,252 @@
 'use client';
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
+import {
+  Download, Loader2, Check, Pencil, Palette, Eye, Sparkles, Lock, Cloud, CloudOff, FileText, ZoomIn, Moon, Sun, Info,
+} from 'lucide-react';
 import { useCVStore } from '@/app/store/cvStore';
-import Navbar from '@/app/components/Navbar';
 import CVForm from '@/app/components/CVForm';
-import CVPreview from '@/app/components/CVPreview';
-import TemplateSelector, { TEMPLATES } from '@/app/components/TemplateSelector';
-import AuthModal from '@/app/components/AuthModal';
+import CVDocument, { CVLayout } from '@/app/components/CVDocument';
+import FontPicker from '@/app/components/design/FontPicker';
+import TemplatePicker from '@/app/components/design/TemplatePicker';
 import ServicesPanel from '@/app/components/ServicesPanel';
-import ChatWidget from '@/app/components/ChatWidget';
-import { CVProvider } from '@/app/store/cvStore';
-import { t } from '@/app/store/translations';
+import Modal from '@/app/components/ui/Modal';
+import Logo from '@/app/components/ui/Logo';
+import { useToast } from '@/app/components/ui/Toaster';
+import { DEMO_CV_AZ, DEMO_CV_EN } from '@/lib/cv/demo';
+import { isPremiumTemplate, TEMPLATE_BY_ID } from '@/lib/cv/templates';
+import { exportCvPdf, cvFilename } from '@/lib/pdf/exportCv';
 import { CVData } from '@/app/types/cv';
-import { Eye, Lock, UserPlus, FileText, Pencil, Check } from 'lucide-react';
 
-const DEMO_CV_AZ: CVData = {
-  personal: {
-    firstName: 'Anar', lastName: 'Məmmədov', email: 'anar.memmedov@gmail.com',
-    phone: '+99451 123 45 67', city: 'Bakı', country: 'Azərbaycan',
-    jobTitle: 'QA Avtomasiya Mühəndisi', photo: '',
-    linkedin: 'linkedin.com/in/anarmammadly',
-    summary: 'Playwright, Selenium və Postman üzrə təcrübəli QA avtomasiya mühəndisi. Komanda daxilində səmərəli ünsiyyət və analitik yanaşma ilə layihələrin keyfiyyətini artırır.',
-  },
-  experience: [
-    { id:'e1', jobTitle:'QA Avtomasiya Mühəndisi', company:'Google',    city:'Bakı', country:'Azərbaycan', startMonth:'8', startYear:'2023', endMonth:'',  endYear:'',     current:true,  description:'Playwright və Selenium ilə test avtomatlaşdırma çərçivələri qurdu. Postman vasitəsilə API testlərini həyata keçirdi. GitHub üzərindən kod idarəetməsini təmin etdi.' },
-    { id:'e2', jobTitle:'QA Mühəndisi',            company:'Microsoft', city:'Bakı', country:'Azərbaycan', startMonth:'3', startYear:'2021', endMonth:'7',  endYear:'2023', current:false, description:'Avtomatlaşdırma sistemlərini inkişaf etdirərək səmərəliliyi artırdı. Komanda ilə Agile metodologiyası üzrə işlədi.' },
-    { id:'e3', jobTitle:'Kiçik QA Mühəndisi',      company:'Amazon',    city:'Bakı', country:'Azərbaycan', startMonth:'1', startYear:'2019', endMonth:'2',  endYear:'2021', current:false, description:'Müxtəlif relizlər üzrə QA problemlərinin həllinə cavabdeh oldu. Daxili müştəri sistemlərinin saxlanılmasını təmin etdi.' },
-  ],
-  education: [
-    { id:'edu1', institutionType:'university' as const, institutionTypeCustom:'', school:'ADA Universiteti',          degree:'Kompüter Elmləri, Magistr',      educationLevel:'Magistr',  city:'Bakı', country:'Azərbaycan', startYear:'2022', endYear:'2024' },
-    { id:'edu2', institutionType:'university' as const, institutionTypeCustom:'', school:'Bakı Dövlət Universiteti',  degree:'Tətbiqi Riyaziyyat, Bakalavr',    educationLevel:'Bakalavr', city:'Bakı', country:'Azərbaycan', startYear:'2015', endYear:'2019' },
-  ],
-  skills: ['Playwright', 'Selenium', 'Postman', 'RestAssured', 'GitHub', 'Agile/Scrum', 'SQL', 'JIRA'],
-  languages: [
-    { id:'l1', name:'Azərbaycan dili', level:'Ana dili' },
-    { id:'l2', name:'İngilis dili',    level:'B2' },
-    { id:'l3', name:'Rus dili',        level:'B1' },
-  ],
-  certificates: [
-    { id:'c1', name:'ISTQB Foundation Level',     issuer:'Coursera', year:'2022' },
-    { id:'c2', name:'Automation QA Certificate',  issuer:'Udemy',    year:'2023' },
-    { id:'c3', name:'AWS Cloud Practitioner',     issuer:'Amazon',   year:'2023' },
-  ],
-  trainings: [
-    { id:'t1', name:'QA Avtomasiya Bootcamp',     provider:'Narix Academy',              year:'2022', description:'Selenium, Playwright, TestNG' },
-    { id:'t2', name:'Qabaqcıl API Testi',          provider:'Test Automation University', year:'2023', description:'REST, GraphQL, Postman' },
-    { id:'t3', name:'Jenkins ilə CI/CD',           provider:'Udemy',                      year:'2023', description:'Jenkins, GitHub Actions' },
-  ],
-  additional: 'GitHub: github.com/anarmammadov',
-};
+type Tab = 'content' | 'design' | 'preview';
 
-const DEMO_CV_EN: CVData = {
-  personal: {
-    firstName: 'Anar', lastName: 'Mammadov', email: 'anar.mammadov@gmail.com',
-    phone: '+99451 123 45 67', city: 'Baku', country: 'Azerbaijan',
-    jobTitle: 'QA Automation Engineer', photo: '',
-    linkedin: 'linkedin.com/in/anarmammadly',
-    summary: 'Results-driven QA Automation Engineer experienced in Playwright, Selenium and Postman. Brings strong analytical thinking and effective collaboration to improve product quality.',
-  },
-  experience: [
-    { id:'e1', jobTitle:'QA Automation Engineer', company:'Google',    city:'Baku', country:'Azerbaijan', startMonth:'8', startYear:'2023', endMonth:'',  endYear:'',     current:true,  description:'Built test automation frameworks using Playwright and Selenium. Conducted API testing with Postman. Managed source control workflows through GitHub.' },
-    { id:'e2', jobTitle:'QA Engineer',            company:'Microsoft', city:'Baku', country:'Azerbaijan', startMonth:'3', startYear:'2021', endMonth:'7',  endYear:'2023', current:false, description:'Improved efficiency by developing and maintaining automation systems. Collaborated with cross-functional teams using Agile methodology.' },
-    { id:'e3', jobTitle:'Junior QA Engineer',     company:'Amazon',    city:'Baku', country:'Azerbaijan', startMonth:'1', startYear:'2019', endMonth:'2',  endYear:'2021', current:false, description:'Resolved QA issues across multiple product releases. Maintained and supported internal customer-facing systems.' },
-  ],
-  education: [
-    { id:'edu1', institutionType:'university' as const, institutionTypeCustom:'', school:'ADA University',         degree:"Computer Science, Master's",       educationLevel:"Master's",   city:'Baku', country:'Azerbaijan', startYear:'2022', endYear:'2024' },
-    { id:'edu2', institutionType:'university' as const, institutionTypeCustom:'', school:'Baku State University',  degree:"Applied Mathematics, Bachelor's",  educationLevel:"Bachelor's", city:'Baku', country:'Azerbaijan', startYear:'2015', endYear:'2019' },
-  ],
-  skills: ['Playwright', 'Selenium', 'Postman', 'RestAssured', 'GitHub', 'Agile/Scrum', 'SQL', 'JIRA'],
-  languages: [
-    { id:'l1', name:'Azerbaijani', level:'Native' },
-    { id:'l2', name:'English',     level:'B2' },
-    { id:'l3', name:'Russian',     level:'B1' },
-  ],
-  certificates: [
-    { id:'c1', name:'ISTQB Foundation Level',    issuer:'Coursera', year:'2022' },
-    { id:'c2', name:'Automation QA Certificate', issuer:'Udemy',    year:'2023' },
-    { id:'c3', name:'AWS Cloud Practitioner',    issuer:'Amazon',   year:'2023' },
-  ],
-  trainings: [
-    { id:'t1', name:'QA Automation Bootcamp',   provider:'Narix Academy',              year:'2022', description:'Selenium, Playwright, TestNG' },
-    { id:'t2', name:'Advanced API Testing',     provider:'Test Automation University', year:'2023', description:'REST, GraphQL, Postman' },
-    { id:'t3', name:'CI/CD with Jenkins',       provider:'Udemy',                      year:'2023', description:'Jenkins, GitHub Actions' },
-  ],
-  additional: 'GitHub: github.com/anarmammadov',
-};
+function isEmptyCv(d: CVData) {
+  const p = d.personal;
+  return !(p.firstName || p.lastName || p.jobTitle || p.summary || p.email || d.experience.length || d.education.length || d.skills.length
+    || d.languages.length || (d.certificates || []).length || (d.trainings || []).length || (d.projects || []).length || (d.customSections || []).length || d.additional);
+}
 
-function CreatePageInner() {
-  const { cvData, setCVData, selectedTemplate, lang, user, setUser, setShowAuthModal, setAuthMode } = useCVStore();
-  // previewRef — həm önizləmə, həm PDF capture üçün istifadə olunur
-  const previewRef = useRef<HTMLDivElement>(null);
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [pdfSuccess, setPdfSuccess] = useState(false);
-  const [showLimitModal, setShowLimitModal] = useState(false);
-  const [showPremiumModal, setShowPremiumModal] = useState(false);
-  const [demoActive, setDemoActive] = useState(false);
-  const [mobileTab, setMobileTab] = useState<'form' | 'preview'>('form');
-  const [isMobile, setIsMobile] = useState(false);
-  const tr = t[lang];
+const SIZES = [{ v: 0.94, l: 'S' }, { v: 1, l: 'M' }, { v: 1.06, l: 'L' }];
 
+export default function CreateClient() {
+  const {
+    cvData, setCVData, selectedTemplate, setSelectedTemplate, cvSettings, setCvSettings, lang, setLang, theme, setTheme,
+    user, setUser, setShowAuthModal, setAuthMode, saveState, lastSaved,
+  } = useCVStore();
+  const { toast } = useToast();
+  const az = lang === 'az';
+  const layoutRef = useRef<CVLayout | null>(null);
+  const [tab, setTab] = useState<Tab>('content');
+  const [pages, setPages] = useState(1);
+  const [zoom, setZoom] = useState<'fit' | 'full'>('fit');
+  const [pdf, setPdf] = useState<'idle' | 'preparing' | 'done'>('idle');
+  const [limitModal, setLimitModal] = useState(false);
+  const [premiumModal, setPremiumModal] = useState(false);
+  const [sidebarTab, setSidebarTab] = useState<'content' | 'design'>('content');
+
+  // /templates → /create?template=<id>
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 900);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    const id = new URLSearchParams(window.location.search).get('template');
+    if (id && TEMPLATE_BY_ID[id as keyof typeof TEMPLATE_BY_ID]) setSelectedTemplate(id as any);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLoadDemo = () => {
-    setCVData(lang === 'az' ? DEMO_CV_AZ : DEMO_CV_EN);
-    setDemoActive(true);
-    setTimeout(() => setDemoActive(false), 2000);
-  };
+  const empty = useMemo(() => isEmptyCv(cvData), [cvData]);
+  // Empty editor → sample content. A photo the user already uploaded always replaces the default sample photo.
+  const shown = useMemo(() => {
+    if (!empty) return cvData;
+    const demo = az ? DEMO_CV_AZ : DEMO_CV_EN;
+    return { ...demo, personal: { ...demo.personal, photo: cvData.personal.photo || demo.personal.photo } };
+  }, [empty, cvData, az]);
+  const isPro = user?.plan === 'premium' || user?.plan === 'admin';
+
+  // mobile tab ↔ desktop sidebar tab
+  const setMobileTab = (t: Tab) => { setTab(t); if (t !== 'preview') setSidebarTab(t); };
 
   const registerDownload = () => {
-    // DB-də CV sayını artır
-    fetch('/api/cv-download', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user!.id }),
-    })
-      .then(r => r.json())
-      .then(data => { if (data.ok) setUser({ ...user!, cvCount: data.cvCount }); })
-      .catch(() => setUser({ ...user!, cvCount: user!.cvCount + 1 }));
-
-    setPdfSuccess(true);
-    setTimeout(() => setPdfSuccess(false), 2500);
+    if (!user) return;
+    fetch('/api/cv-download', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) })
+      .then(r => r.json()).then(d => { if (d.ok) setUser({ ...user, cvCount: d.cvCount }); })
+      .catch(() => setUser({ ...user, cvCount: user.cvCount + 1 }));
   };
 
-  const isMobileDevice = () =>
-    typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  // ── Mobil (iOS/Android): birbaşa A4 PDF generasiya edib yükləyir, native print
-  // dialoqundan istifadə etmir (ikisində də çap interfeysi qeyri-sabit/səliqəsizdir) ──
-  const handleDownloadMobile = async () => {
-    const el = previewRef.current;
-    if (!el) return;
-    setPdfLoading(true);
-    // Clone into a detached node (like the desktop print path) instead of mutating the live
-    // React-controlled ref directly — React re-renders (triggered by setPdfLoading above) would
-    // otherwise reset any inline style we set on it back to its original off-screen position.
-    const clone = el.cloneNode(true) as HTMLElement;
-    clone.id = '__cv_mobile_pdf_root__';
-    clone.style.cssText = `position:absolute;top:${window.scrollY}px;left:${window.scrollX}px;visibility:visible;z-index:9998;pointer-events:none;`;
-    document.body.appendChild(clone);
-    try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import('html2canvas'),
-        import('jspdf'),
-      ]);
-      if (typeof document !== 'undefined' && 'fonts' in document) await document.fonts.ready;
-      const pages = Array.from(clone.querySelectorAll<HTMLElement>('.__print_page'));
-      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-      for (let i = 0; i < pages.length; i++) {
-        const canvas = await html2canvas(pages[i], { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        if (i > 0) pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-      }
-      const fn = cvData.personal.firstName.trim();
-      const ln = cvData.personal.lastName.trim();
-      const filename = ([fn, ln].filter(Boolean).join('-') || 'CV') + '-bircv.az.pdf';
-      pdf.save(filename);
-      registerDownload();
-    } finally {
-      document.body.removeChild(clone);
-      setPdfLoading(false);
-    }
-  };
-
-  // ── Desktop: brauzerin native çap dialoqu (Save as PDF) ──
-  const handleDownloadDesktop = () => {
-    const el = previewRef.current;
-    if (!el) return;
-
-    // CVPreview artıq previewRef daxilində nəzarət olunan səhifə sayı qədər,
-    // hər biri dəqiq 210mm×297mm ölçüdə, overflow:hidden olan səhifə qutuları render edir
-    // (ekranda göstərilən "vərəq-vərəq" önizləmə ilə tam eyni sayda). Çapda brauzerin öz
-    // pagination alqoritminə güvənmirik — bu, ekranla çap nəticəsi arasında uyğunsuzluq
-    // (məs. boş 2-ci səhifə) yaranmasının qarşısını tam kəsir.
-    const clone = el.cloneNode(true) as HTMLElement;
-    clone.id = '__cv_print_root__';
-    clone.style.cssText = 'position:absolute;top:0;left:0;visibility:visible;';
-    document.body.appendChild(clone);
-
-    const style = document.createElement('style');
-    style.id = '__cv_print_style__';
-    style.textContent = [
-      '@media print {',
-      '  @page { size:A4; margin:0; }',
-      '  html, body { margin:0!important; padding:0!important; }',
-      '  body > *:not(#__cv_print_root__) { display:none!important; }',
-      '  #__cv_print_root__ { display:block!important; position:absolute!important; top:0!important; left:0!important; visibility:visible!important; }',
-      '  #__cv_print_root__ .__print_page { break-inside:avoid; }',
-      '  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }',
-      '}',
-    ].join('\n');
-    document.head.appendChild(style);
-
-    // PDF fayl adı: "Ad-Soyad-bircv.az"
-    const fn = cvData.personal.firstName.trim();
-    const ln = cvData.personal.lastName.trim();
-    const prevTitle = document.title;
-    if (fn || ln) {
-      document.title = [fn, ln].filter(Boolean).join('-') + '-bircv.az';
-    }
-
-    window.print();
-    document.title = prevTitle;
-
-    document.body.removeChild(clone);
-    const s = document.getElementById('__cv_print_style__');
-    if (s) s.remove();
-
-    registerDownload();
-  };
-
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!user) { setAuthMode('register'); setShowAuthModal(true); return; }
-    if (user.plan !== 'admin' && user.plan === 'free' && user.cvCount >= 2) {
-      setShowLimitModal(true);
-      return;
+    if (user.plan === 'free' && user.cvCount >= 2) { setLimitModal(true); return; }
+    if (isPremiumTemplate(selectedTemplate) && !isPro) { setPremiumModal(true); return; }
+    if (empty) { toast({ kind: 'info', title: az ? 'Əvvəlcə məlumatlarınızı əlavə edin' : 'Add your details first' }); setMobileTab('content'); return; }
+    if (!layoutRef.current) { toast({ kind: 'error', title: az ? 'Önizləmə hələ hazır deyil' : 'Preview is not ready yet' }); return; }
+    setPdf('preparing');
+    try {
+      await exportCvPdf(layoutRef.current, cvFilename(cvData.personal.firstName, cvData.personal.lastName));
+      registerDownload();
+      setPdf('done');
+      toast({ kind: 'success', title: az ? 'CV-niz hazırdır' : 'Your CV is ready', description: az ? 'PDF faylı yükləndi.' : 'The PDF has been downloaded.' });
+      setTimeout(() => setPdf('idle'), 2200);
+    } catch (e) {
+      console.error('[pdf]', e);
+      setPdf('idle');
+      toast({ kind: 'error', title: az ? 'PDF yaradıla bilmədi' : 'Could not generate the PDF', description: az ? 'Zəhmət olmasa yenidən cəhd edin.' : 'Please try again.' });
     }
-    // Premium şablon yalnız premium/admin plana sahib istifadəçilər üçün yüklənə bilər —
-    // selectedTemplate UI-da seçilə bilsə də (önizləmə üçün), endirmə anında yenidən yoxlanılır.
-    const isPremiumTemplate = TEMPLATES.find(t => t.id === selectedTemplate)?.premium;
-    if (isPremiumTemplate && user.plan !== 'premium' && user.plan !== 'admin') {
-      setShowPremiumModal(true);
-      return;
-    }
+  };
 
-    if (isMobileDevice()) {
-      handleDownloadMobile();
-    } else {
-      handleDownloadDesktop();
-    }
-  }
+  // The sample never overwrites a photo the user has already uploaded.
+  const loadSample = () => { const demo = az ? DEMO_CV_AZ : DEMO_CV_EN; setCVData({ ...demo, personal: { ...demo.personal, photo: cvData.personal.photo || demo.personal.photo } }); toast({ kind: 'success', title: az ? 'Nümunə yükləndi' : 'Sample loaded' }); };
 
-  // ── Shared top bar ────────────────────────────────────────────────────────
-  const TopBar = () => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 16 }}>
-      <h1 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: 0 }}>
-        {lang === 'az' ? 'CV Məlumatları' : 'CV Details'}
-      </h1>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-        <button onClick={handleLoadDemo} style={{
-          background: demoActive ? 'rgba(5,150,105,0.2)' : 'rgba(255,214,10,0.1)',
-          border: `1px solid ${demoActive ? 'rgba(5,150,105,0.5)' : 'rgba(255,214,10,0.35)'}`,
-          color: demoActive ? '#059669' : '#FFD60A',
-          borderRadius: 8, padding: '6px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, transition: 'all 0.3s',
-        }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            {demoActive ? <Check size={13} /> : <Eye size={13} />}
-            {demoActive ? (lang === 'az' ? 'Yükləndi!' : 'Loaded!') : (lang === 'az' ? 'Nümunəyə bax' : 'Load demo')}
-          </span>
-        </button>
-        {!user && (
-          <button onClick={() => { setAuthMode('register'); setShowAuthModal(true); }}
-            style={{ background: 'rgba(124,110,248,0.15)', border: '1px solid rgba(124,110,248,0.3)', color: '#a89ef8', borderRadius: 8, padding: '6px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 600 }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><UserPlus size={13} />{lang === 'az' ? 'Qeydiyyat' : 'Register'}</span>
-          </button>
-        )}
-      </div>
-    </div>
+  // "saved 2 min ago" ticker
+  const [, tick] = useState(0);
+  useEffect(() => { const id = setInterval(() => tick(x => x + 1), 30000); return () => clearInterval(id); }, []);
+  const savedLabel = () => {
+    if (saveState === 'saving') return az ? 'Saxlanılır…' : 'Saving…';
+    if (saveState === 'error') return az ? 'Yadda saxlanmadı' : 'Not saved';
+    if (!lastSaved) return az ? 'Avtomatik saxlanır' : 'Autosaves';
+    const m = Math.floor((Date.now() - lastSaved) / 60000);
+    return m < 1 ? (az ? 'Saxlandı' : 'Saved') : (az ? `${m} dəq əvvəl saxlandı` : `Saved ${m} min ago`);
+  };
+
+  const downloadLabel = pdf === 'preparing' ? (az ? 'PDF hazırlanır…' : 'Generating PDF…') : pdf === 'done' ? (az ? 'Hazırdır' : 'Done') : (az ? 'PDF yüklə' : 'Download PDF');
+  const DownloadBtn = ({ className = '' }: { className?: string }) => (
+    <button onClick={handleDownload} disabled={pdf === 'preparing'} className={`btn-primary ${className}`} aria-live="polite">
+      {pdf === 'preparing' ? <Loader2 size={16} className="spin" /> : pdf === 'done' ? <Check size={16} /> : <Download size={16} />}
+      <span>{downloadLabel}</span>
+    </button>
   );
 
-  // ── Mobile tab switcher ───────────────────────────────────────────────────
-  const MobileTabs = () => (
-    <div style={{ display: 'flex', background: 'rgba(255,255,255,0.06)', borderRadius: 10, padding: 4, gap: 4, marginBottom: 16 }}>
-      {(['form', 'preview'] as const).map(tab => (
-        <button key={tab} onClick={() => setMobileTab(tab)} style={{
-          flex: 1, padding: '9px 0', borderRadius: 7, border: 'none', cursor: 'pointer',
-          fontSize: 13, fontWeight: 700, transition: 'all 0.2s',
-          background: mobileTab === tab ? '#7C6EF8' : 'transparent',
-          color: mobileTab === tab ? '#fff' : 'rgba(255,255,255,0.45)',
-        }}>
-          {tab === 'form'
-            ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Pencil size={13} />{lang === 'az' ? 'Məlumat' : 'Form'}</span>
-            : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Eye size={13} />{lang === 'az' ? 'Önizləmə' : 'Preview'}</span>}
-        </button>
-      ))}
-    </div>
-  );
+  const tabs: { id: Tab; label: string; icon: typeof Pencil }[] = [
+    { id: 'content', label: az ? 'Məzmun' : 'Content', icon: Pencil },
+    { id: 'design', label: az ? 'Dizayn' : 'Design', icon: Palette },
+    { id: 'preview', label: az ? 'Önizləmə' : 'Preview', icon: Eye },
+  ];
 
-  // ── Preview panel ─────────────────────────────────────────────────────────
-  const PreviewPanel = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#fff', margin: 0 }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}><FileText size={15} />{lang === 'az' ? 'Önizləmə' : 'Preview'}</span>
-        </h2>
-        <button onClick={handleDownload} disabled={pdfLoading} style={{
-          background: pdfSuccess ? '#059669' : '#7C6EF8', color: '#fff', border: 'none',
-          borderRadius: 10, padding: '9px 18px', cursor: pdfLoading ? 'wait' : 'pointer',
-          fontSize: 13, fontWeight: 700, transition: 'all 0.3s',
-        }}>
-          {pdfSuccess
-            ? (lang === 'az' ? '✓ Hazırdır!' : '✓ Done!')
-            : pdfLoading
-              ? (lang === 'az' ? 'Hazırlanır...' : 'Generating...')
-              : tr.downloadPDF}
-        </button>
-      </div>
-      {!user && (
-        <div style={{ background: 'rgba(124,110,248,0.1)', border: '1px solid rgba(124,110,248,0.25)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <Lock size={15} style={{ color: '#a89ef8', flexShrink: 0 }} />
-          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', flex: 1 }}>
-            {lang === 'az' ? 'PDF yükləmək üçün qeydiyyatdan keçin' : 'Register to download PDF'}
-          </span>
-          <button onClick={() => { setAuthMode('register'); setShowAuthModal(true); }}
-            style={{ background: '#7C6EF8', color: '#fff', border: 'none', borderRadius: 6, padding: '5px 12px', cursor: 'pointer', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-            {lang === 'az' ? 'Qeydiyyat' : 'Sign Up'}
-          </button>
-        </div>
-      )}
-      <TemplateSelector />
-      <CVPreview data={cvData} template={selectedTemplate} lang={lang} previewRef={previewRef} />
-    </div>
-  );
-
-  // ── Limit modal ──────────────────────────────────────────────────────────
-  const limitModal = showLimitModal && (
-    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'0 16px' }}>
-      <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, padding:32, maxWidth:400, width:'100%', textAlign:'center' }}>
-        <div style={{ width:56, height:56, borderRadius:'50%', background:'rgba(124,110,248,0.15)', border:'2px solid rgba(124,110,248,0.3)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7C6EF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/>
-          </svg>
-        </div>
-        <h2 style={{ color:'#fff', fontSize:20, fontWeight:800, margin:'0 0 10px' }}>
-          {lang==='az' ? 'CV limitinə çatdınız' : 'CV limit reached'}
-        </h2>
-        <p style={{ color:'rgba(255,255,255,0.55)', fontSize:14, lineHeight:1.6, margin:'0 0 24px' }}>
-          {lang==='az'
-            ? 'Pulsuz planda 2 CV yükləmək mümkündür. Limitsiz CV üçün Premium plana keçin.'
-            : 'Free plan allows 2 CV downloads. Upgrade to Premium for unlimited CVs.'}
-        </p>
-        <a href="/pricing" style={{ display:'block', background:'#7C6EF8', color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', marginBottom:12 }}>
-          {lang==='az' ? '✨ Premium-a keç' : '✨ Upgrade to Premium'}
-        </a>
-        <button onClick={()=>setShowLimitModal(false)} style={{ background:'transparent', border:'1px solid rgba(255,255,255,0.15)', color:'rgba(255,255,255,0.5)', borderRadius:12, padding:'11px 0', fontSize:14, cursor:'pointer', width:'100%' }}>
-          {lang==='az' ? 'Bağla' : 'Close'}
-        </button>
-      </div>
-    </div>
-  );
-
-  // ── Premium şablon modal ────────────────────────────────────────────────────
-  const premiumModal = showPremiumModal && (
-    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'0 16px' }}>
-      <div style={{ background:'#111118', border:'1px solid rgba(255,255,255,0.1)', borderRadius:20, padding:32, maxWidth:400, width:'100%', textAlign:'center' }}>
-        <div style={{ width:56, height:56, borderRadius:'50%', background:'rgba(255,214,10,0.12)', border:'2px solid rgba(255,214,10,0.3)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px' }}>
-          <Lock size={24} style={{ color: '#FFD60A' }} />
-        </div>
-        <h2 style={{ color:'#fff', fontSize:20, fontWeight:800, margin:'0 0 10px' }}>
-          {lang==='az' ? 'Bu şablon Premium-dur' : 'This template is Premium'}
-        </h2>
-        <p style={{ color:'rgba(255,255,255,0.55)', fontSize:14, lineHeight:1.6, margin:'0 0 24px' }}>
-          {lang==='az'
-            ? 'Bu şablonla CV yükləmək üçün Premium plana keçməlisiniz. Pulsuz plan üçün başqa şablon seçin.'
-            : 'Downloading with this template requires Premium. Choose a free template, or upgrade.'}
-        </p>
-        <a href="/pricing" style={{ display:'block', background:'#7C6EF8', color:'#fff', borderRadius:12, padding:'13px 0', fontSize:15, fontWeight:700, textDecoration:'none', marginBottom:12 }}>
-          {lang==='az' ? '✨ Premium-a keç' : '✨ Upgrade to Premium'}
-        </a>
-        <button onClick={()=>setShowPremiumModal(false)} style={{ background:'transparent', border:'1px solid rgba(255,255,255,0.15)', color:'rgba(255,255,255,0.5)', borderRadius:12, padding:'11px 0', fontSize:14, cursor:'pointer', width:'100%' }}>
-          {lang==='az' ? 'Bağla' : 'Close'}
-        </button>
-      </div>
-    </div>
-  );
-
-  // ── PDF generasiya overlay (mobil) ──────────────────────────────────────────
-  const pdfOverlay = pdfLoading && (
-    <div style={{ position: 'fixed', inset: 0, background: '#0a0a0f', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, zIndex: 9999 }}>
-      <div style={{ width: 40, height: 40, border: '3px solid rgba(124,110,248,0.25)', borderTopColor: '#7C6EF8', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
-      <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, fontWeight: 600, margin: 0 }}>
-        {lang === 'az' ? 'PDF hazırlanır...' : 'Generating PDF...'}
-      </p>
-    </div>
-  );
-
-  // ── Mobile layout ─────────────────────────────────────────────────────────
-  if (isMobile) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#0a0a0f' }}>
-        <Navbar />
-        <AuthModal />
-        <ChatWidget />
-        {limitModal}
-        {premiumModal}
-        {pdfOverlay}
-        <div style={{ padding: '16px 14px' }}>
-          {TopBar()}
-          {MobileTabs()}
-          {mobileTab === 'form' ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <CVForm />
-              <ServicesPanel />
-            </div>
-          ) : (
-            PreviewPanel()
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  // ── Desktop layout ────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0f' }}>
-      <Navbar />
-      <AuthModal />
-      <ChatWidget />
-      {limitModal}
-      {premiumModal}
-      {pdfOverlay}
-      <div style={{
-        maxWidth: 1440, margin: '0 auto', padding: '24px 20px',
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-        gap: 24, alignItems: 'start',
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {TopBar()}
-          <CVForm />
-          <ServicesPanel />
+    <div className="flex h-dvh flex-col overflow-hidden bg-bg">
+      {/* ── app bar ── */}
+      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line bg-surface px-3 sm:px-5">
+        <Logo />
+        <div className="hidden items-center gap-2 text-small text-muted sm:flex" aria-live="polite">
+          <span className="mx-1 h-4 w-px bg-line" />
+          {saveState === 'error' ? <CloudOff size={14} className="text-warning" /> : saveState === 'saving' ? <Loader2 size={14} className="spin" /> : <Cloud size={14} />}
+          <span className={saveState === 'error' ? 'text-warning' : ''}>{savedLabel()}</span>
         </div>
-        <div style={{ position: 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {PreviewPanel()}
+        <div className="ml-auto flex items-center gap-2">
+          <div className="seg hidden sm:inline-flex" role="group" aria-label="Language">
+            {(['az', 'en'] as const).map(l => <button key={l} aria-pressed={lang === l} onClick={() => setLang(l)}>{l.toUpperCase()}</button>)}
+          </div>
+          <button className="btn-ghost btn-icon sm:hidden" onClick={() => setLang(az ? 'en' : 'az')} aria-label="Language"><span className="text-[0.75rem] font-bold">{lang.toUpperCase()}</span></button>
+          <button className="btn-secondary btn-icon hidden sm:inline-flex" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Theme">{theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}</button>
+          {!user && <button className="btn-ghost hidden md:inline-flex" onClick={() => { setAuthMode('login'); setShowAuthModal(true); }}>{az ? 'Daxil ol' : 'Log in'}</button>}
+          <DownloadBtn />
         </div>
+      </header>
+
+      <div className="flex min-h-0 flex-1">
+        {/* ── editor sidebar ── */}
+        <aside className={`${tab === 'preview' ? 'hidden' : 'flex'} min-h-0 w-full flex-col border-r border-line bg-bg lg:flex lg:w-[440px] lg:shrink-0 xl:w-[480px]`}>
+          <div className="hidden shrink-0 border-b border-line px-4 py-3 lg:block">
+            <div className="seg w-full" role="tablist">
+              {(['content', 'design'] as const).map(t => (
+                <button key={t} role="tab" aria-selected={sidebarTab === t} onClick={() => setSidebarTab(t)} className="flex-1">
+                  {t === 'content' ? (az ? 'Məzmun' : 'Content') : (az ? 'Dizayn' : 'Design')}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-28 pt-4 lg:pb-8" key={sidebarTab}>
+            <div className="animate-rise">
+              {sidebarTab === 'content' ? (
+                <div className="flex flex-col gap-3">
+                  {empty && (
+                    <div className="card-flat flex items-center gap-3 border-primary/30 bg-primary-soft/50 p-4">
+                      <Sparkles size={18} className="shrink-0 text-primary" aria-hidden />
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[0.875rem] font-semibold text-ink">{az ? 'Boş CV' : 'Blank CV'}</div>
+                        <div className="text-small text-ink-2">{az ? 'Formu doldurun və ya nümunə ilə başlayın.' : 'Fill in the form, or start from a sample.'}</div>
+                      </div>
+                      <button onClick={loadSample} className="btn-secondary btn-sm shrink-0">{az ? 'Nümunə yüklə' : 'Load sample'}</button>
+                    </div>
+                  )}
+                  <CVForm />
+                  <ServicesPanel />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-7">
+                  <DesignBlock title={az ? 'Şablon' : 'Template'}>
+                    <TemplatePicker value={selectedTemplate} onChange={setSelectedTemplate} lang={lang} font={cvSettings.font} isPro={!!isPro} />
+                  </DesignBlock>
+                  <DesignBlock title={az ? 'Şrift' : 'Font'} hint={az ? 'Seçim CV-yə və PDF-ə dərhal tətbiq olunur' : 'Applies instantly to the CV and the PDF'}>
+                    <FontPicker value={cvSettings.font} onChange={f => setCvSettings({ font: f })} lang={lang} />
+                  </DesignBlock>
+                  <DesignBlock title={az ? 'Mətn ölçüsü' : 'Text size'}>
+                    <div className="seg" role="group" aria-label={az ? 'Mətn ölçüsü' : 'Text size'}>
+                      {SIZES.map(s => <button key={s.v} aria-pressed={cvSettings.textScale === s.v} onClick={() => setCvSettings({ textScale: s.v })} className="w-14">{s.l}</button>)}
+                    </div>
+                  </DesignBlock>
+                </div>
+              )}
+            </div>
+          </div>
+        </aside>
+
+        {/* ── preview ── */}
+        <main className={`${tab === 'preview' ? 'flex' : 'hidden'} min-h-0 min-w-0 flex-1 flex-col bg-surface-2 lg:flex`}>
+          <div className="flex h-12 shrink-0 items-center gap-3 border-b border-line bg-surface/70 px-4 backdrop-blur">
+            <span className="flex items-center gap-2 text-small font-medium text-ink-2"><FileText size={15} />{az ? 'A4 önizləmə' : 'A4 preview'} · {pages} {az ? 'səhifə' : pages === 1 ? 'page' : 'pages'}</span>
+            <div className="seg ml-auto" role="group" aria-label="Zoom">
+              <button aria-pressed={zoom === 'fit'} onClick={() => setZoom('fit')}>{az ? 'Sığdır' : 'Fit'}</button>
+              <button aria-pressed={zoom === 'full'} onClick={() => setZoom('full')}><ZoomIn size={14} className="mr-1 inline" />100%</button>
+            </div>
+          </div>
+          <div className="min-h-0 flex-1 overflow-auto px-3 py-5 pb-32 sm:px-8 lg:pb-8">
+            {empty && (
+              <div className="mx-auto mb-4 flex max-w-[794px] items-center gap-2 rounded-xl border border-primary/25 bg-primary-soft px-3.5 py-2.5 text-small text-primary" role="status">
+                <Info size={15} className="shrink-0" />{az ? 'Bu, nümunə məzmundur. Yazmağa başlayanda CV-niz burada görünəcək.' : 'This is sample content. Your CV appears here as you type.'}
+              </div>
+            )}
+            <div className="mx-auto transition-[max-width] duration-300 ease-out" style={{ width: '100%', maxWidth: zoom === 'full' ? 794 : 860, minWidth: zoom === 'full' ? 794 : 0 }}>
+              <CVDocument data={shown} template={selectedTemplate} lang={lang} font={cvSettings.font} textScale={cvSettings.textScale}
+                layoutRef={layoutRef} onLayout={l => setPages(l.pages)} />
+            </div>
+          </div>
+        </main>
       </div>
+
+      {/* ── mobile bottom navigation ── */}
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden" aria-label="Editor">
+        <div className="grid grid-cols-3">
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setMobileTab(t.id)} aria-current={tab === t.id ? 'page' : undefined}
+              className={`relative flex h-14 flex-col items-center justify-center gap-0.5 text-[0.6875rem] font-semibold transition-colors ${tab === t.id ? 'text-primary' : 'text-muted'}`}>
+              <t.icon size={19} aria-hidden />{t.label}
+              {tab === t.id && <span className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-primary" />}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* ── gating modals ── */}
+      <Modal open={limitModal} onClose={() => setLimitModal(false)} title={az ? 'CV limitinə çatdınız' : 'CV limit reached'}>
+        <p className="mb-5 text-body text-ink-2">{az ? 'Pulsuz planda 2 CV yükləmək mümkündür. Limitsiz CV və bütün şablonlar üçün Premium plana keçin.' : 'The free plan includes 2 CV downloads. Upgrade to Premium for unlimited CVs and every template.'}</p>
+        <Link href="/pricing" className="btn-primary btn-lg w-full"><Sparkles size={16} />{az ? 'Premium-a keç' : 'Upgrade to Premium'}</Link>
+      </Modal>
+      <Modal open={premiumModal} onClose={() => setPremiumModal(false)} title={az ? 'Bu şablon Premium-dur' : 'This template is Premium'}>
+        <p className="mb-5 text-body text-ink-2">{az ? 'Bu şablonla PDF yükləmək üçün Premium lazımdır. Önizləməni pulsuz görə bilərsiniz — və ya pulsuz şablon seçin.' : 'Downloading with this template needs Premium. Previewing is free — or pick a free template.'}</p>
+        <div className="grid gap-2">
+          <Link href="/pricing" className="btn-primary btn-lg"><Lock size={15} />{az ? 'Premium-a keç' : 'Upgrade to Premium'}</Link>
+          <button className="btn-secondary btn-lg" onClick={() => { setPremiumModal(false); setMobileTab('design'); }}>{az ? 'Pulsuz şablon seç' : 'Choose a free template'}</button>
+        </div>
+      </Modal>
     </div>
   );
 }
 
-export default function CreateClient() {
-  return <CVProvider><CreatePageInner /></CVProvider>;
+function DesignBlock({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <div className="mb-3">
+        <h3 className="t-h3 text-[1.05rem]">{title}</h3>
+        {hint && <p className="mt-0.5 text-small text-muted">{hint}</p>}
+      </div>
+      {children}
+    </section>
+  );
 }

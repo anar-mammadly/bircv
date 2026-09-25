@@ -104,7 +104,7 @@ export default function HomeClient() {
                   <div className="mt-5 grid gap-1.5">
                     {CV_FONT_OPTIONS.map(f => (
                       <div key={f.id} className="flex items-baseline justify-between gap-3 rounded-lg bg-bg px-3 py-2 text-ink" style={{ fontFamily: `"${f.css}"` }}>
-                        <span className="font-semibold">{f.name}</span><span className="hidden truncate text-small text-muted sm:block">Əə Ğğ İı Şş — 1234</span>
+                        <span className="font-semibold">{f.name}</span>
                       </div>
                     ))}
                   </div>

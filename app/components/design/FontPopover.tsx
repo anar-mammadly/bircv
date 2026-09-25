@@ -55,7 +55,7 @@ export default function FontPopover({ value, onChange, lang }: { value: CVFontId
                 className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-surface-2 focus-visible:bg-surface-2 ${sel ? 'bg-primary-soft/60' : ''}`}>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[0.95rem] font-semibold leading-tight text-ink" style={style}>{o.name}</span>
-                  <span className="mt-0.5 block truncate text-caption text-muted" style={style}>{o.css ? 'Əə Ğğ İı Öö Şş Üü Çç 0123' : o.note}</span>
+                  {!o.css && <span className="mt-0.5 block truncate text-caption text-muted">{o.note}</span>}
                 </span>
                 <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full ${sel ? 'bg-primary text-on-primary' : 'text-transparent'}`} aria-hidden><Check size={12} strokeWidth={3} /></span>
               </button>

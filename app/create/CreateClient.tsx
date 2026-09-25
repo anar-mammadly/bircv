@@ -7,7 +7,7 @@ import {
 import { useCVStore } from '@/app/store/cvStore';
 import CVForm from '@/app/components/CVForm';
 import CVDocument, { CVLayout } from '@/app/components/CVDocument';
-import FontPicker from '@/app/components/design/FontPicker';
+import FontPopover from '@/app/components/design/FontPopover';
 import TemplatePicker from '@/app/components/design/TemplatePicker';
 import ServicesPanel from '@/app/components/ServicesPanel';
 import Modal from '@/app/components/ui/Modal';
@@ -187,11 +187,8 @@ export default function CreateClient() {
                 </div>
               ) : (
                 <div className="flex flex-col gap-7">
-                  <DesignBlock title={az ? 'Şablon' : 'Template'}>
+                  <DesignBlock title={az ? 'Şablon' : 'Template'} action={<FontPopover value={cvSettings.font} onChange={f => setCvSettings({ font: f })} lang={lang} />}>
                     <TemplatePicker value={selectedTemplate} onChange={setSelectedTemplate} lang={lang} font={cvSettings.font} isPro={!!isPro} />
-                  </DesignBlock>
-                  <DesignBlock title={az ? 'Şrift' : 'Font'} hint={az ? 'Seçim CV-yə və PDF-ə dərhal tətbiq olunur' : 'Applies instantly to the CV and the PDF'}>
-                    <FontPicker value={cvSettings.font} onChange={f => setCvSettings({ font: f })} lang={lang} />
                   </DesignBlock>
                   <DesignBlock title={az ? 'Mətn ölçüsü' : 'Text size'}>
                     <div className="seg" role="group" aria-label={az ? 'Mətn ölçüsü' : 'Text size'}>
@@ -257,12 +254,15 @@ export default function CreateClient() {
   );
 }
 
-function DesignBlock({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+function DesignBlock({ title, hint, action, children }: { title: string; hint?: string; action?: React.ReactNode; children: React.ReactNode }) {
   return (
     <section>
-      <div className="mb-3">
-        <h3 className="t-h3 text-[1.05rem]">{title}</h3>
-        {hint && <p className="mt-0.5 text-small text-muted">{hint}</p>}
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="t-h3 text-[1.05rem]">{title}</h3>
+          {hint && <p className="mt-0.5 text-small text-muted">{hint}</p>}
+        </div>
+        {action}
       </div>
       {children}
     </section>

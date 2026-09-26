@@ -1,7 +1,7 @@
 import { CVData } from '@/app/types/cv';
 import { DEMO_CV_AZ, DEMO_CV_EN } from '@/lib/cv/demo';
 
-export type SampleId = 'qa' | 'backend' | 'devops' | 'marketing' | 'sales';
+export type SampleId = 'qa' | 'backend' | 'devops' | 'marketing' | 'sales' | 'hr';
 
 export interface SampleProfile {
   id: SampleId;
@@ -14,6 +14,7 @@ const BACKEND_PHOTO = '/images/samples/backend.jpg';
 const DEVOPS_PHOTO = '/images/samples/devops.jpg';
 const MARKETING_PHOTO = '/images/samples/marketing.jpg';
 const SALES_PHOTO = '/images/samples/sales.jpg';
+const HR_PHOTO = '/images/samples/hr.jpg';
 
 const BACKEND_AZ: CVData = {
   personal: {
@@ -295,6 +296,78 @@ const SALES_EN: CVData = {
   additional: 'LinkedIn: linkedin.com/in/elnurallazov',
 };
 
+const HR_AZ: CVData = {
+  personal: {
+    firstName: 'Nərmin', lastName: 'Quliyeva', email: 'narmin.quliyeva@gmail.com',
+    phone: '+994 55 678 90 12', city: 'Bakı', country: 'Azərbaycan',
+    jobTitle: 'HR Biznes Partnyoru', photo: HR_PHOTO,
+    linkedin: 'linkedin.com/in/narminquliyeva',
+    summary: 'Biznes tərəfdaşlığı və istedad idarəetməsi üzrə 6+ illik təcrübəli HR Biznes Partnyoru. Struktur dəyişiklikləri, performans idarəetməsi və işçi saxlama strategiyaları ilə biznes nəticələrinə birbaşa dəstək verir.',
+  },
+  experience: [
+    { id: 'e1', jobTitle: 'Baş HR Biznes Partnyoru', company: 'Meridian Retail Group', city: 'Bakı', country: 'Azərbaycan', startMonth: '3', startYear: '2021', endMonth: '', endYear: '', current: true,
+      description: '• 200+ işçini əhatə edən 3 departamentə strateji HR dəstəyi göstərir\n• İllik işçi dövriyyəsini 18%-dən 9%-ə endirən saxlama proqramı hazırladı\n• Performans qiymətləndirmə sistemini yenidən qurdu və rəhbərlərə koçinq etdi' },
+    { id: 'e2', jobTitle: 'HR Biznes Partnyoru', company: 'Vertex Analytics', city: 'Bakı', country: 'Azərbaycan', startMonth: '2', startYear: '2019', endMonth: '2', endYear: '2021', current: false,
+      description: '• Departament rəhbərləri ilə birgə illik işçi qüvvəsi planlamasını həyata keçirdi\n• Onboarding prosesini rəqəmsallaşdıraraq adaptasiya müddətini 30% qısaltdı' },
+    { id: 'e3', jobTitle: 'Kiçik HR Mütəxəssisi', company: 'Bravo Supermarket', city: 'Bakı', country: 'Azərbaycan', startMonth: '6', startYear: '2017', endMonth: '1', endYear: '2019', current: false,
+      description: '• İşə qəbul prosesini idarə etdi, ayda orta 15 vakansiyanı bağladı\n• Daxili məmnuniyyət sorğularını təşkil edərək nəticələri rəhbərliyə təqdim etdi' },
+  ],
+  education: [
+    { id: 'edu1', institutionType: 'university' as const, institutionTypeCustom: '', school: 'ADA Universiteti', degree: 'İnsan Resurslarının İdarə Edilməsi, Magistr', educationLevel: 'Magistr', city: 'Bakı', country: 'Azərbaycan', startYear: '2019', endYear: '2021' },
+    { id: 'edu2', institutionType: 'university' as const, institutionTypeCustom: '', school: 'Bakı Dövlət Universiteti', degree: 'Menecment, Bakalavr', educationLevel: 'Bakalavr', city: 'Bakı', country: 'Azərbaycan', startYear: '2013', endYear: '2017' },
+  ],
+  skills: ['İstedad İdarəetməsi', 'Performans İdarəetməsi', 'Təşkilati İnkişaf', 'İşçi Münasibətləri', 'HR Analitikası', 'İşə Qəbul', 'Dəyişiklik İdarəetməsi'],
+  languages: [
+    { id: 'l1', name: 'Azərbaycan dili', level: 'Ana dili' },
+    { id: 'l2', name: 'İngilis dili', level: 'C1' },
+    { id: 'l3', name: 'Rus dili', level: 'B1' },
+  ],
+  certificates: [
+    { id: 'c1', name: 'SHRM Certified Professional (SHRM-CP)', issuer: 'SHRM', year: '2022' },
+    { id: 'c2', name: 'HR Business Partner Certificate', issuer: 'Coursera', year: '2020' },
+  ],
+  trainings: [
+    { id: 't1', name: 'Strategic HR Management Program', provider: 'Narix Academy', year: '2019', description: 'Performans idarəetməsi, Təşkilati inkişaf' },
+  ],
+  additional: 'LinkedIn: linkedin.com/in/narminquliyeva',
+};
+
+const HR_EN: CVData = {
+  personal: {
+    firstName: 'Narmin', lastName: 'Guliyeva', email: 'narmin.guliyeva@gmail.com',
+    phone: '+994 55 678 90 12', city: 'Baku', country: 'Azerbaijan',
+    jobTitle: 'HR Business Partner', photo: HR_PHOTO,
+    linkedin: 'linkedin.com/in/narminquliyeva',
+    summary: 'HR Business Partner with 6+ years of experience in business partnering and talent management. Drives business outcomes through org design, performance management and retention strategy.',
+  },
+  experience: [
+    { id: 'e1', jobTitle: 'Senior HR Business Partner', company: 'Meridian Retail Group', city: 'Baku', country: 'Azerbaijan', startMonth: '3', startYear: '2021', endMonth: '', endYear: '', current: true,
+      description: '• Provides strategic HR support to 3 departments covering 200+ employees\n• Built a retention program that cut annual turnover from 18% to 9%\n• Redesigned the performance review system and coached department leads' },
+    { id: 'e2', jobTitle: 'HR Business Partner', company: 'Vertex Analytics', city: 'Baku', country: 'Azerbaijan', startMonth: '2', startYear: '2019', endMonth: '2', endYear: '2021', current: false,
+      description: '• Ran annual workforce planning together with department heads\n• Digitised onboarding, cutting ramp-up time by 30%' },
+    { id: 'e3', jobTitle: 'Junior HR Specialist', company: 'Bravo Supermarket', city: 'Baku', country: 'Azerbaijan', startMonth: '6', startYear: '2017', endMonth: '1', endYear: '2019', current: false,
+      description: '• Managed recruitment, closing an average of 15 roles a month\n• Ran internal satisfaction surveys and presented results to leadership' },
+  ],
+  education: [
+    { id: 'edu1', institutionType: 'university' as const, institutionTypeCustom: '', school: 'ADA University', degree: "Human Resource Management, Master's", educationLevel: 'Master', city: 'Baku', country: 'Azerbaijan', startYear: '2019', endYear: '2021' },
+    { id: 'edu2', institutionType: 'university' as const, institutionTypeCustom: '', school: 'Baku State University', degree: "Management, Bachelor's", educationLevel: 'Bachelor', city: 'Baku', country: 'Azerbaijan', startYear: '2013', endYear: '2017' },
+  ],
+  skills: ['Talent Management', 'Performance Management', 'Organizational Development', 'Employee Relations', 'HR Analytics', 'Recruitment', 'Change Management'],
+  languages: [
+    { id: 'l1', name: 'Azerbaijani', level: 'Native' },
+    { id: 'l2', name: 'English', level: 'C1' },
+    { id: 'l3', name: 'Russian', level: 'B1' },
+  ],
+  certificates: [
+    { id: 'c1', name: 'SHRM Certified Professional (SHRM-CP)', issuer: 'SHRM', year: '2022' },
+    { id: 'c2', name: 'HR Business Partner Certificate', issuer: 'Coursera', year: '2020' },
+  ],
+  trainings: [
+    { id: 't1', name: 'Strategic HR Management Program', provider: 'Narix Academy', year: '2019', description: 'Performance management, Organizational development' },
+  ],
+  additional: 'LinkedIn: linkedin.com/in/narminquliyeva',
+};
+
 /** Sample library shown by the "Load sample" picker. QA reuses the existing demo CV as-is. */
 export const SAMPLE_PROFILES: SampleProfile[] = [
   { id: 'qa', photo: DEMO_CV_AZ.personal.photo || '', data: { az: DEMO_CV_AZ, en: DEMO_CV_EN } },
@@ -302,6 +375,7 @@ export const SAMPLE_PROFILES: SampleProfile[] = [
   { id: 'devops', photo: DEVOPS_PHOTO, data: { az: DEVOPS_AZ, en: DEVOPS_EN } },
   { id: 'marketing', photo: MARKETING_PHOTO, data: { az: MARKETING_AZ, en: MARKETING_EN } },
   { id: 'sales', photo: SALES_PHOTO, data: { az: SALES_AZ, en: SALES_EN } },
+  { id: 'hr', photo: HR_PHOTO, data: { az: HR_AZ, en: HR_EN } },
 ];
 
 export function sampleData(id: SampleId, lang: 'az' | 'en'): CVData {

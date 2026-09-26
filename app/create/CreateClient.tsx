@@ -195,7 +195,7 @@ export default function CreateClient() {
               ) : (
                 <div className="flex flex-col gap-7">
                   <DesignBlock title={az ? 'Şablon' : 'Template'} action={<FontPopover value={cvSettings.font} onChange={f => setCvSettings({ font: f })} lang={lang} />}>
-                    <TemplatePicker value={selectedTemplate} onChange={setSelectedTemplate} lang={lang} font={cvSettings.font} isPro={!!isPro} />
+                    <TemplatePicker value={selectedTemplate} onChange={setSelectedTemplate} lang={lang} font={cvSettings.font} isPro={!!isPro} data={shown} />
                   </DesignBlock>
                   <DesignBlock title={az ? 'Mətn ölçüsü' : 'Text size'}>
                     <div className="seg" role="group" aria-label={az ? 'Mətn ölçüsü' : 'Text size'}>

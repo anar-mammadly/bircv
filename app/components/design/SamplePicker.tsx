@@ -9,6 +9,7 @@ const NAME: Record<SampleId, { az: string; en: string }> = {
   devops: { az: 'DevOps Mühəndisi', en: 'DevOps Engineer' },
   marketing: { az: 'Marketinq Mütəxəssisi', en: 'Marketing Specialist' },
   sales: { az: 'Satış Mütəxəssisi', en: 'Sales Specialist' },
+  hr: { az: 'HR Biznes Partnyoru', en: 'HR Business Partner' },
 };
 
 /** Opened by the "Load sample" button: pick which profession's sample CV to load. */

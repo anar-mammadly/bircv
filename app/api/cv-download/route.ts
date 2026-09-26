@@ -16,7 +16,9 @@ export async function POST(req: NextRequest) {
 
   if (!current) return NextResponse.json({ error: 'user not found' }, { status: 404 });
 
-  if (current.plan !== 'admin' && current.plan === 'free' && current.cv_count >= 2) {
+  // Free plan: exactly one download, ever. This check reads the persisted counter (Supabase),
+  // so it survives refresh, logout/login and a new browser — it is never client-side state.
+  if (current.plan !== 'admin' && current.plan === 'free' && current.cv_count >= 1) {
     return NextResponse.json({ ok: false, reason: 'limit_reached', cvCount: current.cv_count });
   }
 

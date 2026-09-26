@@ -15,7 +15,7 @@ export default function PricingClient() {
       name: az ? 'Pulsuz' : 'Free', price: 0, period: '', highlight: false,
       blurb: az ? 'İlk CV-nizi yaratmaq üçün.' : 'Everything to create your first CV.',
       features: [
-        [true, az ? '2 CV yükləmə' : '2 CV downloads'], [true, az ? '6 pulsuz şablon' : '6 free templates'], [true, az ? '5 AI sorğusu' : '5 AI requests'],
+        [true, az ? '1 CV yükləmə' : '1 CV download'], [true, az ? '4 pulsuz şablon' : '4 free templates'], [true, az ? '5 AI sorğusu' : '5 AI requests'],
         [true, az ? 'A4 PDF, real mətn' : 'A4 PDF with real text'], [false, az ? 'Premium şablonlar' : 'Premium templates'], [false, az ? 'HR dəstəyi' : 'HR support'],
       ] as [boolean, string][],
       cta: az ? 'Pulsuz başla' : 'Start free', href: '/create', wa: null as string | null,

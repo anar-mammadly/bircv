@@ -14,6 +14,8 @@ import Modal from '@/app/components/ui/Modal';
 import Logo from '@/app/components/ui/Logo';
 import { useToast } from '@/app/components/ui/Toaster';
 import { DEMO_CV_AZ, DEMO_CV_EN } from '@/lib/cv/demo';
+import { sampleData, SampleId } from '@/lib/cv/samples';
+import SamplePicker from '@/app/components/design/SamplePicker';
 import { isPremiumTemplate, TEMPLATE_BY_ID } from '@/lib/cv/templates';
 import { exportCvPdf, cvFilename } from '@/lib/pdf/exportCv';
 import { CVData } from '@/app/types/cv';
@@ -60,6 +62,7 @@ export default function CreateClient() {
   const [limitModal, setLimitModal] = useState(false);
   const [premiumModal, setPremiumModal] = useState(false);
   const [sidebarTab, setSidebarTab] = useState<'content' | 'design'>('content');
+  const [samplePicker, setSamplePicker] = useState(false);
 
   // /templates → /create?template=<id>
   useEffect(() => {
@@ -89,7 +92,7 @@ export default function CreateClient() {
 
   const handleDownload = async () => {
     if (!user) { setAuthMode('register'); setShowAuthModal(true); return; }
-    if (user.plan === 'free' && user.cvCount >= 2) { setLimitModal(true); return; }
+    if (user.plan === 'free' && user.cvCount >= 1) { setLimitModal(true); return; }
     if (isPremiumTemplate(selectedTemplate) && !isPro) { setPremiumModal(true); return; }
     if (empty) { toast({ kind: 'info', title: az ? 'Əvvəlcə məlumatlarınızı əlavə edin' : 'Add your details first' }); setMobileTab('content'); return; }
     if (!layoutRef.current) { toast({ kind: 'error', title: az ? 'Önizləmə hələ hazır deyil' : 'Preview is not ready yet' }); return; }
@@ -108,7 +111,11 @@ export default function CreateClient() {
   };
 
   // The sample never overwrites a photo the user has already uploaded.
-  const loadSample = () => { const demo = az ? DEMO_CV_AZ : DEMO_CV_EN; setCVData({ ...demo, personal: { ...demo.personal, photo: cvData.personal.photo || demo.personal.photo } }); toast({ kind: 'success', title: az ? 'Nümunə yükləndi' : 'Sample loaded' }); };
+  const loadSample = (id: SampleId) => {
+    const demo = sampleData(id, lang);
+    setCVData({ ...demo, personal: { ...demo.personal, photo: cvData.personal.photo || demo.personal.photo } });
+    toast({ kind: 'success', title: az ? 'Nümunə yükləndi' : 'Sample loaded' });
+  };
 
   // "saved 2 min ago" ticker
   const [, tick] = useState(0);
@@ -179,7 +186,7 @@ export default function CreateClient() {
                         <div className="text-[0.875rem] font-semibold text-ink">{az ? 'Boş CV' : 'Blank CV'}</div>
                         <div className="text-small text-ink-2">{az ? 'Formu doldurun və ya nümunə ilə başlayın.' : 'Fill in the form, or start from a sample.'}</div>
                       </div>
-                      <button onClick={loadSample} className="btn-secondary btn-sm shrink-0">{az ? 'Nümunə yüklə' : 'Load sample'}</button>
+                      <button onClick={() => setSamplePicker(true)} className="btn-secondary btn-sm shrink-0">{az ? 'Nümunə yüklə' : 'Load sample'}</button>
                     </div>
                   )}
                   <CVForm />
@@ -238,9 +245,11 @@ export default function CreateClient() {
         </div>
       </nav>
 
+      <SamplePicker open={samplePicker} onClose={() => setSamplePicker(false)} onPick={loadSample} lang={lang} />
+
       {/* ── gating modals ── */}
       <Modal open={limitModal} onClose={() => setLimitModal(false)} title={az ? 'CV limitinə çatdınız' : 'CV limit reached'}>
-        <p className="mb-5 text-body text-ink-2">{az ? 'Pulsuz planda 2 CV yükləmək mümkündür. Limitsiz CV və bütün şablonlar üçün Premium plana keçin.' : 'The free plan includes 2 CV downloads. Upgrade to Premium for unlimited CVs and every template.'}</p>
+        <p className="mb-5 text-body text-ink-2">{az ? 'Pulsuz planda 1 CV yükləmək mümkündür. Limitsiz CV və bütün şablonlar üçün Premium plana keçin.' : 'The free plan includes 1 CV download. Upgrade to Premium for unlimited CVs and every template.'}</p>
         <Link href="/pricing" className="btn-primary btn-lg w-full"><Sparkles size={16} />{az ? 'Premium-a keç' : 'Upgrade to Premium'}</Link>
       </Modal>
       <Modal open={premiumModal} onClose={() => setPremiumModal(false)} title={az ? 'Bu şablon Premium-dur' : 'This template is Premium'}>

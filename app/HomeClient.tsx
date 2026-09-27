@@ -21,7 +21,7 @@ export default function HomeClient() {
   ];
 
   const faqs = [
-    { q: az ? 'BirCV pulsuzdur?' : 'Is BirCV free?', a: az ? 'Bəli. Pulsuz planda şablonların çoxu, 2 CV yükləmə və 5 AI sorğusu var. Premium limitləri qaldırır və bütün şablonları açır.' : 'Yes. The free plan includes most templates, 2 CV downloads and 5 AI requests. Premium lifts the limits and unlocks every template.' },
+    { q: az ? 'BirCV pulsuzdur?' : 'Is BirCV free?', a: az ? 'Bəli. Pulsuz planda şablonların çoxu, 1 CV yükləmə və 5 AI sorğusu var. Premium limitləri qaldırır və bütün şablonları açır.' : 'Yes. The free plan includes most templates, 1 CV download and 5 AI requests. Premium lifts the limits and unlocks every template.' },
     { q: az ? 'CV-lər ATS sistemlərinə uyğundur?' : 'Are the CVs ATS-friendly?', a: az ? 'PDF-də mətn şəkil deyil, real mətndir — ATS və HR proqramları onu oxuya bilir. Minimal və Klassik şablonlar tək sütunludur.' : 'The PDF contains real text, not an image, so ATS and HR tools can read it. Minimal and Klassik are single-column layouts.' },
     { q: az ? 'Şrifti dəyişsəm CV pozulmur?' : 'Will changing the font break my CV?', a: az ? 'Xeyr. Şrift dəyişəndə mətn yenidən sətirlənir və səhifələr yenidən hesablanır; PDF də eyni şriftlə yaranır.' : 'No. When you change the font the text re-wraps and pages are recalculated; the PDF uses the same embedded font.' },
     { q: az ? 'Məlumatlarım harada saxlanılır?' : 'Where is my data stored?', a: az ? 'CV məzmununuz yalnız sizin brauzerinizdə saxlanılır. Serverə yalnız hesab məlumatları və AI sorğuları göndərilir.' : 'Your CV content stays in your browser. Only account details and AI requests are sent to our servers.' },
@@ -37,7 +37,7 @@ export default function HomeClient() {
         {/* ── hero ── */}
         <section className="section grid items-center gap-12 pb-16 pt-10 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-8 lg:pb-24 lg:pt-20">
           <div className="animate-rise">
-            <span className="chip mb-6 border-primary/25 bg-primary-soft text-primary"><Sparkles size={13} />{az ? 'AI yazı köməkçisi ilə' : 'With an AI writing assistant'}</span>
+            <span className="chip mb-6 border-primary/25 bg-primary-soft text-primary"><Sparkles size={13} />{az ? 'AI dəstəyi ilə' : 'With an AI writing assistant'}</span>
             <h1 className="t-display max-w-[14ch]">
               {az ? <>Peşəkar CV. <span className="text-primary">Dəqiqələr</span> içində.</> : <>A professional CV, <span className="text-primary">in minutes</span>.</>}
             </h1>

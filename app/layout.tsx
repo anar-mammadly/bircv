@@ -8,6 +8,10 @@ const SITE_URL = "https://bircv.az";
 const TITLE = "BirCV – Azərbaycan dilində CV Yarat və Hazırla";
 const DESCRIPTION =
   "BirCV ilə pulsuz CV düzəlt: süni intellekt köməyilə dəqiqələr içində peşəkar CV hazırlayın, Azərbaycan dilində şablonlar seçin, PDF yükləyin. İş axtarışı, karyera və CV konsultasiyası üçün bir nömrəli platforma.";
+// Link-preview-only text/image (WhatsApp, Telegram, LinkedIn, X, ...) — kept separate from the page
+// <title>/description above so this never drifts the site's own SEO metadata.
+const OG_TITLE = "BirCV - Peşəkar CV-nizi dəqiqələr içində hazırlayın";
+const OG_IMAGE = { url: `${SITE_URL}/og-image.png`, width: 1200, height: 630, alt: "BirCV — Azərbaycan dilində CV platforması" };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -25,13 +29,15 @@ export const metadata: Metadata = {
     locale: "az_AZ",
     url: SITE_URL,
     siteName: "BirCV",
-    title: TITLE,
+    title: OG_TITLE,
     description: DESCRIPTION,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: TITLE,
+    title: OG_TITLE,
     description: DESCRIPTION,
+    images: [OG_IMAGE.url],
   },
 };
 

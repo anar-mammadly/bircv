@@ -3,8 +3,8 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { CVData, TemplateId, AppLanguage, User } from '@/app/types/cv';
 import { CVFontId, DEFAULT_CV_FONT } from '@/lib/cvFonts';
 
-export interface CVSettings { font: CVFontId; textScale: number }
-const DEFAULT_SETTINGS: CVSettings = { font: DEFAULT_CV_FONT, textScale: 1 };
+export interface CVSettings { font: CVFontId; textScale: number; leftTextScale: number; rightTextScale: number; accentColor: string }
+const DEFAULT_SETTINGS: CVSettings = { font: DEFAULT_CV_FONT, textScale: 1, leftTextScale: 1, rightTextScale: 1, accentColor: '' };
 export type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 
 const defaultCV: CVData = {
@@ -55,7 +55,8 @@ function loadSettings(): { template?: TemplateId; settings: CVSettings } {
   try {
     const r = JSON.parse(localStorage.getItem('bircv_settings') || '{}');
     const scale = typeof r.textScale === 'number' && r.textScale >= 0.85 && r.textScale <= 1.15 ? r.textScale : 1;
-    return { template: r.template, settings: { font: r.font || DEFAULT_CV_FONT, textScale: scale } };
+    const regionScale = (v: unknown) => typeof v === 'number' && v >= 0.85 && v <= 1.15 ? v : 1;
+    return { template: r.template, settings: { font: r.font || DEFAULT_CV_FONT, textScale: scale, leftTextScale: regionScale(r.leftTextScale), rightTextScale: regionScale(r.rightTextScale), accentColor: /^#[0-9a-f]{6}$/i.test(r.accentColor || '') ? r.accentColor : '' } };
   } catch { return { settings: DEFAULT_SETTINGS }; }
 }
 

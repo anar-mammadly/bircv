@@ -59,6 +59,10 @@ npm run deploy
 3. Önizləmə səhifələri həmin DOM-un snapshot-ıdır; PDF isə eyni DOM-dan oxunur (`lib/pdf/domToPdf.ts`) — mətn, düzbucaqlılar, gradientlər, şəkillər vektor/raster primitivlərinə çevrilir. Önizləmə ilə PDF eyni layout-dan gəldiyi üçün fərqlənə bilməz.
 4. Şriftlər `public/fonts/cv/*.ttf` — brauzer (`app/cv-fonts.css`) və PDF eyni faylı istifadə edir. Faylları `scripts/build-cv-fonts.py` yaradır (Latin + Azərbaycan hərfləri; ə/Ə olmayan şriftlərə əlavə olunur).
 
+Dizayn panelində bütün şablonlar üçün şrift, ümumi ölçü (85–115%), ayrıca sol/sağ mətn ölçüsü və vurğu rəngi seçilə bilər. Bir sütunlu məzmun sağ/əsas mətn ölçüsünü istifadə edir. Ayarlar `bircv_settings` daxilində brauzerdə saxlanılır; əvvəlki ayarlar yeni sahələr üçün standart dəyərlərlə açılır. Önizləmə və PDF eyni dizayn parametrlərindən istifadə edir.
+
+Dizayn QA: `/dev/lab?tpl=tech&fx=long&font=inter&scale=1.06&left=0.9&right=1.1&color=%237C3AED`. `window.__qa()` səhifələmə/daşma nəticələrini, `window.__exportPdf()` PDF çıxışını verir. Şəxsi `.local/` məlumatları və `/app/local-premium/` önizləməsi Git-ə daxil edilmir.
+
 Yeni şablon əlavə etmək: komponenti yaz → `CVPreview.tsx`-də `renderTemplate`-ə əlavə et → `TemplateId` (`app/types/cv.ts`) və `lib/cv/templates.ts`-ə yaz. Test üçün: `npm run dev`, sonra `/dev/lab?tpl=<id>&fx=long&font=inter` (yalnız development).
 
 ## Struktur

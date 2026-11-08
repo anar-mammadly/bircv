@@ -74,10 +74,10 @@ export function ExtraSections({ data, lang, Heading, color = '#374151', muted = 
           <Heading>{L.projects(lang)}</Heading>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {projects.map(pr => (
-              <div key={pr.id} style={{ fontSize, lineHeight: 1.55, color }}>
+              <div key={pr.id} style={{ fontSize: `calc(${fontSize}px * var(--cv-region-scale, 1))`, lineHeight: 1.55, color }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
                   <span style={{ fontWeight: 700, color: accent }}>{pr.name}</span>
-                  {pr.link && <span style={{ fontSize: fontSize - 1, color: muted, overflowWrap: 'anywhere', textAlign: 'right' }}>{pr.link}</span>}
+                  {pr.link && <span style={{ fontSize: `calc(${fontSize - 1}px * var(--cv-region-scale, 1))`, color: muted, overflowWrap: 'anywhere', textAlign: 'right' }}>{pr.link}</span>}
                 </div>
                 {pr.description && <div style={{ color, whiteSpace: 'pre-line' }}>{pr.description}</div>}
               </div>
@@ -88,7 +88,7 @@ export function ExtraSections({ data, lang, Heading, color = '#374151', muted = 
       {customs.map(cs => (
         <div key={cs.id} style={{ marginBottom: gap }}>
           <Heading>{cs.title || (lang === 'az' ? 'Bölmə' : 'Section')}</Heading>
-          <div style={{ fontSize, lineHeight: 1.6, color, whiteSpace: 'pre-line', overflowWrap: 'anywhere' }}>{cs.content}</div>
+          <div style={{ fontSize: `calc(${fontSize}px * var(--cv-region-scale, 1))`, lineHeight: 1.6, color, whiteSpace: 'pre-line', overflowWrap: 'anywhere' }}>{cs.content}</div>
         </div>
       ))}
     </>

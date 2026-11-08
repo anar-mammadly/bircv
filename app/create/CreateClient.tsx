@@ -7,6 +7,7 @@ import {
 import { useCVStore } from '@/app/store/cvStore';
 import CVForm from '@/app/components/CVForm';
 import CVDocument, { CVLayout } from '@/app/components/CVDocument';
+import AppearanceControls from '@/app/components/design/AppearanceControls';
 import FontPopover from '@/app/components/design/FontPopover';
 import TemplatePicker from '@/app/components/design/TemplatePicker';
 import ServicesPanel from '@/app/components/ServicesPanel';
@@ -28,7 +29,6 @@ function isEmptyCv(d: CVData) {
     || d.languages.length || (d.certificates || []).length || (d.trainings || []).length || (d.projects || []).length || (d.customSections || []).length || d.additional);
 }
 
-const SIZES = [{ v: 0.94, l: 'S' }, { v: 1, l: 'M' }, { v: 1.06, l: 'L' }];
 
 export default function CreateClient() {
   const {
@@ -194,13 +194,11 @@ export default function CreateClient() {
                 </div>
               ) : (
                 <div className="flex flex-col gap-7">
-                  <DesignBlock title={az ? 'Şablon' : 'Template'} action={<FontPopover value={cvSettings.font} onChange={f => setCvSettings({ font: f })} lang={lang} />}>
-                    <TemplatePicker value={selectedTemplate} onChange={setSelectedTemplate} lang={lang} font={cvSettings.font} isPro={!!isPro} data={shown} />
+                  <DesignBlock title={az ? 'Görünüş' : 'Appearance'} action={<FontPopover value={cvSettings.font} onChange={f => setCvSettings({ font: f })} lang={lang} />}>
+                    <AppearanceControls settings={cvSettings} onChange={setCvSettings} lang={lang} />
                   </DesignBlock>
-                  <DesignBlock title={az ? 'Mətn ölçüsü' : 'Text size'}>
-                    <div className="seg" role="group" aria-label={az ? 'Mətn ölçüsü' : 'Text size'}>
-                      {SIZES.map(s => <button key={s.v} aria-pressed={cvSettings.textScale === s.v} onClick={() => setCvSettings({ textScale: s.v })} className="w-14">{s.l}</button>)}
-                    </div>
+                  <DesignBlock title={az ? 'Şablon' : 'Template'}>
+                    <TemplatePicker value={selectedTemplate} onChange={setSelectedTemplate} lang={lang} font={cvSettings.font} isPro={!!isPro} data={shown} settings={cvSettings} />
                   </DesignBlock>
                 </div>
               )}
@@ -225,7 +223,7 @@ export default function CreateClient() {
           <div ref={previewRef} className="flex min-h-0 flex-1 flex-col overflow-auto px-3 py-5 pb-32 sm:px-8 lg:px-6 lg:py-4 lg:pb-4">
             <div className="mx-auto my-auto shrink-0 transition-[width] duration-300 ease-out"
               style={pageW ? { width: pageW } : { width: '100%', maxWidth: 860 }}>
-              <CVDocument data={shown} template={selectedTemplate} lang={lang} font={cvSettings.font} textScale={cvSettings.textScale}
+              <CVDocument data={shown} template={selectedTemplate} lang={lang} font={cvSettings.font} textScale={cvSettings.textScale} accentColor={cvSettings.accentColor || undefined} leftTextScale={cvSettings.leftTextScale} rightTextScale={cvSettings.rightTextScale}
                 layoutRef={layoutRef} onLayout={l => setPages(l.pages)} />
             </div>
           </div>

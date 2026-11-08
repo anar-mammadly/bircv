@@ -10,8 +10,8 @@ import { CVFontId } from '@/lib/cvFonts';
  * `data` lets a caller show its own CV content (e.g. the Design tab mirrors the editor's current CV);
  * without it, this falls back to the marketing demo CV (home page, /templates gallery).
  */
-export default function TemplatePreview({ template, lang, font, width, data }: {
-  template: TemplateId; lang: 'az' | 'en'; font?: CVFontId; width?: number; data?: CVData;
+export default function TemplatePreview({ template, lang, font, width, data, accentColor, textScale, leftTextScale, rightTextScale }: {
+  template: TemplateId; lang: 'az' | 'en'; font?: CVFontId; width?: number; data?: CVData; accentColor?: string; textScale?: number; leftTextScale?: number; rightTextScale?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(width || 0);
@@ -29,7 +29,7 @@ export default function TemplatePreview({ template, lang, font, width, data }: {
   return (
     <div ref={ref} className="relative w-full overflow-hidden bg-white" style={{ aspectRatio: '210 / 297' }}>
       {visible && w > 0 ? (
-        <CVDocument data={data || (lang === 'az' ? DEMO_CV_AZ : DEMO_CV_EN)} template={template} lang={lang} font={font} fixedWidth={w} maxPages={1} showPageNumbers={false} flat />
+        <CVDocument data={data || (lang === 'az' ? DEMO_CV_AZ : DEMO_CV_EN)} template={template} lang={lang} font={font} accentColor={accentColor} textScale={textScale} leftTextScale={leftTextScale} rightTextScale={rightTextScale} fixedWidth={w} maxPages={1} showPageNumbers={false} flat />
       ) : (
         <div className="skeleton absolute inset-0 rounded-none" aria-hidden />
       )}

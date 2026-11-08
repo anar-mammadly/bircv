@@ -77,6 +77,7 @@ export interface CVData {
   experience: WorkExperience[];
   education: Education[];
   skills: string[];
+  skillGroups?: { title: string; items: string[] }[];
   languages: Language[];
   certificates: Certificate[];
   trainings: Training[];

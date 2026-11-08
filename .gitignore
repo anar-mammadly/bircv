@@ -46,3 +46,7 @@ next-env.d.ts
 
 # secrets
 .env
+.local/
+
+# Personal development-only CV preview
+/app/local-premium/

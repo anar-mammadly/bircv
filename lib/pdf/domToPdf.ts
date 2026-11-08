@@ -236,6 +236,7 @@ export async function renderPdf(src: PdfSource, title: string): Promise<Blob> {
     clone.setAttribute('width', String(b.w)); clone.setAttribute('height', String(b.h));
     const cs = getComputedStyle(svg);
     clone.style.color = cs.color;
+    clone.style.setProperty('--cv-accent', cs.getPropertyValue('--cv-accent'));
     // SVG <text> must render in a registered font, never a silent system fallback
     const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' }));
     try {
@@ -361,6 +362,23 @@ export async function renderPdf(src: PdfSource, title: string): Promise<Blob> {
   };
 
   const drawText = async (node: Text, cs: CSSStyleDeclaration, alpha: number, lang: string) => {
+    // The browser falls back to a system font for this chevron: the embedded
+    // CV font subsets do not contain U+203A. Paint the browser glyph itself
+    // at its existing DOM position instead of emitting a missing PDF glyph.
+    if (node.data.trim() === '›') {
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      const rect = range.getBoundingClientRect();
+      const b = box(rect);
+      const cssFont = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      await rasterize(b, ctx => {
+        ctx.font = cssFont;
+        ctx.fillStyle = cs.color;
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText('›', 0, ascentOf(cssFont));
+      }, alpha);
+      return;
+    }
     const family = cs.fontFamily.split(',')[0].trim().replace(/^["']|["']$/g, '');
     const weight = parseInt(cs.fontWeight, 10) || (cs.fontWeight === 'bold' ? 700 : 400);
     const italic = cs.fontStyle === 'italic' || cs.fontStyle === 'oblique';

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, MutableRefObject } from 'react';
 import { CVData, TemplateId } from '@/app/types/cv';
 import { CVFontId, DEFAULT_CV_FONT } from '@/lib/cvFonts';
+import { markDesignRegions, fitContactRows } from '@/lib/cv/design';
 import { paginate } from '@/lib/cv/paginate';
 import { renderTemplate } from '@/app/components/CVPreview';
 
@@ -26,6 +27,9 @@ interface Props {
   font?: CVFontId;
   /** 0.9 – 1.1: scales all text and spacing while the A4 geometry stays fixed. */
   textScale?: number;
+  accentColor?: string;
+  leftTextScale?: number;
+  rightTextScale?: number;
   layoutRef?: MutableRefObject<CVLayout | null>;
   onLayout?: (l: { pages: number }) => void;
   /** Pixel width the pages are shown at. Default: fill the container. */
@@ -40,7 +44,7 @@ interface Props {
 
 export default function CVDocument({
   data, template, lang, font = DEFAULT_CV_FONT, textScale = 1,
-  layoutRef, onLayout, fixedWidth, gap = 18, showPageNumbers = true, maxPages, flat,
+  accentColor, leftTextScale = 1, rightTextScale = 1, layoutRef, onLayout, fixedWidth, gap = 18, showPageNumbers = true, maxPages, flat,
 }: Props) {
   const deferred = useDeferredValue(data);
   const s = textScale;
@@ -85,12 +89,14 @@ export default function CVDocument({
     return () => document.fonts.removeEventListener('loadingdone', bump);
   }, []);
 
-  const content = useMemo(() => renderTemplate(template, deferred, lang), [template, deferred, lang]);
+  const content = useMemo(() => renderTemplate(template, deferred, lang, accentColor, leftTextScale, rightTextScale), [template, deferred, lang, accentColor, leftTextScale, rightTextScale]);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     root.style.minHeight = '0px';
+    if (template !== 'tech') markDesignRegions(root, leftTextScale, rightTextScale);
+    fitContactRows(root);
     const { pages } = paginate(root, { pageH, padTop: 40 / s, padBottom: 30 / s });
     root.style.minHeight = `${pages * pageH}px`;
     const html = root.outerHTML;
@@ -115,7 +121,7 @@ export default function CVDocument({
           style={{ position: 'fixed', top: 0, left: -99999, width: docW, visibility: 'hidden', pointerEvents: 'none' }}
           aria-hidden="true"
         >
-          <div ref={rootRef} className="cv-doc" style={{ width: docW, display: 'flex', flexDirection: 'column' }}>
+          <div ref={rootRef} className="cv-doc" style={{ width: docW, display: 'flex', flexDirection: 'column', '--cv-accent': /^#[0-9a-f]{6}$/i.test(accentColor || '') ? accentColor : undefined } as React.CSSProperties}>
             {content}
           </div>
         </div>,

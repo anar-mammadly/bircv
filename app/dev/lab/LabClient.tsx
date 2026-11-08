@@ -36,6 +36,7 @@ export default function LabClient() {
     <div style={{ background: '#e5e7eb', padding: 16, minHeight: '100vh' }}>
       <CVDocument
         data={FIXTURES[fx] || FIXTURES.standard} template={tpl} lang={lang} font={font} textScale={scale}
+        accentColor={q.get('color') || undefined} leftTextScale={Number(q.get('left') || 1)} rightTextScale={Number(q.get('right') || 1)}
         layoutRef={layoutRef} fixedWidth={w}
         onLayout={l => { if (typeof window !== 'undefined') (window as any).__cvPages = l.pages; }}
       />

@@ -4,10 +4,11 @@ import { Lock, Check } from 'lucide-react';
 import TemplatePreview from '@/app/components/TemplatePreview';
 import { TEMPLATE_LIST, CATEGORY_LABEL, TemplateCategory } from '@/lib/cv/templates';
 import { CVData, TemplateId } from '@/app/types/cv';
+import type { CVSettings } from '@/app/store/cvStore';
 import { CVFontId } from '@/lib/cvFonts';
 
-export default function TemplatePicker({ value, onChange, lang, font, isPro, data }: {
-  value: TemplateId; onChange: (id: TemplateId) => void; lang: 'az' | 'en'; font: CVFontId; isPro: boolean; data: CVData;
+export default function TemplatePicker({ value, onChange, lang, font, isPro, data, settings }: {
+  value: TemplateId; onChange: (id: TemplateId) => void; lang: 'az' | 'en'; font: CVFontId; isPro: boolean; data: CVData; settings?: CVSettings;
 }) {
   const [cat, setCat] = useState<TemplateCategory | 'all'>('all');
   const cats: (TemplateCategory | 'all')[] = ['all', 'professional', 'modern', 'minimal', 'creative', 'executive', 'ats'];
@@ -29,7 +30,7 @@ export default function TemplatePicker({ value, onChange, lang, font, isPro, dat
           return (
             <button key={t.id} type="button" role="radio" aria-checked={selected} onClick={() => onChange(t.id)}
               className={`group relative overflow-hidden rounded-xl border text-left transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md ${selected ? 'border-primary shadow-[0_0_0_2px_rgb(var(--primary))]' : 'border-line'}`}>
-              <div className="pointer-events-none border-b border-line"><TemplatePreview template={t.id} lang={lang} font={font === 'template' ? undefined : font} data={data} /></div>
+              <div className="pointer-events-none border-b border-line"><TemplatePreview template={t.id} lang={lang} font={font === 'template' ? undefined : font} data={data} accentColor={settings?.accentColor || undefined} textScale={settings?.textScale} leftTextScale={settings?.leftTextScale} rightTextScale={settings?.rightTextScale} /></div>
               <div className="flex items-center gap-1.5 bg-surface px-2.5 py-2">
                 <span className="min-w-0 flex-1 truncate text-[0.8125rem] font-semibold text-ink">{t.name}</span>
                 {t.premium && !isPro && <span className="badge-accent shrink-0"><Lock size={10} />PRO</span>}
